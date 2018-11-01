@@ -388,7 +388,7 @@ class TestRepoEvalCountOneCommitLog(unittest.TestCase):
 
     def test_get_git_cmd(self):
         # function under test
-        result = self.e.get_git_cmd('1990-01-01', '2016-01-01')
+        result = self.e.get_git_cmd('1990-01-01', '2018-08-31')
 
         expected = 'log --pretty=format:"{\'sha\':\'%H\', \'author\':u\'\'\'%an\'\'\', \'email\':u\'%ae\', \'date\':\'%ad\', \'subject\': u\\\"\\\"\\\"%s\\\"\\\"\\\"}" --after=\'@@@zzz###\' --before=\'###zzz@@@\' --encoding=utf-8 --numstat'
 
