@@ -409,12 +409,12 @@ class TestRepoEvalCountOneCommitLog(unittest.TestCase):
         #     print(k, str(line, encoding='utf-8'))
 
         # test line
-        test_line = str(stdout.splitlines()[6], encoding='utf-8')
+        test_line = str(stdout.splitlines()[0], encoding='utf-8')
 
         # check if the line contains all the information correctly
-        expected_set = {'e7e82a', 'Kang Won Lee', 'kangwon_fwd@naver.com', 'Sat Jun 21 21:23:48 2014 +0900', 'regex_test.submodule_naver_to() : git submodule add "-f" option. To add a repository as submodule under an ignored data folder'}
+        expected_list = ['7dbdb9', 'KangWon LEE', 'kangwon.lee@kpu.ac.kr', 'Wed Jul 4 18:48:00 2018 +0900', 'Initial commit']
 
-        for item in expected_set:
+        for item in expected_list:
             self.assertIn(item, test_line)
 
     def test_convert_git_log_to_table(self):
