@@ -458,9 +458,7 @@ class TestRepoEvalCountOneCommitLog(unittest.TestCase):
         """
         This test tries to figure out if git log with formatting is suitable to extract information
         """
-        txt = '{\'sha\':\'9bfd20b43355df5fceb8098356f5a3267020872e\', \'author\':u\'Name\', \'email\':u\'email@domain.name\', \'date\':\'Fri Apr 13 21:58:07 2018 +0900\', \'subject\': u"""ex08복습!(\\n은 새 줄에서 시작, """안에 어떤 내용이든 쓸 수 있음)"""}'
-
-        txt = self.get_input_string('problem_case_repo_path_01.txt', '9bfd20b43355df5fceb8098356f5a3267020872e')
+        txt = '{\'sha\':\'9bfd20b43355df5fceb8098356f5a3267020872e\', \'author\':u\'\'\'Limchaekwang\'\'\', \'email\':u\'sksmsekgnsdl@naver.com\', \'date\':\'Fri Apr 13 21:58:07 2018 +0900\', \'subject\': u\'\'\'ex08복습!(\\n은 새 줄에서 시작, """안에 어떤 내용이든 쓸 수 있음)\'\'\'}'
 
         result = self.e.get_commit_dict(txt)
         expected = {'sha': '9bfd20b43355df5fceb8098356f5a3267020872e', 
