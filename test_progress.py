@@ -242,8 +242,12 @@ class TestRepoEvalPoundCounter(unittest.TestCase):
         self.assertSetEqual(expected, comments)
 
 
+folder = os.getcwd()
+
+
 class TestRepoEvalRunEach(unittest.TestCase):
     def setUp(self):
+        os.chdir(folder)
         self.config = configparser.ConfigParser()
         assert os.path.exists('test_run_each.cfg'), f'cwd = {os.getcwd()}'
         self.config.read('test_run_each.cfg')
