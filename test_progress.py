@@ -245,7 +245,7 @@ class TestRepoEvalPoundCounter(unittest.TestCase):
 class TestRepoEvalRunEach(unittest.TestCase):
     def setUp(self):
         self.config = configparser.ConfigParser()
-        assert os.path.exists('test_run_each.cfg')
+        assert os.path.exists('test_run_each.cfg'), f'cwd = {os.getcwd()}'
         self.config.read('test_run_each.cfg')
         self.e = progress.RepoEvalRunEach(self.config['operation']['python_path'])
 
