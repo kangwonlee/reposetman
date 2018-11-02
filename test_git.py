@@ -42,20 +42,17 @@ class TestGit(unittest.TestCase):
         check first two commits included in the message
         """
         msg = git.git("log --follow --oneline git.py", bVerbose=False)
+
+        expected0_str = '7dbdb92 Initial commit'
         # print "\ntest_git_log_oneline() msg ="
         # print msg
+
+        print(f'test_git_log_oneline() : msg={msg}')
+
         try:
-            self.assertIn("27bb090 refactored git() to git.py", msg,
-                          msg='"%s" not in "%s"' % ("27bb090 refactored git() to git.py", msg))
-            self.assertIn("85aa1a4 ** doesn't work yet ** tried to use mingw32 to run git in UNIX style environment;",
-                          msg, msg='"%s" not in "%s"' % (
-                "85aa1a4 ** doesn't work yet ** tried to use mingw32 to run git in UNIX style environment;", msg))
+            self.assertIn(expected0_str, msg)
         except UnicodeDecodeError:
-            self.assertIn("27bb090 refactored git() to git.py", msg,
-                          msg='"%s" not in "%s"' % ("27bb090 refactored git() to git.py", msg))
-            self.assertIn("85aa1a4 ** doesn't work yet ** tried to use mingw32 to run git in UNIX style environment;",
-                          msg, msg='"%s" not in "%s"' % (
-                "85aa1a4 ** doesn't work yet ** tried to use mingw32 to run git in UNIX style environment;", msg))
+            self.assertIn(expected0_str, msg)
 
     def test_get_last_sha(self):
 
