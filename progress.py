@@ -887,7 +887,7 @@ class RepoEvalCountOneCommitLog(RepoEval):
             line = line.replace("''''}", r"\''''}")
 
         try:
-            last_commit_dict = ast.literal_eval(line)
+            last_commit_dict = ast.literal_eval(ast.literal_eval(line))
         except SyntaxError:
             # https://stackoverflow.com/questions/1347791/unicode-error-unicodeescape-codec-cant-decode-bytes-cannot-open-text-file
             # if `line` includes a string such as '\uabc' or '\Uabc', `ast.literal_eval()` assumes it is a escape sequence for the unicode
