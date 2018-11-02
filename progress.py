@@ -822,7 +822,7 @@ class RepoEvalCountOneCommitLog(RepoEval):
 
         # commit log line loop
         for line in git_log_split_lines:
-            if line and '{' == line[0]:
+            if line and (('sha' in line) and ('author' in line) and ('email' in line) and ('date' in line) and ('subject' in line)):
                 # new commit
 
                 # to use git log output as input to python
