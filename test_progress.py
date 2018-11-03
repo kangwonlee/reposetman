@@ -251,8 +251,15 @@ class TestRepoEvalRunEachBase(unittest.TestCase):
     def init_test_run_each(self):
         if not os.path.exists(self.config_filename):
             config = configparser.ConfigParser()
+
             config['operation'] = {
                 'python_path': shutil.which('python')
+            }
+
+            config['tests'] = {
+                'count_commits': True,
+                'run_all': True,
+                'pound_count': True,
             }
 
             with open(self.config_filename, 'w') as cfg_file:
