@@ -15,7 +15,6 @@ cfg_filename = 'regex_test.cfg'
 
 
 def init_regex_test_cfg():
-    cfg_filename = 'regex_test.cfg'
     list_filename = 'test_list.txt'
     repo_path = 'sample'
     if not os.path.exists(cfg_filename):
@@ -24,9 +23,13 @@ def init_regex_test_cfg():
             'listFile': list_filename,
             'path': repo_path,
         }
+        config['Admin'] = {
+            'id': 'please configure github id'
+        }
 
         with open(cfg_filename, 'w') as cfg_file:
             config.write(cfg_file)
+        raise FileNotFoundError(f'Please configure github id in {cfg_filename} and restart')
 
 
 config = configparser.ConfigParser()
@@ -34,7 +37,7 @@ config = configparser.ConfigParser()
 if not os.path.exists(cfg_filename):
     init_regex_test_cfg()
 
-config.read('regex_test.cfg')
+config.read(cfg_filename)
 
 
 def get_proj_id_list(filename=config['repository']['listFile']):
