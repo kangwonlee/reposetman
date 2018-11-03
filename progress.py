@@ -1073,7 +1073,7 @@ class RepoEvalPoundByteCounterExcludingRef(RepoEvalPoundByteCounter):
         with open(self.reference_cfg_filename, 'w') as ref_cfg_file:
             config_ref.write(ref_cfg_file)
 
-        raise FileNotFoundError(f'please configure {self.reference_cfg_filename} and restart')
+        raise FileNotFoundError(f'please configure {self.reference_cfg_filename}, run reference.py, and restart')
 
     def get_line_point(self, comment, b_verbose=False):
         if comment.strip() not in self.comments_ref:
