@@ -246,6 +246,19 @@ class TestRepoEvalPoundCounter(unittest.TestCase):
 folder = os.getcwd()
 
 
+class TestRepoEvalRunEachBase(unittest.TestCase):
+    config_filename = 'test_run_each.cfg'
+    def init_test_run_each(self):
+        if not os.path.exists(self.config_filename):
+            config = configparser.ConfigParser()
+            config['operation'] = {
+                'python_path': shutil.which('python')
+            }
+
+            with open(self.config_filename, 'w') as cfg_file:
+                config.write(cfg_file)
+
+
 class TestRepoEvalRunEach(unittest.TestCase):
     def setUp(self):
         os.chdir(folder)
@@ -283,18 +296,7 @@ class TestRepoEvalRunEach(unittest.TestCase):
                     self.assertTrue(msgo, msg='\n{file}\nstderr : {stderr}'.format(file=py_file, stderr=msge))
 
 
-class TestRepoEvalRunEachSkipSome(unittest.TestCase):
-    config_filename = 'test_run_each.cfg'
-    def init_test_run_each(self):
-        if not os.path.exists(self.config_filename):
-            config = configparser.ConfigParser()
-            config['operation'] = {
-                'python_path': shutil.which('python')
-            }
-
-            with open(self.config_filename, 'w') as cfg_file:
-                config.write(cfg_file)
-
+class TestRepoEvalRunEachSkipSome(TestRepoEvalRunEachBase):
     def setUp(self):
         self.config = configparser.ConfigParser()
         if not os.path.exists(self.config_filename):
