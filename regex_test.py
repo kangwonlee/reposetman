@@ -15,7 +15,6 @@ cfg_filename = 'regex_test.cfg'
 
 
 def init_regex_test_cfg():
-    cfg_filename = 'regex_test.cfg'
     list_filename = 'test_list.txt'
     repo_path = 'sample'
     if not os.path.exists(cfg_filename):
@@ -37,7 +36,7 @@ config = configparser.ConfigParser()
 if not os.path.exists(cfg_filename):
     init_regex_test_cfg()
 
-config.read('regex_test.cfg')
+config.read(cfg_filename)
 
 
 def get_proj_id_list(filename=config['repository']['listFile']):
