@@ -1030,8 +1030,7 @@ class RepoEvalPoundByteCounterExcludingRef(RepoEvalPoundByteCounter):
                     self.comments_ref.add(line.strip())
 
         else:
-
-            raise FileNotFoundError(f"Can't find {self.reference_cfg_filename} file")
+            self.init_reference_cfg_file()
 
     def init_reference_cfg_file(self):
         """
