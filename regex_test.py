@@ -24,6 +24,9 @@ def init_regex_test_cfg():
             'listFile': list_filename,
             'path': repo_path,
         }
+        config['Admin'] = {
+            'id': 'please configure github admin id'
+        }
 
         with open(cfg_filename, 'w') as cfg_file:
             config.write(cfg_file)
