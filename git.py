@@ -1,4 +1,5 @@
 import os
+import shutil
 import subprocess
 import sys
 import urllib.parse as up
@@ -28,6 +29,26 @@ def gen_git_path_dict_list(file_path='git_path.cfg'):
         for line in f:
             # generate each line
             yield line.strip()
+
+
+def which_git():
+    """
+    run `which git`
+
+    >>> os.path.exists(which_git())
+    True
+    """
+    # python 3.3 or higher
+    which_git = shutil.which('git')
+    result = None
+    if os.path.exists(which_git):
+        if os.access(which_git, os.X_OK):
+            result = which_git
+        else:
+            raise PermissionError(f"{which_git} is not executable")
+    else:
+        raise FileNotFoundError(f"{which_git} does not exist")
+    return result
 
 
 # begin set git path
