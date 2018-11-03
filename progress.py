@@ -1028,7 +1028,7 @@ class RepoEvalPoundByteCounterExcludingRef(RepoEvalPoundByteCounter):
                     self.comments_ref.add(line.strip())
 
         else:
-            raise IOError("'Can't find reference.cfg file")
+            raise FileNotFoundError("'Can't find reference.cfg file")
 
     def get_line_point(self, comment, b_verbose=False):
         if comment.strip() not in self.comments_ref:
