@@ -3,6 +3,7 @@ import configparser
 import datetime
 import glob
 import os
+import shutil
 import subprocess
 import tempfile
 import time
@@ -283,9 +284,23 @@ class TestRepoEvalRunEach(unittest.TestCase):
 
 
 class TestRepoEvalRunEachSkipSome(unittest.TestCase):
+    config_filename = 'test_run_each.cfg'
+    def init_test_run_each(self):
+        if not os.path.exists(self.config_filename):
+            config = configparser.ConfigParser()
+            config['operation'] = {
+                'python_path': shutil.which('python')
+            }
+
+            with open(self.config_filename, 'w') as cfg_file:
+                config.write(cfg_file)
+
     def setUp(self):
         self.config = configparser.ConfigParser()
-        self.config.read('test_run_each.cfg')
+        if not os.path.exists(self.config_filename):
+            self.init_test_run_each()
+
+        self.config.read(self.config_filename)
         self.e = progress.RepoEvalRunEachSkipSome(self.config['operation']['python_path'])
     
     def test_is_input_just_comments(self):
