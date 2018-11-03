@@ -41,7 +41,7 @@ class TestGit(unittest.TestCase):
         >>> git log --follow --oneline git.py
         check first two commits included in the message
         """
-        msg = git.git("log --follow --oneline git.py", bVerbose=False)
+        msg = git.git(("log", "--follow", "--oneline", "git.py"), bVerbose=False)
 
         expected0_str = '7dbdb92 Initial commit'
         # print "\ntest_git_log_oneline() msg ="
