@@ -1013,13 +1013,14 @@ class RepoEvalPoundByteCounter(RepoEvalPoundLineCounter):
 
 
 class RepoEvalPoundByteCounterExcludingRef(RepoEvalPoundByteCounter):
+    reference_cfg_filename = 'reference.cfg'
     def __init__(self):
         super(RepoEvalPoundByteCounterExcludingRef, self).__init__()
 
-        if os.path.exists('reference.cfg'):
+        if os.path.exists(self.reference_cfg_filename):
             self.comments_ref = unique_list.unique_list()
             self.config_ref = configparser.ConfigParser()
-            self.config_ref.read('reference.cfg')
+            self.config_ref.read(self.reference_cfg_filename)
 
             reference_comment_filename = self.config_ref['operation']['comment_output_file']
 
@@ -1028,7 +1029,8 @@ class RepoEvalPoundByteCounterExcludingRef(RepoEvalPoundByteCounter):
                     self.comments_ref.add(line.strip())
 
         else:
-            raise FileNotFoundError("'Can't find reference.cfg file")
+
+            raise FileNotFoundError(f"Can't find {self.reference_cfg_filename} file")
 
     def get_line_point(self, comment, b_verbose=False):
         if comment.strip() not in self.comments_ref:
