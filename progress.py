@@ -615,7 +615,8 @@ class RepoEval(object):
         is_pycharm_path = '.idea' in path
         is_vscode_path = '.vscode' in path
         is_pycache_path = '__pycache__' in path
-        b_ignore = any((is_dot_git_path, is_xcode_path, is_pycharm_path, is_vscode_path, is_pycache_path))
+        is_ipynb_checkpoints_path = '.ipynb_checkpoints' in path
+        b_ignore = any((is_dot_git_path, is_xcode_path, is_pycharm_path, is_vscode_path, is_pycache_path, is_ipynb_checkpoints_path))
         return b_ignore
 
     def is_ignore_filename(self, filename):
