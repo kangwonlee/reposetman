@@ -145,7 +145,7 @@ def git_common(cmd, b_verbose=True):
     >>> git_common("status") # == git status
     """
 
-    return run_command(git_string % cmd, b_verbose)
+    return run_command((git_exe_path,) + tuple(cmd), b_verbose)
 
 
 def git(cmd, bVerbose = True):
