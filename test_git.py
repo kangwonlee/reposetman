@@ -13,7 +13,7 @@ class TestGit(unittest.TestCase):
         self.assertIn(expected, msg, msg='"%s" not in "%s"' % (expected, msg))
 
     def test_git_config(self):
-        msg = git.git("config", bVerbose=False)
+        msg = git.git(["config"], bVerbose=False)
         expected = "usage: git config"
         self.assertIn(expected, msg, msg='"%s" not in "%s"' % (expected, msg))
 
