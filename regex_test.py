@@ -24,11 +24,12 @@ def init_regex_test_cfg():
             'path': repo_path,
         }
         config['Admin'] = {
-            'id': 'please configure github admin id'
+            'id': 'please configure github id'
         }
 
         with open(cfg_filename, 'w') as cfg_file:
             config.write(cfg_file)
+        raise FileNotFoundError(f'Please configure github id in {cfg_filename} and restart')
 
 
 config = configparser.ConfigParser()
