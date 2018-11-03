@@ -51,39 +51,23 @@ def which_git():
     return result
 
 
+def find_git_in_path():
+    PATH = 'PATH'
+    result = []
+    if PATH in os.environ:
+        for path in os.environ[PATH].split(';'):
+            if os.path.exists(path):
+                if 'git' in os.listdir(path):
+                    print (f"{path} has git")
+                    result.append(path)
+            else:
+                print(f"{path} does not exist")
+
+    return result
+
+
 # begin set git path
-git_path = False
-dll_path = False
-
-for git_path_candidate in gen_git_path_dict_list():
-    git_path_dict = {'base': git_path_candidate}
-    if os.path.exists(git_path_dict['base']):
-        git_path_dict['git_path'] = os.path.join(git_path_dict['base'], "bin")
-        git_path_dict['dll_path'] = os.path.join(git_path_dict['base'], "mingw","bin")
-        git_path = git_path_dict['git_path']
-        dll_path = git_path_dict['dll_path']
-        
-# adding environment variables
-# ref : http://stackoverflow.com/questions/5971635/setting-reading-up-environment-variables-in-python
-        os.environ['PATH'] = add_if_missing(git_path_dict['dll_path'], os.environ['PATH'])
-        break
-
-if (not git_path) or (not dll_path):
-    print ("unable to find git path in")
-    for path in gen_git_path_dict_list():
-        print (path)
-    sys.exit(1)   
-
-
-if "__main__" == __name__ : 
-    print("git.py : git_path ={git_path} exists? {exists}".format(
-        git_path=git_path,
-        exists=os.path.exists(git_path),
-    ))
-    
-git_exe_path = os.path.join(git_path,"git")
-
-git_string = git_exe_path + " %s"
+git_exe_path = which_git()
 
 # end set git path
 
