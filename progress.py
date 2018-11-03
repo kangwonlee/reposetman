@@ -1032,6 +1032,49 @@ class RepoEvalPoundByteCounterExcludingRef(RepoEvalPoundByteCounter):
 
             raise FileNotFoundError(f"Can't find {self.reference_cfg_filename} file")
 
+    def init_reference_cfg_file(self):
+        """
+        Initialize reference config file and raise error
+        """
+        config_ref = configparser.ConfigParser()
+        #sample cfg file
+        r'''
+        [operation]
+        folder=data\ref
+        comment_output_file=reference_comment.txt
+        [urls]
+        a=https://github.com/<github id>/<repository a name>
+        b=https://github.com/<github id>/<repository b name>
+        c=https://github.com/<github id>/<repository c name>
+        [commits]
+        a=<hash value of reference commit in repo a>
+        b=<hash value of reference commit in repo b>
+        c=<hash value of reference commit in repo c>
+        '''
+        config_ref['operation'] = {
+            # will clone reference repositories to this folder
+            'folder': os.path.join('data', 'ref'),
+            # will write sample comment set to this file
+            'comment_output_file' : 'reference_comment.txt',
+        }
+        config_ref['urls'] = {
+            # urls of the reference repositories
+            'a':'reference repository a url here',
+            'b':'reference repository b url here',
+            'c':'reference repository c url here',
+        }
+        config_ref['commits'] = {
+            # hashes of reference commits here
+            'a':'reference repository a base hash here',
+            'b':'reference repository b base hash here',
+            'c':'reference repository c base hash here',
+        }
+
+        with open(self.reference_cfg_filename, 'w') as ref_cfg_file:
+            config_ref.write(ref_cfg_file)
+
+        raise FileNotFoundError(f'please configure {self.reference_cfg_filename} and restart')
+
     def get_line_point(self, comment, b_verbose=False):
         if comment.strip() not in self.comments_ref:
             if b_verbose: 
