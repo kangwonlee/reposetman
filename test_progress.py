@@ -258,18 +258,20 @@ class TestRepoEvalRunEachBase(unittest.TestCase):
             with open(self.config_filename, 'w') as cfg_file:
                 config.write(cfg_file)
 
-
-class TestRepoEvalRunEach(unittest.TestCase):
     def setUp(self):
-        os.chdir(folder)
         self.config = configparser.ConfigParser()
-        assert os.path.exists('test_run_each.cfg'), f'cwd = {os.getcwd()}'
-        self.config.read('test_run_each.cfg')
-        self.e = progress.RepoEvalRunEach(self.config['operation']['python_path'])
+        if not os.path.exists(self.config_filename):
+            self.init_test_run_each()
+
+        self.config.read(self.config_filename)
+        self.e = progress.RepoEvalRunEachSkipSome(self.config['operation']['python_path'])
 
     def tearDown(self):
         del self.e
         del self.config
+
+
+class TestRepoEvalRunEach(TestRepoEvalRunEachBase):
 
     def test_run_script_input(self):
         # function under test
@@ -297,13 +299,6 @@ class TestRepoEvalRunEach(unittest.TestCase):
 
 
 class TestRepoEvalRunEachSkipSome(TestRepoEvalRunEachBase):
-    def setUp(self):
-        self.config = configparser.ConfigParser()
-        if not os.path.exists(self.config_filename):
-            self.init_test_run_each()
-
-        self.config.read(self.config_filename)
-        self.e = progress.RepoEvalRunEachSkipSome(self.config['operation']['python_path'])
     
     def test_is_input_just_comments(self):
         txt = '# coding: utf-8\n' \
