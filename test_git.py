@@ -23,7 +23,7 @@ class TestGit(unittest.TestCase):
         >>> git log --follow git.py
         check "Author:", "Date:", "commit" strings are all included in the message
         """
-        msg = git.git("log --follow git.py", bVerbose=False)
+        msg = git.git(("log", "--follow", "git.py"), bVerbose=False)
         # print "\ntest_git_log() msg ="
         # print msg
         try:
