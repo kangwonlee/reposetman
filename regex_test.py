@@ -11,7 +11,29 @@ import timeit
 import unique_list
 
 
+cfg_filename = 'regex_test.cfg'
+
+
+def init_regex_test_cfg():
+    cfg_filename = 'regex_test.cfg'
+    list_filename = 'test_list.txt'
+    repo_path = 'sample'
+    if not os.path.exists(cfg_filename):
+        config = configparser.ConfigParser()
+        config['repository'] = {
+            'listFile': list_filename,
+            'path': repo_path,
+        }
+
+        with open(cfg_filename, 'w') as cfg_file:
+            config.write(cfg_file)
+
+
 config = configparser.ConfigParser()
+
+if not os.path.exists(cfg_filename):
+    init_regex_test_cfg()
+
 config.read('regex_test.cfg')
 
 
