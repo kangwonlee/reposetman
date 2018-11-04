@@ -892,6 +892,7 @@ class RepoEvalCountOneCommitLog(RepoEval):
         except SyntaxError:
             # https://stackoverflow.com/questions/1347791/unicode-error-unicodeescape-codec-cant-decode-bytes-cannot-open-text-file
             # if `line` includes a string such as '\uabc' or '\Uabc', `ast.literal_eval()` assumes it is a escape sequence for the unicode
+            line = line.replace(r'\USER', r'_USER')
             line = line.replace(r'\U', r'\\U')
             line = line.replace(r'\u', r'\\u')
             try:
