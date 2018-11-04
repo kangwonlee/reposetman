@@ -865,6 +865,13 @@ class RepoEvalCountOneCommitLog(RepoEval):
                         for files_in_commit in temporary_file_list:
                             eval_dict[files_in_commit] = eval_dict.get(files_in_commit, 0) + point
 
+                        # if it is still not a dict
+                        if isinstance(last_commit_dict, str):
+                            # try to convert it again
+                            print(f'last_commit_dict = {repr(last_commit_dict)}')
+                            last_commit_dict = ast.literal_eval(last_commit_dict)
+                            if not isinstance(last_commit_dict, dict):
+                                raise ValueError(f'last_commit_dict = {repr(last_commit_dict)}')
                         last_commit_dict['files'] = temporary_file_list
                     else:
                         print('\n{class_name}.convert_git_log_to_table() : end of file list but temporary_file_list empty'.format(
@@ -892,6 +899,7 @@ class RepoEvalCountOneCommitLog(RepoEval):
         except SyntaxError:
             # https://stackoverflow.com/questions/1347791/unicode-error-unicodeescape-codec-cant-decode-bytes-cannot-open-text-file
             # if `line` includes a string such as '\uabc' or '\Uabc', `ast.literal_eval()` assumes it is a escape sequence for the unicode
+            line = line.replace(r'\USER', r'_USER')
             line = line.replace(r'\U', r'\\U')
             line = line.replace(r'\u', r'\\u')
             try:
