@@ -1,8 +1,8 @@
 |    |   total  |  00_interpolation.ipynb  |  05_probability.ipynb  |  10_statistics  |  10_statistics.ipynb  |
 |:--:|:----:|:----:|:----:|:----:|:----:|
+| eca18b-nmisp-20-2jaejin | 4 | 1.5 | 1.0 |  | 1.5  |
 | eca18b-nmisp-20-ljk941219 | 4 | 1.0 | 2.0 |  | 1.0  |
 | eca18b-nmisp-20-rkd0797 | 4 | 1.0 | 2.0 |  | 1.0  |
-| eca18b-nmisp-20-2jaejin | 3 | 1.5 | 1.0 |  | 0.5  |
 | eca18b-nmisp-20-Na-Young-Lee | 3 | 1.0 | 1.0 |  | 1.0  |
 | eca18b-nmisp-20-WooJLee | 3 | 1.0 | 1.0 |  | 1.0  |
 | eca18b-nmisp-20-jeapilbyeon | 3 | 1.0 | 1.0 |  | 1.0  |
