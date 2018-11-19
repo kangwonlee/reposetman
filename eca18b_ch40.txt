@@ -48,7 +48,7 @@
 
 장유경 (2016110037) (11.06 오후 07:22)
 
-2016110037 장유경 https://github.com/ECA18B/eca18b-nmisp-40-JYK1446 
+2016110037 장유경 https://github.com/ECA18B/eca18b-nmisp-40-JYK1446
 ※ 11.06 오후 07:22 수정되었습니다.
 
 노승현 (2017110016) (11.06 오후 07:23)
@@ -66,3 +66,11 @@
 조현덕 (2015112042) (11.06 오후 08:15)
 
 2015112042 조현덕 https://github.com/ECA18B/eca18b-nmisp-40-ChoHyeonDeok
+
+진승현 (2015110041) (6일 전 오후 06:18)
+
+2015110041 진승현 https://github.com/ECA18B/eca18b-nmisp-40-seonghyunJIn
+
+이승민 (2015114031) (6일 전 오후 08:22)
+
+2015114031 이승민 https://github.com/ECA18B/eca18b-nmisp-40-jerrydavidlee
