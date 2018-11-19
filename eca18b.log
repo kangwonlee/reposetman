@@ -2,84 +2,99 @@ clone_or_pull_repo( 6) : pull https://github.com/ECA18B/eca18b-nmisp-00-dlwns333
 clone_or_pull_repo( 7) : pull https://github.com/ECA18B/eca18b-nmisp-00-suntakkweon
 clone_or_pull_repo(10) : pull https://github.com/ECA18B/eca18b-nmisp-00-seonghyunJIn
 clone_or_pull_repo(11) : pull https://github.com/ECA18B/eca18b-nmisp-00-ljk941219
-clone_or_pull_repo(18) : pull https://github.com/ECA18B/eca18b-nmisp-00-SungYoungHoon
-clone_or_pull_repo(19) : pull https://github.com/ECA18B/eca18b-nmisp-00-baehyeonji
-clone_or_pull_repo( 0) : pull https://github.com/ECA18B/eca18b-nmisp-00-rrqweq53
-clone_or_pull_repo( 1) : pull https://github.com/ECA18B/eca18b-nmisp-00-rkd0797
+clone_or_pull_repo(16) : pull https://github.com/ECA18B/eca18b-nmisp-00-Bohyun-cpf18a
+clone_or_pull_repo(17) : pull https://github.com/ECA18B/eca18b-nmisp-00-qkrwhdrud
+clone_or_pull_repo( 4) : pull https://github.com/ECA18B/eca18b-nmisp-00-JYK1446
+clone_or_pull_repo( 5) : pull https://github.com/ECA18B/eca18b-nmisp-00-seojanghyeon
 clone_or_pull_repo(14) : pull https://github.com/ECA18B/eca18b-nmisp-00-ohbongkwon
 clone_or_pull_repo(15) : pull https://github.com/ECA18B/eca18b-nmisp-00-rlaehdwn66
-clone_or_pull_repo(20) : pull https://github.com/ECA18B/eca18b-nmisp-00-beyonding12
-clone_or_pull_repo(21) : pull https://github.com/ECA18B/eca18b-nmisp-00-MunYoonKyung
+clone_or_pull_repo(22) : pull https://github.com/ECA18B/eca18b-nmisp-00-Taeyoung-cpf18c
+clone_or_pull_repo(23) : pull https://github.com/ECA18B/eca18b-nmisp-00-seunghyeon-eca18b
+clone_or_pull_repo( 0) : pull https://github.com/ECA18B/eca18b-nmisp-00-rrqweq53
+clone_or_pull_repo( 1) : pull https://github.com/ECA18B/eca18b-nmisp-00-rkd0797
+C:\Users\User\Documents\reposetman_18pfd\reposetman_eca18b\repository\ch00
+fatal: Unable to create 'C:/Users/User/Documents/reposetman_18pfd/reposetman_eca18b/.git/index.lock': File exists.
+
+Another git process seems to be running in this repository, e.g.
+an editor opened by 'git commit'. Please make sure all processes
+are terminated then try again. If it still fails, a git process
+may have crashed in this repository earlier:
+remove the file manually to continue.
+
+clone_or_pull_repo( 8) : pull https://github.com/ECA18B/eca18b-nmisp-00-ChoHyeonDeok
+clone_or_pull_repo( 9) : pull https://github.com/ECA18B/eca18b-nmisp-00-inhovation37
+clone_or_pull_repo(18) : pull https://github.com/ECA18B/eca18b-nmisp-00-SungYoungHoon
+clone_or_pull_repo(19) : pull https://github.com/ECA18B/eca18b-nmisp-00-baehyeonji
+clone_or_pull_repo(24) : pull https://github.com/ECA18B/eca18b-nmisp-00-2jaejin
 clone_or_pull_repo( 2) : pull https://github.com/ECA18B/eca18b-nmisp-00-jeapilbyeon
 C:\Users\User\Documents\reposetman_18pfd\reposetman_eca18b\repository\ch00
-fatal: not a git repository (or any of the parent directories): .git
+fatal: Unable to create 'C:/Users/User/Documents/reposetman_18pfd/reposetman_eca18b/.git/index.lock': File exists.
+
+Another git process seems to be running in this repository, e.g.
+an editor opened by 'git commit'. Please make sure all processes
+are terminated then try again. If it still fails, a git process
+may have crashed in this repository earlier:
+remove the file manually to continue.
 
 clone_or_pull_repo( 3) : pull https://github.com/ECA18B/eca18b-nmisp-00-WooJLee
 clone_or_pull_repo(12) : pull https://github.com/ECA18B/eca18b-nmisp-00-kingisme7
 clone_or_pull_repo(13) : pull https://github.com/ECA18B/eca18b-nmisp-00-Na-Young-Lee
-clone_or_pull_repo(22) : pull https://github.com/ECA18B/eca18b-nmisp-00-Taeyoung-cpf18c
-clone_or_pull_repo(23) : pull https://github.com/ECA18B/eca18b-nmisp-00-seunghyeon-eca18b
-clone_or_pull_repo( 4) : pull https://github.com/ECA18B/eca18b-nmisp-00-JYK1446
-clone_or_pull_repo( 5) : pull https://github.com/ECA18B/eca18b-nmisp-00-seojanghyeon
-clone_or_pull_repo( 8) : pull https://github.com/ECA18B/eca18b-nmisp-00-ChoHyeonDeok
-clone_or_pull_repo( 9) : pull https://github.com/ECA18B/eca18b-nmisp-00-inhovation37
-clone_or_pull_repo(16) : pull https://github.com/ECA18B/eca18b-nmisp-00-Bohyun-cpf18a
-clone_or_pull_repo(17) : pull https://github.com/ECA18B/eca18b-nmisp-00-qkrwhdrud
-clone_or_pull_repo(24) : pull https://github.com/ECA18B/eca18b-nmisp-00-2jaejin
-RepoEvalCountOneCommitLog.eval_repo( 0) start: name=eca18b-nmisp-00-rrqweq53
-RepoEvalCountOneCommitLog.eval_repo( 0) end: name=eca18b-nmisp-00-rrqweq53 (0.333495 sec)
-RepoEvalCountOneCommitLog.eval_repo( 6) start: name=eca18b-nmisp-00-dlwns333
-RepoEvalCountOneCommitLog.eval_repo( 6) end: name=eca18b-nmisp-00-dlwns333 (0.154982 sec)
-RepoEvalCountOneCommitLog.eval_repo(11) start: name=eca18b-nmisp-00-ljk941219
-RepoEvalCountOneCommitLog.eval_repo(11) end: name=eca18b-nmisp-00-ljk941219 (0.214044 sec)
-RepoEvalCountOneCommitLog.eval_repo(16) start: name=eca18b-nmisp-00-Bohyun-cpf18a
-RepoEvalCountOneCommitLog.eval_repo(16) end: name=eca18b-nmisp-00-Bohyun-cpf18a (0.840585 sec)
+clone_or_pull_repo(20) : pull https://github.com/ECA18B/eca18b-nmisp-00-beyonding12
+clone_or_pull_repo(21) : pull https://github.com/ECA18B/eca18b-nmisp-00-MunYoonKyung
 RepoEvalCountOneCommitLog.eval_repo( 2) start: name=eca18b-nmisp-00-jeapilbyeon
-RepoEvalCountOneCommitLog.eval_repo( 2) end: name=eca18b-nmisp-00-jeapilbyeon (0.449724 sec)
+RepoEvalCountOneCommitLog.eval_repo( 2) end: name=eca18b-nmisp-00-jeapilbyeon (0.48085 sec)
 RepoEvalCountOneCommitLog.eval_repo( 9) start: name=eca18b-nmisp-00-inhovation37
-RepoEvalCountOneCommitLog.eval_repo( 9) end: name=eca18b-nmisp-00-inhovation37 (0.182065 sec)
-RepoEvalCountOneCommitLog.eval_repo(14) start: name=eca18b-nmisp-00-ohbongkwon
-RepoEvalCountOneCommitLog.eval_repo(14) end: name=eca18b-nmisp-00-ohbongkwon (0.438602 sec)
-RepoEvalCountOneCommitLog.eval_repo(19) start: name=eca18b-nmisp-00-baehyeonji
-RepoEvalCountOneCommitLog.eval_repo(19) end: name=eca18b-nmisp-00-baehyeonji (0.548146 sec)
-RepoEvalCountOneCommitLog.eval_repo( 3) start: name=eca18b-nmisp-00-WooJLee
-RepoEvalCountOneCommitLog.eval_repo( 3) end: name=eca18b-nmisp-00-WooJLee (0.141796 sec)
-RepoEvalCountOneCommitLog.eval_repo( 4) start: name=eca18b-nmisp-00-JYK1446
-RepoEvalCountOneCommitLog.eval_repo( 4) end: name=eca18b-nmisp-00-JYK1446 (0.248729 sec)
-RepoEvalCountOneCommitLog.eval_repo( 8) start: name=eca18b-nmisp-00-ChoHyeonDeok
-RepoEvalCountOneCommitLog.eval_repo( 8) end: name=eca18b-nmisp-00-ChoHyeonDeok (0.104668 sec)
+RepoEvalCountOneCommitLog.eval_repo( 9) end: name=eca18b-nmisp-00-inhovation37 (0.116705 sec)
 RepoEvalCountOneCommitLog.eval_repo(12) start: name=eca18b-nmisp-00-kingisme7
-RepoEvalCountOneCommitLog.eval_repo(12) end: name=eca18b-nmisp-00-kingisme7 (0.0922973 sec)
-RepoEvalCountOneCommitLog.eval_repo(13) start: name=eca18b-nmisp-00-Na-Young-Lee
-RepoEvalCountOneCommitLog.eval_repo(13) end: name=eca18b-nmisp-00-Na-Young-Lee (0.518021 sec)
-RepoEvalCountOneCommitLog.eval_repo(21) start: name=eca18b-nmisp-00-MunYoonKyung
-RepoEvalCountOneCommitLog.eval_repo(21) end: name=eca18b-nmisp-00-MunYoonKyung (0.371882 sec)
-RepoEvalCountOneCommitLog.eval_repo(24) start: name=eca18b-nmisp-00-2jaejin
-RepoEvalCountOneCommitLog.eval_repo(24) end: name=eca18b-nmisp-00-2jaejin (0.379249 sec)
-RepoEvalCountOneCommitLog.eval_repo( 1) start: name=eca18b-nmisp-00-rkd0797
-RepoEvalCountOneCommitLog.eval_repo( 1) end: name=eca18b-nmisp-00-rkd0797 (0.250642 sec)
-RepoEvalCountOneCommitLog.eval_repo( 5) start: name=eca18b-nmisp-00-seojanghyeon
-RepoEvalCountOneCommitLog.eval_repo( 5) end: name=eca18b-nmisp-00-seojanghyeon (0.0988746 sec)
-RepoEvalCountOneCommitLog.eval_repo( 7) start: name=eca18b-nmisp-00-suntakkweon
-RepoEvalCountOneCommitLog.eval_repo( 7) end: name=eca18b-nmisp-00-suntakkweon (0.134113 sec)
-RepoEvalCountOneCommitLog.eval_repo(10) start: name=eca18b-nmisp-00-seonghyunJIn
-RepoEvalCountOneCommitLog.eval_repo(10) end: name=eca18b-nmisp-00-seonghyunJIn (0.19286 sec)
+RepoEvalCountOneCommitLog.eval_repo(12) end: name=eca18b-nmisp-00-kingisme7 (0.0719571 sec)
+RepoEvalCountOneCommitLog.eval_repo(16) start: name=eca18b-nmisp-00-Bohyun-cpf18a
+RepoEvalCountOneCommitLog.eval_repo(16) end: name=eca18b-nmisp-00-Bohyun-cpf18a (0.578328 sec)
+RepoEvalCountOneCommitLog.eval_repo( 0) start: name=eca18b-nmisp-00-rrqweq53
+RepoEvalCountOneCommitLog.eval_repo( 0) end: name=eca18b-nmisp-00-rrqweq53 (0.288042 sec)
+RepoEvalCountOneCommitLog.eval_repo( 6) start: name=eca18b-nmisp-00-dlwns333
+RepoEvalCountOneCommitLog.eval_repo( 6) end: name=eca18b-nmisp-00-dlwns333 (0.263046 sec)
+RepoEvalCountOneCommitLog.eval_repo(11) start: name=eca18b-nmisp-00-ljk941219
+RepoEvalCountOneCommitLog.eval_repo(11) end: name=eca18b-nmisp-00-ljk941219 (0.112082 sec)
 RepoEvalCountOneCommitLog.eval_repo(15) start: name=eca18b-nmisp-00-rlaehdwn66
-RepoEvalCountOneCommitLog.eval_repo(15) end: name=eca18b-nmisp-00-rlaehdwn66 (0.105788 sec)
+RepoEvalCountOneCommitLog.eval_repo(15) end: name=eca18b-nmisp-00-rlaehdwn66 (0.0608056 sec)
 RepoEvalCountOneCommitLog.eval_repo(17) start: name=eca18b-nmisp-00-qkrwhdrud
-RepoEvalCountOneCommitLog.eval_repo(17) end: name=eca18b-nmisp-00-qkrwhdrud (0.205362 sec)
+RepoEvalCountOneCommitLog.eval_repo(17) end: name=eca18b-nmisp-00-qkrwhdrud (0.0570204 sec)
 RepoEvalCountOneCommitLog.eval_repo(18) start: name=eca18b-nmisp-00-SungYoungHoon
-RepoEvalCountOneCommitLog.eval_repo(18) end: name=eca18b-nmisp-00-SungYoungHoon (0.145632 sec)
+RepoEvalCountOneCommitLog.eval_repo(18) end: name=eca18b-nmisp-00-SungYoungHoon (0.0611634 sec)
+RepoEvalCountOneCommitLog.eval_repo(19) start: name=eca18b-nmisp-00-baehyeonji
+RepoEvalCountOneCommitLog.eval_repo(19) end: name=eca18b-nmisp-00-baehyeonji (0.483164 sec)
+RepoEvalCountOneCommitLog.eval_repo( 1) start: name=eca18b-nmisp-00-rkd0797
+RepoEvalCountOneCommitLog.eval_repo( 1) end: name=eca18b-nmisp-00-rkd0797 (0.254902 sec)
+RepoEvalCountOneCommitLog.eval_repo( 5) start: name=eca18b-nmisp-00-seojanghyeon
+RepoEvalCountOneCommitLog.eval_repo( 5) end: name=eca18b-nmisp-00-seojanghyeon (0.17732 sec)
+RepoEvalCountOneCommitLog.eval_repo( 8) start: name=eca18b-nmisp-00-ChoHyeonDeok
+RepoEvalCountOneCommitLog.eval_repo( 8) end: name=eca18b-nmisp-00-ChoHyeonDeok (0.0908241 sec)
+RepoEvalCountOneCommitLog.eval_repo(10) start: name=eca18b-nmisp-00-seonghyunJIn
+RepoEvalCountOneCommitLog.eval_repo(10) end: name=eca18b-nmisp-00-seonghyunJIn (0.137179 sec)
+RepoEvalCountOneCommitLog.eval_repo(14) start: name=eca18b-nmisp-00-ohbongkwon
+RepoEvalCountOneCommitLog.eval_repo(14) end: name=eca18b-nmisp-00-ohbongkwon (0.230777 sec)
+RepoEvalCountOneCommitLog.eval_repo(21) start: name=eca18b-nmisp-00-MunYoonKyung
+RepoEvalCountOneCommitLog.eval_repo(21) end: name=eca18b-nmisp-00-MunYoonKyung (0.262073 sec)
+RepoEvalCountOneCommitLog.eval_repo(24) start: name=eca18b-nmisp-00-2jaejin
+RepoEvalCountOneCommitLog.eval_repo(24) end: name=eca18b-nmisp-00-2jaejin (0.357972 sec)
+RepoEvalCountOneCommitLog.eval_repo( 3) start: name=eca18b-nmisp-00-WooJLee
+RepoEvalCountOneCommitLog.eval_repo( 3) end: name=eca18b-nmisp-00-WooJLee (0.143893 sec)
+RepoEvalCountOneCommitLog.eval_repo( 4) start: name=eca18b-nmisp-00-JYK1446
+RepoEvalCountOneCommitLog.eval_repo( 4) end: name=eca18b-nmisp-00-JYK1446 (0.280298 sec)
+RepoEvalCountOneCommitLog.eval_repo( 7) start: name=eca18b-nmisp-00-suntakkweon
+RepoEvalCountOneCommitLog.eval_repo( 7) end: name=eca18b-nmisp-00-suntakkweon (0.177308 sec)
+RepoEvalCountOneCommitLog.eval_repo(13) start: name=eca18b-nmisp-00-Na-Young-Lee
+RepoEvalCountOneCommitLog.eval_repo(13) end: name=eca18b-nmisp-00-Na-Young-Lee (0.253003 sec)
 RepoEvalCountOneCommitLog.eval_repo(20) start: name=eca18b-nmisp-00-beyonding12
-RepoEvalCountOneCommitLog.eval_repo(20) end: name=eca18b-nmisp-00-beyonding12 (0.1757 sec)
+RepoEvalCountOneCommitLog.eval_repo(20) end: name=eca18b-nmisp-00-beyonding12 (0.058111 sec)
 RepoEvalCountOneCommitLog.eval_repo(22) start: name=eca18b-nmisp-00-Taeyoung-cpf18c
-RepoEvalCountOneCommitLog.eval_repo(22) end: name=eca18b-nmisp-00-Taeyoung-cpf18c (0.125044 sec)
+RepoEvalCountOneCommitLog.eval_repo(22) end: name=eca18b-nmisp-00-Taeyoung-cpf18c (0.101875 sec)
 RepoEvalCountOneCommitLog.eval_repo(23) start: name=eca18b-nmisp-00-seunghyeon-eca18b
-RepoEvalCountOneCommitLog.eval_repo(23) end: name=eca18b-nmisp-00-seunghyeon-eca18b (0.887012 sec)
-clone_or_pull_repo( 0) : pull https://github.com/ECA18B/eca18b-nmisp-01-WooJLee
-clone_or_pull_repo( 1) : pull https://github.com/ECA18B/eca18b-nmisp-01-TaeyoungJeong
-clone_or_pull_repo(12) : pull https://github.com/ECA18B/eca18b-nmisp-01-ljk941219
-clone_or_pull_repo(13) : pull https://github.com/ECA18B/eca18b-nmisp-01-dlwns333
+RepoEvalCountOneCommitLog.eval_repo(23) end: name=eca18b-nmisp-00-seunghyeon-eca18b (0.823022 sec)
+clone_or_pull_repo( 6) : pull https://github.com/ECA18B/eca18b-nmisp-01-ohbongkwon
+clone_or_pull_repo( 7) : pull https://github.com/ECA18B/eca18b-nmisp-01-rlaehdwn66
+clone_or_pull_repo(10) : pull https://github.com/ECA18B/eca18b-nmisp-01-Na-Young-Lee
+clone_or_pull_repo(11) : pull https://github.com/ECA18B/eca18b-nmisp-01-2jaejin
 clone_or_pull_repo(18) : pull https://github.com/ECA18B/eca18b-nmisp-01-HanGiNa
 clone_or_pull_repo(19) : pull https://github.com/ECA18B/eca18b-nmisp-01-suntakkweon
 clone_or_pull_repo( 4) : pull https://github.com/ECA18B/eca18b-nmisp-01-rkd0797
@@ -93,87 +108,83 @@ may have crashed in this repository earlier:
 remove the file manually to continue.
 
 clone_or_pull_repo( 5) : pull https://github.com/ECA18B/eca18b-nmisp-01-jeapilbyeon
-clone_or_pull_repo(10) : pull https://github.com/ECA18B/eca18b-nmisp-01-Na-Young-Lee
-clone_or_pull_repo(11) : pull https://github.com/ECA18B/eca18b-nmisp-01-2jaejin
+clone_or_pull_repo(14) : pull https://github.com/ECA18B/eca18b-nmisp-01-kingisme7
+clone_or_pull_repo(15) : pull https://github.com/ECA18B/eca18b-nmisp-01-Bohyun-cpf18a
 clone_or_pull_repo(20) : pull https://github.com/ECA18B/eca18b-nmisp-01-inhovation37
 clone_or_pull_repo(21) : pull https://github.com/ECA18B/eca18b-nmisp-00-seunghyeon-eca18b
 clone_or_pull_repo( 2) : pull https://github.com/ECA18B/eca18b-nmisp-01-qkrwhdrud
 clone_or_pull_repo( 3) : pull https://github.com/ECA18B/eca18b-nmisp-01-rrqweq53
-clone_or_pull_repo(14) : pull https://github.com/ECA18B/eca18b-nmisp-01-kingisme7
-clone_or_pull_repo(15) : pull https://github.com/ECA18B/eca18b-nmisp-01-Bohyun-cpf18a
+C:\Users\User\Documents\reposetman_18pfd\reposetman_eca18b\repository\ch10
+fatal: Unable to create 'C:/Users/User/Documents/reposetman_18pfd/reposetman_eca18b/.git/index.lock': File exists.
+
+Another git process seems to be running in this repository, e.g.
+an editor opened by 'git commit'. Please make sure all processes
+are terminated then try again. If it still fails, a git process
+may have crashed in this repository earlier:
+remove the file manually to continue.
+
+clone_or_pull_repo(12) : pull https://github.com/ECA18B/eca18b-nmisp-01-ljk941219
+clone_or_pull_repo(13) : pull https://github.com/ECA18B/eca18b-nmisp-01-dlwns333
 clone_or_pull_repo(22) : pull https://github.com/ECA18B/eca18b-nmisp-01-seojanghyeon
 clone_or_pull_repo(23) : pull https://github.com/ECA18B/eca18b-nmisp-01-MunYoonKyung
-clone_or_pull_repo( 6) : pull https://github.com/ECA18B/eca18b-nmisp-01-ohbongkwon
-clone_or_pull_repo( 7) : pull https://github.com/ECA18B/eca18b-nmisp-01-rlaehdwn66
+clone_or_pull_repo( 0) : pull https://github.com/ECA18B/eca18b-nmisp-01-WooJLee
+clone_or_pull_repo( 1) : pull https://github.com/ECA18B/eca18b-nmisp-01-TaeyoungJeong
 clone_or_pull_repo( 8) : pull https://github.com/ECA18B/eca18b-nmisp-01-ChoHyeonDeok
 clone_or_pull_repo( 9) : pull https://github.com/ECA18B/eca18b-nmisp-01-SungYoungHoon
 clone_or_pull_repo(16) : pull https://github.com/ECA18B/eca18b-nmisp-01-seonghyunJIn
 clone_or_pull_repo(17) : pull https://github.com/ECA18B/eca18b-nmisp-01-baehyeonji
 clone_or_pull_repo(24) : pull https://github.com/ECA18B/eca18b-nmisp-01-JYK1446
 RepoEvalCountOneCommitLog.eval_repo( 2) start: name=eca18b-nmisp-01-qkrwhdrud
-RepoEvalCountOneCommitLog.eval_repo( 2) end: name=eca18b-nmisp-01-qkrwhdrud (0.096174 sec)
-RepoEvalCountOneCommitLog.eval_repo( 6) start: name=eca18b-nmisp-01-ohbongkwon
-RepoEvalCountOneCommitLog.eval_repo( 6) end: name=eca18b-nmisp-01-ohbongkwon (0.0594215 sec)
-RepoEvalCountOneCommitLog.eval_repo( 7) start: name=eca18b-nmisp-01-rlaehdwn66
-RepoEvalCountOneCommitLog.eval_repo( 7) end: name=eca18b-nmisp-01-rlaehdwn66 (0.0571945 sec)
-RepoEvalCountOneCommitLog.eval_repo( 8) start: name=eca18b-nmisp-01-ChoHyeonDeok
-RepoEvalCountOneCommitLog.eval_repo( 8) end: name=eca18b-nmisp-01-ChoHyeonDeok (0.105819 sec)
-RepoEvalCountOneCommitLog.eval_repo(12) start: name=eca18b-nmisp-01-ljk941219
-RepoEvalCountOneCommitLog.eval_repo(12) end: name=eca18b-nmisp-01-ljk941219 (0.222293 sec)
-RepoEvalCountOneCommitLog.eval_repo(13) start: name=eca18b-nmisp-01-dlwns333
-RepoEvalCountOneCommitLog.eval_repo(13) end: name=eca18b-nmisp-01-dlwns333 (0.0952017 sec)
-RepoEvalCountOneCommitLog.eval_repo(15) start: name=eca18b-nmisp-01-Bohyun-cpf18a
-RepoEvalCountOneCommitLog.eval_repo(15) end: name=eca18b-nmisp-01-Bohyun-cpf18a (0.421907 sec)
-RepoEvalCountOneCommitLog.eval_repo( 0) start: name=eca18b-nmisp-01-WooJLee
-RepoEvalCountOneCommitLog.eval_repo( 0) end: name=eca18b-nmisp-01-WooJLee (0.122832 sec)
+RepoEvalCountOneCommitLog.eval_repo( 2) end: name=eca18b-nmisp-01-qkrwhdrud (0.0689893 sec)
 RepoEvalCountOneCommitLog.eval_repo( 5) start: name=eca18b-nmisp-01-jeapilbyeon
-RepoEvalCountOneCommitLog.eval_repo( 5) end: name=eca18b-nmisp-01-jeapilbyeon (0.229835 sec)
-RepoEvalCountOneCommitLog.eval_repo(10) start: name=eca18b-nmisp-01-Na-Young-Lee
-RepoEvalCountOneCommitLog.eval_repo(10) end: name=eca18b-nmisp-01-Na-Young-Lee (0.325977 sec)
-RepoEvalCountOneCommitLog.eval_repo(14) start: name=eca18b-nmisp-01-kingisme7
-RepoEvalCountOneCommitLog.eval_repo(14) end: name=eca18b-nmisp-01-kingisme7 (0.148946 sec)
-RepoEvalCountOneCommitLog.eval_repo(18) start: name=eca18b-nmisp-01-HanGiNa
-RepoEvalCountOneCommitLog.eval_repo(18) end: name=eca18b-nmisp-01-HanGiNa (0.0892241 sec)
-RepoEvalCountOneCommitLog.eval_repo(20) start: name=eca18b-nmisp-01-inhovation37
-RepoEvalCountOneCommitLog.eval_repo(20) end: name=eca18b-nmisp-01-inhovation37 (0.119816 sec)
-RepoEvalCountOneCommitLog.eval_repo(23) start: name=eca18b-nmisp-01-MunYoonKyung
-RepoEvalCountOneCommitLog.eval_repo(23) end: name=eca18b-nmisp-01-MunYoonKyung (0.145709 sec)
-RepoEvalCountOneCommitLog.eval_repo( 3) start: name=eca18b-nmisp-01-rrqweq53
-RepoEvalCountOneCommitLog.eval_repo( 3) end: name=eca18b-nmisp-01-rrqweq53 (0.218161 sec)
-RepoEvalCountOneCommitLog.eval_repo( 9) start: name=eca18b-nmisp-01-SungYoungHoon
-RepoEvalCountOneCommitLog.eval_repo( 9) end: name=eca18b-nmisp-01-SungYoungHoon (0.0709114 sec)
-RepoEvalCountOneCommitLog.eval_repo(11) start: name=eca18b-nmisp-01-2jaejin
-RepoEvalCountOneCommitLog.eval_repo(11) end: name=eca18b-nmisp-01-2jaejin (0.371067 sec)
-RepoEvalCountOneCommitLog.eval_repo(16) start: name=eca18b-nmisp-01-seonghyunJIn
-RepoEvalCountOneCommitLog.eval_repo(16) end: name=eca18b-nmisp-01-seonghyunJIn (0.13932 sec)
-RepoEvalCountOneCommitLog.eval_repo(19) start: name=eca18b-nmisp-01-suntakkweon
-RepoEvalCountOneCommitLog.eval_repo(19) end: name=eca18b-nmisp-01-suntakkweon (0.156117 sec)
-RepoEvalCountOneCommitLog.eval_repo(22) start: name=eca18b-nmisp-01-seojanghyeon
-RepoEvalCountOneCommitLog.eval_repo(22) end: name=eca18b-nmisp-01-seojanghyeon (0.0830827 sec)
-RepoEvalCountOneCommitLog.eval_repo(24) start: name=eca18b-nmisp-01-JYK1446
-RepoEvalCountOneCommitLog.eval_repo(24) end: name=eca18b-nmisp-01-JYK1446 (0.141934 sec)
+RepoEvalCountOneCommitLog.eval_repo( 5) end: name=eca18b-nmisp-01-jeapilbyeon (0.200946 sec)
+RepoEvalCountOneCommitLog.eval_repo(12) start: name=eca18b-nmisp-01-ljk941219
+RepoEvalCountOneCommitLog.eval_repo(12) end: name=eca18b-nmisp-01-ljk941219 (0.139913 sec)
+RepoEvalCountOneCommitLog.eval_repo(13) start: name=eca18b-nmisp-01-dlwns333
+RepoEvalCountOneCommitLog.eval_repo(13) end: name=eca18b-nmisp-01-dlwns333 (0.0759511 sec)
+RepoEvalCountOneCommitLog.eval_repo(15) start: name=eca18b-nmisp-01-Bohyun-cpf18a
+RepoEvalCountOneCommitLog.eval_repo(15) end: name=eca18b-nmisp-01-Bohyun-cpf18a (0.294956 sec)
 RepoEvalCountOneCommitLog.eval_repo( 1) start: name=eca18b-nmisp-01-TaeyoungJeong
-RepoEvalCountOneCommitLog.eval_repo( 1) end: name=eca18b-nmisp-01-TaeyoungJeong (0.0923595 sec)
+RepoEvalCountOneCommitLog.eval_repo( 1) end: name=eca18b-nmisp-01-TaeyoungJeong (0.0657225 sec)
 RepoEvalCountOneCommitLog.eval_repo( 4) start: name=eca18b-nmisp-01-rkd0797
-RepoEvalCountOneCommitLog.eval_repo( 4) end: name=eca18b-nmisp-01-rkd0797 (0.645312 sec)
+RepoEvalCountOneCommitLog.eval_repo( 4) end: name=eca18b-nmisp-01-rkd0797 (0.44216 sec)
 RepoEvalCountOneCommitLog.eval_repo(17) start: name=eca18b-nmisp-01-baehyeonji
-RepoEvalCountOneCommitLog.eval_repo(17) end: name=eca18b-nmisp-01-baehyeonji (0.173604 sec)
+RepoEvalCountOneCommitLog.eval_repo(17) end: name=eca18b-nmisp-01-baehyeonji (0.122899 sec)
+RepoEvalCountOneCommitLog.eval_repo(20) start: name=eca18b-nmisp-01-inhovation37
+RepoEvalCountOneCommitLog.eval_repo(20) end: name=eca18b-nmisp-01-inhovation37 (0.102876 sec)
+RepoEvalCountOneCommitLog.eval_repo(23) start: name=eca18b-nmisp-01-MunYoonKyung
+RepoEvalCountOneCommitLog.eval_repo(23) end: name=eca18b-nmisp-01-MunYoonKyung (0.11904 sec)
+RepoEvalCountOneCommitLog.eval_repo( 0) start: name=eca18b-nmisp-01-WooJLee
+RepoEvalCountOneCommitLog.eval_repo( 0) end: name=eca18b-nmisp-01-WooJLee (0.0768471 sec)
+RepoEvalCountOneCommitLog.eval_repo( 6) start: name=eca18b-nmisp-01-ohbongkwon
+RepoEvalCountOneCommitLog.eval_repo( 6) end: name=eca18b-nmisp-01-ohbongkwon (0.0568202 sec)
+RepoEvalCountOneCommitLog.eval_repo( 7) start: name=eca18b-nmisp-01-rlaehdwn66
+RepoEvalCountOneCommitLog.eval_repo( 7) end: name=eca18b-nmisp-01-rlaehdwn66 (0.0677876 sec)
+RepoEvalCountOneCommitLog.eval_repo( 9) start: name=eca18b-nmisp-01-SungYoungHoon
+RepoEvalCountOneCommitLog.eval_repo( 9) end: name=eca18b-nmisp-01-SungYoungHoon (0.0491226 sec)
+RepoEvalCountOneCommitLog.eval_repo(11) start: name=eca18b-nmisp-01-2jaejin
+RepoEvalCountOneCommitLog.eval_repo(11) end: name=eca18b-nmisp-01-2jaejin (0.250818 sec)
+RepoEvalCountOneCommitLog.eval_repo(16) start: name=eca18b-nmisp-01-seonghyunJIn
+RepoEvalCountOneCommitLog.eval_repo(16) end: name=eca18b-nmisp-01-seonghyunJIn (0.0795505 sec)
+RepoEvalCountOneCommitLog.eval_repo(19) start: name=eca18b-nmisp-01-suntakkweon
+RepoEvalCountOneCommitLog.eval_repo(19) end: name=eca18b-nmisp-01-suntakkweon (0.123581 sec)
+RepoEvalCountOneCommitLog.eval_repo(22) start: name=eca18b-nmisp-01-seojanghyeon
+RepoEvalCountOneCommitLog.eval_repo(22) end: name=eca18b-nmisp-01-seojanghyeon (0.0519617 sec)
+RepoEvalCountOneCommitLog.eval_repo(24) start: name=eca18b-nmisp-01-JYK1446
+RepoEvalCountOneCommitLog.eval_repo(24) end: name=eca18b-nmisp-01-JYK1446 (0.103145 sec)
+RepoEvalCountOneCommitLog.eval_repo( 3) start: name=eca18b-nmisp-01-rrqweq53
+RepoEvalCountOneCommitLog.eval_repo( 3) end: name=eca18b-nmisp-01-rrqweq53 (0.165698 sec)
+RepoEvalCountOneCommitLog.eval_repo( 8) start: name=eca18b-nmisp-01-ChoHyeonDeok
+RepoEvalCountOneCommitLog.eval_repo( 8) end: name=eca18b-nmisp-01-ChoHyeonDeok (0.0639663 sec)
+RepoEvalCountOneCommitLog.eval_repo(10) start: name=eca18b-nmisp-01-Na-Young-Lee
+RepoEvalCountOneCommitLog.eval_repo(10) end: name=eca18b-nmisp-01-Na-Young-Lee (0.22271 sec)
+RepoEvalCountOneCommitLog.eval_repo(14) start: name=eca18b-nmisp-01-kingisme7
+RepoEvalCountOneCommitLog.eval_repo(14) end: name=eca18b-nmisp-01-kingisme7 (0.0921261 sec)
+RepoEvalCountOneCommitLog.eval_repo(18) start: name=eca18b-nmisp-01-HanGiNa
+RepoEvalCountOneCommitLog.eval_repo(18) end: name=eca18b-nmisp-01-HanGiNa (0.0666609 sec)
 RepoEvalCountOneCommitLog.eval_repo(21) start: name=eca18b-nmisp-00-seunghyeon-eca18b
-RepoEvalCountOneCommitLog.eval_repo(21) end: name=eca18b-nmisp-00-seunghyeon-eca18b (0.740975 sec)
-clone_or_pull_repo( 6) : pull https://github.com/ECA18B/eca18b-nmisp-20-jeapilbyeon
-clone_or_pull_repo( 7) : pull https://github.com/ECA18B/eca18b-nmisp-20-inhovation37
-clone_or_pull_repo(12) : pull https://github.com/ECA18B/eca18b-nmisp-20-seonghyunJIn
-clone_or_pull_repo(13) : pull https://github.com/ECA18B/eca18b-nmisp-20-kingisme7
+RepoEvalCountOneCommitLog.eval_repo(21) end: name=eca18b-nmisp-00-seunghyeon-eca18b (0.662251 sec)
 clone_or_pull_repo( 2) : pull https://github.com/ECA18B/eca18b-nmisp-20-rkd0797
-clone_or_pull_repo( 3) : pull https://github.com/ECA18B/eca18b-nmisp-20-ljk941219
-clone_or_pull_repo(14) : pull https://github.com/ECA18B/eca18b-nmisp-20-JYK1446
-clone_or_pull_repo(15) : pull https://github.com/ECA18B/eca18b-nmisp-20-SungYoungHoon
-clone_or_pull_repo( 4) : pull https://github.com/ECA18B/eca18b-nmisp-20-Bohyun-cpf18a
-clone_or_pull_repo( 5) : pull https://github.com/ECA18B/eca18b-nmisp-20-suntakkweon
-clone_or_pull_repo( 8) : pull https://github.com/ECA18B/eca18b-nmisp-20-WooJLee
-clone_or_pull_repo( 9) : pull https://github.com/ECA18B/eca18b-nmisp-20-rrqweq53
-clone_or_pull_repo(18) : pull https://github.com/ECA18B/eca18b-nmisp-20-seunghyeon-eca18b
-clone_or_pull_repo( 0) : pull https://github.com/ECA18B/eca18b-nmisp-20-MunYoonKyung
 C:\Users\User\Documents\reposetman_18pfd\reposetman_eca18b\repository\ch20
 fatal: Unable to create 'C:/Users/User/Documents/reposetman_18pfd/reposetman_eca18b/.git/index.lock': File exists.
 
@@ -183,7 +194,7 @@ are terminated then try again. If it still fails, a git process
 may have crashed in this repository earlier:
 remove the file manually to continue.
 
-clone_or_pull_repo( 1) : pull https://github.com/ECA18B/eca18b-nmisp-20-2jaejin
+clone_or_pull_repo( 3) : pull https://github.com/ECA18B/eca18b-nmisp-20-ljk941219
 clone_or_pull_repo(10) : pull https://github.com/ECA18B/eca18b-nmisp-20-ohbongkwon
 C:\Users\User\Documents\reposetman_18pfd\reposetman_eca18b\repository\ch20
 fatal: Unable to create 'C:/Users/User/Documents/reposetman_18pfd/reposetman_eca18b/.git/index.lock': File exists.
@@ -195,56 +206,69 @@ may have crashed in this repository earlier:
 remove the file manually to continue.
 
 clone_or_pull_repo(11) : pull https://github.com/ECA18B/eca18b-nmisp-20-Na-Young-Lee
+clone_or_pull_repo( 4) : pull https://github.com/ECA18B/eca18b-nmisp-20-Bohyun-cpf18a
+clone_or_pull_repo( 5) : pull https://github.com/ECA18B/eca18b-nmisp-20-suntakkweon
+clone_or_pull_repo(14) : pull https://github.com/ECA18B/eca18b-nmisp-20-JYK1446
+clone_or_pull_repo(15) : pull https://github.com/ECA18B/eca18b-nmisp-20-SungYoungHoon
+clone_or_pull_repo( 6) : pull https://github.com/ECA18B/eca18b-nmisp-20-jeapilbyeon
+clone_or_pull_repo( 7) : pull https://github.com/ECA18B/eca18b-nmisp-20-inhovation37
+clone_or_pull_repo( 8) : pull https://github.com/ECA18B/eca18b-nmisp-20-WooJLee
+clone_or_pull_repo( 9) : pull https://github.com/ECA18B/eca18b-nmisp-20-rrqweq53
+clone_or_pull_repo(18) : pull https://github.com/ECA18B/eca18b-nmisp-20-seunghyeon-eca18b
+clone_or_pull_repo( 0) : pull https://github.com/ECA18B/eca18b-nmisp-20-MunYoonKyung
+clone_or_pull_repo( 1) : pull https://github.com/ECA18B/eca18b-nmisp-20-2jaejin
+clone_or_pull_repo(12) : pull https://github.com/ECA18B/eca18b-nmisp-20-seonghyunJIn
+clone_or_pull_repo(13) : pull https://github.com/ECA18B/eca18b-nmisp-20-kingisme7
 clone_or_pull_repo(16) : pull https://github.com/ECA18B/eca18b-nmisp-20-ChoHyeonDeok
 clone_or_pull_repo(17) : pull https://github.com/ECA18B/eca18b-nmisp-20-qkrwhdrud
-RepoEvalCountOneCommitLog.eval_repo( 1) start: name=eca18b-nmisp-20-2jaejin
-RepoEvalCountOneCommitLog.eval_repo( 1) end: name=eca18b-nmisp-20-2jaejin (0.200979 sec)
-RepoEvalCountOneCommitLog.eval_repo( 6) start: name=eca18b-nmisp-20-jeapilbyeon
-RepoEvalCountOneCommitLog.eval_repo( 6) end: name=eca18b-nmisp-20-jeapilbyeon (0.149511 sec)
-RepoEvalCountOneCommitLog.eval_repo(10) start: name=eca18b-nmisp-20-ohbongkwon
-RepoEvalCountOneCommitLog.eval_repo(10) end: name=eca18b-nmisp-20-ohbongkwon (0.142538 sec)
-RepoEvalCountOneCommitLog.eval_repo(14) start: name=eca18b-nmisp-20-JYK1446
-RepoEvalCountOneCommitLog.eval_repo(14) end: name=eca18b-nmisp-20-JYK1446 (0.156498 sec)
-RepoEvalCountOneCommitLog.eval_repo( 2) start: name=eca18b-nmisp-20-rkd0797
-RepoEvalCountOneCommitLog.eval_repo( 2) end: name=eca18b-nmisp-20-rkd0797 (0.209481 sec)
-RepoEvalCountOneCommitLog.eval_repo( 7) start: name=eca18b-nmisp-20-inhovation37
-RepoEvalCountOneCommitLog.eval_repo( 7) end: name=eca18b-nmisp-20-inhovation37 (0.149832 sec)
-RepoEvalCountOneCommitLog.eval_repo(11) start: name=eca18b-nmisp-20-Na-Young-Lee
-RepoEvalCountOneCommitLog.eval_repo(11) end: name=eca18b-nmisp-20-Na-Young-Lee (0.138558 sec)
-RepoEvalCountOneCommitLog.eval_repo(15) start: name=eca18b-nmisp-20-SungYoungHoon
-RepoEvalCountOneCommitLog.eval_repo(15) end: name=eca18b-nmisp-20-SungYoungHoon (0.140986 sec)
 RepoEvalCountOneCommitLog.eval_repo( 0) start: name=eca18b-nmisp-20-MunYoonKyung
-RepoEvalCountOneCommitLog.eval_repo( 0) end: name=eca18b-nmisp-20-MunYoonKyung (0.183417 sec)
+RepoEvalCountOneCommitLog.eval_repo( 0) end: name=eca18b-nmisp-20-MunYoonKyung (0.102911 sec)
 RepoEvalCountOneCommitLog.eval_repo( 4) start: name=eca18b-nmisp-20-Bohyun-cpf18a
-RepoEvalCountOneCommitLog.eval_repo( 4) end: name=eca18b-nmisp-20-Bohyun-cpf18a (0.132869 sec)
-RepoEvalCountOneCommitLog.eval_repo( 9) start: name=eca18b-nmisp-20-rrqweq53
-RepoEvalCountOneCommitLog.eval_repo( 9) end: name=eca18b-nmisp-20-rrqweq53 (0.108922 sec)
+RepoEvalCountOneCommitLog.eval_repo( 4) end: name=eca18b-nmisp-20-Bohyun-cpf18a (0.077755 sec)
+RepoEvalCountOneCommitLog.eval_repo( 6) start: name=eca18b-nmisp-20-jeapilbyeon
+RepoEvalCountOneCommitLog.eval_repo( 6) end: name=eca18b-nmisp-20-jeapilbyeon (0.114639 sec)
+RepoEvalCountOneCommitLog.eval_repo(10) start: name=eca18b-nmisp-20-ohbongkwon
+RepoEvalCountOneCommitLog.eval_repo(10) end: name=eca18b-nmisp-20-ohbongkwon (0.0437899 sec)
 RepoEvalCountOneCommitLog.eval_repo(12) start: name=eca18b-nmisp-20-seonghyunJIn
-RepoEvalCountOneCommitLog.eval_repo(12) end: name=eca18b-nmisp-20-seonghyunJIn (0.154732 sec)
-RepoEvalCountOneCommitLog.eval_repo(17) start: name=eca18b-nmisp-20-qkrwhdrud
-RepoEvalCountOneCommitLog.eval_repo(17) end: name=eca18b-nmisp-20-qkrwhdrud (0.176731 sec)
-RepoEvalCountOneCommitLog.eval_repo( 3) start: name=eca18b-nmisp-20-ljk941219
-RepoEvalCountOneCommitLog.eval_repo( 3) end: name=eca18b-nmisp-20-ljk941219 (0.121783 sec)
-RepoEvalCountOneCommitLog.eval_repo( 5) start: name=eca18b-nmisp-20-suntakkweon
-RepoEvalCountOneCommitLog.eval_repo( 5) end: name=eca18b-nmisp-20-suntakkweon (0.108889 sec)
-RepoEvalCountOneCommitLog.eval_repo( 8) start: name=eca18b-nmisp-20-WooJLee
-RepoEvalCountOneCommitLog.eval_repo( 8) end: name=eca18b-nmisp-20-WooJLee (0.124282 sec)
-RepoEvalCountOneCommitLog.eval_repo(13) start: name=eca18b-nmisp-20-kingisme7
-RepoEvalCountOneCommitLog.eval_repo(13) end: name=eca18b-nmisp-20-kingisme7 (0.126209 sec)
+RepoEvalCountOneCommitLog.eval_repo(12) end: name=eca18b-nmisp-20-seonghyunJIn (0.0890648 sec)
 RepoEvalCountOneCommitLog.eval_repo(16) start: name=eca18b-nmisp-20-ChoHyeonDeok
-RepoEvalCountOneCommitLog.eval_repo(16) end: name=eca18b-nmisp-20-ChoHyeonDeok (0.10669 sec)
+RepoEvalCountOneCommitLog.eval_repo(16) end: name=eca18b-nmisp-20-ChoHyeonDeok (0.0448997 sec)
+RepoEvalCountOneCommitLog.eval_repo( 3) start: name=eca18b-nmisp-20-ljk941219
+RepoEvalCountOneCommitLog.eval_repo( 3) end: name=eca18b-nmisp-20-ljk941219 (0.161817 sec)
+RepoEvalCountOneCommitLog.eval_repo( 5) start: name=eca18b-nmisp-20-suntakkweon
+RepoEvalCountOneCommitLog.eval_repo( 5) end: name=eca18b-nmisp-20-suntakkweon (0.0389342 sec)
+RepoEvalCountOneCommitLog.eval_repo( 7) start: name=eca18b-nmisp-20-inhovation37
+RepoEvalCountOneCommitLog.eval_repo( 7) end: name=eca18b-nmisp-20-inhovation37 (0.0441637 sec)
+RepoEvalCountOneCommitLog.eval_repo( 9) start: name=eca18b-nmisp-20-rrqweq53
+RepoEvalCountOneCommitLog.eval_repo( 9) end: name=eca18b-nmisp-20-rrqweq53 (0.121967 sec)
+RepoEvalCountOneCommitLog.eval_repo(13) start: name=eca18b-nmisp-20-kingisme7
+RepoEvalCountOneCommitLog.eval_repo(13) end: name=eca18b-nmisp-20-kingisme7 (0.0409596 sec)
+RepoEvalCountOneCommitLog.eval_repo(14) start: name=eca18b-nmisp-20-JYK1446
+RepoEvalCountOneCommitLog.eval_repo(14) end: name=eca18b-nmisp-20-JYK1446 (0.045038 sec)
+RepoEvalCountOneCommitLog.eval_repo(17) start: name=eca18b-nmisp-20-qkrwhdrud
+RepoEvalCountOneCommitLog.eval_repo(17) end: name=eca18b-nmisp-20-qkrwhdrud (0.0370114 sec)
+RepoEvalCountOneCommitLog.eval_repo( 2) start: name=eca18b-nmisp-20-rkd0797
+RepoEvalCountOneCommitLog.eval_repo( 2) end: name=eca18b-nmisp-20-rkd0797 (0.217435 sec)
+RepoEvalCountOneCommitLog.eval_repo( 8) start: name=eca18b-nmisp-20-WooJLee
+RepoEvalCountOneCommitLog.eval_repo( 8) end: name=eca18b-nmisp-20-WooJLee (0.10165 sec)
+RepoEvalCountOneCommitLog.eval_repo(11) start: name=eca18b-nmisp-20-Na-Young-Lee
+RepoEvalCountOneCommitLog.eval_repo(11) end: name=eca18b-nmisp-20-Na-Young-Lee (0.104473 sec)
+RepoEvalCountOneCommitLog.eval_repo(15) start: name=eca18b-nmisp-20-SungYoungHoon
+RepoEvalCountOneCommitLog.eval_repo(15) end: name=eca18b-nmisp-20-SungYoungHoon (0.043103 sec)
 RepoEvalCountOneCommitLog.eval_repo(18) start: name=eca18b-nmisp-20-seunghyeon-eca18b
-RepoEvalCountOneCommitLog.eval_repo(18) end: name=eca18b-nmisp-20-seunghyeon-eca18b (0.106906 sec)
+RepoEvalCountOneCommitLog.eval_repo(18) end: name=eca18b-nmisp-20-seunghyeon-eca18b (0.058018 sec)
+RepoEvalCountOneCommitLog.eval_repo( 1) start: name=eca18b-nmisp-20-2jaejin
+RepoEvalCountOneCommitLog.eval_repo( 1) end: name=eca18b-nmisp-20-2jaejin (0.626382 sec)
 clone_or_pull_repo( 6) : pull https://github.com/ECA18B/eca18b-nmisp-30-jerrydavidlee
 clone_or_pull_repo( 7) : pull https://github.com/ECA18B/eca18b-nmisp-30-kingisme7
-clone_or_pull_repo(12) : pull https://github.com/ECA18B/eca18b-nmisp-30-MunYoonKyung
-clone_or_pull_repo(13) : pull https://github.com/ECA18B/eca18b-nmisp-30-rkd0797
-clone_or_pull_repo( 4) : pull https://github.com/ECA18B/eca18b-nmisp-30-ohbongkwon
-clone_or_pull_repo( 5) : pull https://github.com/ECA18B/eca18b-nmisp-30-2jaejin
 clone_or_pull_repo(14) : pull https://github.com/ECA18B/eca18b-nmisp-30-ljk941219
 clone_or_pull_repo(15) : pull https://github.com/ECA18B/eca18b-nmisp-30-Na-Young-Lee
 clone_or_pull_repo( 0) : pull https://github.com/ECA18B/eca18b-nmisp-30-suntakkweon
 clone_or_pull_repo( 1) : pull https://github.com/ECA18B/eca18b-nmisp-30-rrqweq53
+clone_or_pull_repo(12) : pull https://github.com/ECA18B/eca18b-nmisp-30-MunYoonKyung
+clone_or_pull_repo(13) : pull https://github.com/ECA18B/eca18b-nmisp-30-rkd0797
+clone_or_pull_repo( 4) : pull https://github.com/ECA18B/eca18b-nmisp-30-ohbongkwon
+clone_or_pull_repo( 5) : pull https://github.com/ECA18B/eca18b-nmisp-30-2jaejin
 clone_or_pull_repo(10) : pull https://github.com/ECA18B/eca18b-nmisp-30-ChoHyeonDeok
 clone_or_pull_repo(11) : pull https://github.com/ECA18B/eca18b-nmisp-30-qkrwhdrud
 clone_or_pull_repo(18) : pull https://github.com/ECA18B/eca18b-nmisp-30-SungYoungHoon
@@ -255,72 +279,63 @@ clone_or_pull_repo( 8) : pull https://github.com/ECA18B/eca18b-nmisp-30-WooJLee
 clone_or_pull_repo( 9) : pull https://github.com/ECA18B/eca18b-nmisp-30-JYK1446
 clone_or_pull_repo(16) : pull https://github.com/ECA18B/eca18b-nmisp-30-Bohyun-cpf18a
 clone_or_pull_repo(17) : pull https://github.com/ECA18B/eca18b-nmisp-30-seunghyeon-eca18b
-RepoEvalCountOneCommitLog.eval_repo( 2) start: name=eca18b-nmisp-30-inhovation37
-RepoEvalCountOneCommitLog.eval_repo( 2) end: name=eca18b-nmisp-30-inhovation37 (0.0834632 sec)
-RepoEvalCountOneCommitLog.eval_repo( 5) start: name=eca18b-nmisp-30-2jaejin
-RepoEvalCountOneCommitLog.eval_repo( 5) end: name=eca18b-nmisp-30-2jaejin (0.094187 sec)
-RepoEvalCountOneCommitLog.eval_repo(10) start: name=eca18b-nmisp-30-ChoHyeonDeok
-RepoEvalCountOneCommitLog.eval_repo(10) end: name=eca18b-nmisp-30-ChoHyeonDeok (0.090831 sec)
-RepoEvalCountOneCommitLog.eval_repo(14) start: name=eca18b-nmisp-30-ljk941219
-RepoEvalCountOneCommitLog.eval_repo(14) end: name=eca18b-nmisp-30-ljk941219 (0.13159 sec)
-RepoEvalCountOneCommitLog.eval_repo( 1) start: name=eca18b-nmisp-30-rrqweq53
-RepoEvalCountOneCommitLog.eval_repo( 1) end: name=eca18b-nmisp-30-rrqweq53 (0.110704 sec)
-RepoEvalCountOneCommitLog.eval_repo( 7) start: name=eca18b-nmisp-30-kingisme7
-RepoEvalCountOneCommitLog.eval_repo( 7) end: name=eca18b-nmisp-30-kingisme7 (0.0829971 sec)
-RepoEvalCountOneCommitLog.eval_repo(11) start: name=eca18b-nmisp-30-qkrwhdrud
-RepoEvalCountOneCommitLog.eval_repo(11) end: name=eca18b-nmisp-30-qkrwhdrud (0.079951 sec)
-RepoEvalCountOneCommitLog.eval_repo(15) start: name=eca18b-nmisp-30-Na-Young-Lee
-RepoEvalCountOneCommitLog.eval_repo(15) end: name=eca18b-nmisp-30-Na-Young-Lee (0.102359 sec)
-RepoEvalCountOneCommitLog.eval_repo(18) start: name=eca18b-nmisp-30-SungYoungHoon
-RepoEvalCountOneCommitLog.eval_repo(18) end: name=eca18b-nmisp-30-SungYoungHoon (0.0827873 sec)
-RepoEvalCountOneCommitLog.eval_repo( 0) start: name=eca18b-nmisp-30-suntakkweon
-RepoEvalCountOneCommitLog.eval_repo( 0) end: name=eca18b-nmisp-30-suntakkweon (0.0861938 sec)
-RepoEvalCountOneCommitLog.eval_repo( 4) start: name=eca18b-nmisp-30-ohbongkwon
-RepoEvalCountOneCommitLog.eval_repo( 4) end: name=eca18b-nmisp-30-ohbongkwon (0.0635099 sec)
-RepoEvalCountOneCommitLog.eval_repo( 8) start: name=eca18b-nmisp-30-WooJLee
-RepoEvalCountOneCommitLog.eval_repo( 8) end: name=eca18b-nmisp-30-WooJLee (0.0718474 sec)
-RepoEvalCountOneCommitLog.eval_repo(12) start: name=eca18b-nmisp-30-MunYoonKyung
-RepoEvalCountOneCommitLog.eval_repo(12) end: name=eca18b-nmisp-30-MunYoonKyung (0.0827374 sec)
-RepoEvalCountOneCommitLog.eval_repo(16) start: name=eca18b-nmisp-30-Bohyun-cpf18a
-RepoEvalCountOneCommitLog.eval_repo(16) end: name=eca18b-nmisp-30-Bohyun-cpf18a (0.105672 sec)
-RepoEvalCountOneCommitLog.eval_repo(19) start: name=eca18b-nmisp-30-HanGiNa
-RepoEvalCountOneCommitLog.eval_repo(19) end: name=eca18b-nmisp-30-HanGiNa (0.0837364 sec)
 RepoEvalCountOneCommitLog.eval_repo( 3) start: name=eca18b-nmisp-30-jeapilbyeon
-RepoEvalCountOneCommitLog.eval_repo( 3) end: name=eca18b-nmisp-30-jeapilbyeon (0.085284 sec)
+RepoEvalCountOneCommitLog.eval_repo( 3) end: name=eca18b-nmisp-30-jeapilbyeon (0.116268 sec)
+RepoEvalCountOneCommitLog.eval_repo( 8) start: name=eca18b-nmisp-30-WooJLee
+RepoEvalCountOneCommitLog.eval_repo( 8) end: name=eca18b-nmisp-30-WooJLee (0.048995 sec)
+RepoEvalCountOneCommitLog.eval_repo(10) start: name=eca18b-nmisp-30-ChoHyeonDeok
+RepoEvalCountOneCommitLog.eval_repo(10) end: name=eca18b-nmisp-30-ChoHyeonDeok (0.0818486 sec)
+RepoEvalCountOneCommitLog.eval_repo(15) start: name=eca18b-nmisp-30-Na-Young-Lee
+RepoEvalCountOneCommitLog.eval_repo(15) end: name=eca18b-nmisp-30-Na-Young-Lee (0.135258 sec)
+RepoEvalCountOneCommitLog.eval_repo(18) start: name=eca18b-nmisp-30-SungYoungHoon
+RepoEvalCountOneCommitLog.eval_repo(18) end: name=eca18b-nmisp-30-SungYoungHoon (0.0671301 sec)
+RepoEvalCountOneCommitLog.eval_repo( 2) start: name=eca18b-nmisp-30-inhovation37
+RepoEvalCountOneCommitLog.eval_repo( 2) end: name=eca18b-nmisp-30-inhovation37 (0.0429783 sec)
+RepoEvalCountOneCommitLog.eval_repo( 4) start: name=eca18b-nmisp-30-ohbongkwon
+RepoEvalCountOneCommitLog.eval_repo( 4) end: name=eca18b-nmisp-30-ohbongkwon (0.0419867 sec)
 RepoEvalCountOneCommitLog.eval_repo( 6) start: name=eca18b-nmisp-30-jerrydavidlee
-RepoEvalCountOneCommitLog.eval_repo( 6) end: name=eca18b-nmisp-30-jerrydavidlee (0.0715098 sec)
+RepoEvalCountOneCommitLog.eval_repo( 6) end: name=eca18b-nmisp-30-jerrydavidlee (0.0429986 sec)
+RepoEvalCountOneCommitLog.eval_repo( 7) start: name=eca18b-nmisp-30-kingisme7
+RepoEvalCountOneCommitLog.eval_repo( 7) end: name=eca18b-nmisp-30-kingisme7 (0.0682819 sec)
+RepoEvalCountOneCommitLog.eval_repo(11) start: name=eca18b-nmisp-30-qkrwhdrud
+RepoEvalCountOneCommitLog.eval_repo(11) end: name=eca18b-nmisp-30-qkrwhdrud (0.0427735 sec)
+RepoEvalCountOneCommitLog.eval_repo(14) start: name=eca18b-nmisp-30-ljk941219
+RepoEvalCountOneCommitLog.eval_repo(14) end: name=eca18b-nmisp-30-ljk941219 (0.224935 sec)
+RepoEvalCountOneCommitLog.eval_repo(19) start: name=eca18b-nmisp-30-HanGiNa
+RepoEvalCountOneCommitLog.eval_repo(19) end: name=eca18b-nmisp-30-HanGiNa (0.0472453 sec)
+RepoEvalCountOneCommitLog.eval_repo( 1) start: name=eca18b-nmisp-30-rrqweq53
+RepoEvalCountOneCommitLog.eval_repo( 1) end: name=eca18b-nmisp-30-rrqweq53 (0.176315 sec)
 RepoEvalCountOneCommitLog.eval_repo( 9) start: name=eca18b-nmisp-30-JYK1446
-RepoEvalCountOneCommitLog.eval_repo( 9) end: name=eca18b-nmisp-30-JYK1446 (0.0621655 sec)
-RepoEvalCountOneCommitLog.eval_repo(13) start: name=eca18b-nmisp-30-rkd0797
-RepoEvalCountOneCommitLog.eval_repo(13) end: name=eca18b-nmisp-30-rkd0797 (0.136233 sec)
+RepoEvalCountOneCommitLog.eval_repo( 9) end: name=eca18b-nmisp-30-JYK1446 (0.0470955 sec)
+RepoEvalCountOneCommitLog.eval_repo(12) start: name=eca18b-nmisp-30-MunYoonKyung
+RepoEvalCountOneCommitLog.eval_repo(12) end: name=eca18b-nmisp-30-MunYoonKyung (0.0578091 sec)
+RepoEvalCountOneCommitLog.eval_repo(16) start: name=eca18b-nmisp-30-Bohyun-cpf18a
+RepoEvalCountOneCommitLog.eval_repo(16) end: name=eca18b-nmisp-30-Bohyun-cpf18a (0.110988 sec)
 RepoEvalCountOneCommitLog.eval_repo(17) start: name=eca18b-nmisp-30-seunghyeon-eca18b
-RepoEvalCountOneCommitLog.eval_repo(17) end: name=eca18b-nmisp-30-seunghyeon-eca18b (0.10383 sec)
-clone_or_pull_repo( 6) : pull https://github.com/ECA18B/eca18b-nmisp-40-baehyeonji
-clone_or_pull_repo( 7) : pull https://github.com/ECA18B/eca18b-nmisp-40-inhovation37
+RepoEvalCountOneCommitLog.eval_repo(17) end: name=eca18b-nmisp-30-seunghyeon-eca18b (0.162065 sec)
+RepoEvalCountOneCommitLog.eval_repo( 0) start: name=eca18b-nmisp-30-suntakkweon
+RepoEvalCountOneCommitLog.eval_repo( 0) end: name=eca18b-nmisp-30-suntakkweon (0.0472834 sec)
+RepoEvalCountOneCommitLog.eval_repo( 5) start: name=eca18b-nmisp-30-2jaejin
+RepoEvalCountOneCommitLog.eval_repo( 5) end: name=eca18b-nmisp-30-2jaejin (0.186094 sec)
+RepoEvalCountOneCommitLog.eval_repo(13) start: name=eca18b-nmisp-30-rkd0797
+RepoEvalCountOneCommitLog.eval_repo(13) end: name=eca18b-nmisp-30-rkd0797 (0.400859 sec)
+clone_or_pull_repo( 0) : pull https://github.com/ECA18B/eca18b-nmisp-40-WooJLee
+clone_or_pull_repo( 1) : pull https://github.com/ECA18B/eca18b-nmisp-40-rkd0797
+C:\Users\User\Documents\reposetman_18pfd\reposetman_eca18b\repository\ch40
+fatal: Unable to create 'C:/Users/User/Documents/reposetman_18pfd/reposetman_eca18b/.git/index.lock': File exists.
+
+Another git process seems to be running in this repository, e.g.
+an editor opened by 'git commit'. Please make sure all processes
+are terminated then try again. If it still fails, a git process
+may have crashed in this repository earlier:
+remove the file manually to continue.
+
 clone_or_pull_repo( 8) : pull https://github.com/ECA18B/eca18b-nmisp-40-2jaejin
 clone_or_pull_repo( 9) : pull https://github.com/ECA18B/eca18b-nmisp-40-Na-Young-Lee
 clone_or_pull_repo( 4) : pull https://github.com/ECA18B/eca18b-nmisp-40-rrqweq53
-C:\Users\User\Documents\reposetman_18pfd\reposetman_eca18b\repository\ch40
-fatal: Unable to create 'C:/Users/User/Documents/reposetman_18pfd/reposetman_eca18b/.git/index.lock': File exists.
-
-Another git process seems to be running in this repository, e.g.
-an editor opened by 'git commit'. Please make sure all processes
-are terminated then try again. If it still fails, a git process
-may have crashed in this repository earlier:
-remove the file manually to continue.
-
 clone_or_pull_repo( 5) : pull https://github.com/ECA18B/eca18b-nmisp-40-HanGiNa
-clone_or_pull_repo(12) : pull https://github.com/ECA18B/eca18b-nmisp-40-JYK1446
-C:\Users\User\Documents\reposetman_18pfd\reposetman_eca18b\repository\ch40
-fatal: Unable to create 'C:/Users/User/Documents/reposetman_18pfd/reposetman_eca18b/.git/index.lock': File exists.
-
-Another git process seems to be running in this repository, e.g.
-an editor opened by 'git commit'. Please make sure all processes
-are terminated then try again. If it still fails, a git process
-may have crashed in this repository earlier:
-remove the file manually to continue.
-
-clone_or_pull_repo(13) : pull https://github.com/ECA18B/eca18b-nmisp-40-seunghyeon-eca18b
+clone_or_pull_repo(14) : pull https://github.com/ECA18B/eca18b-nmisp-40-kingisme7
+clone_or_pull_repo(15) : pull https://github.com/ECA18B/eca18b-nmisp-40-MunYoonKyung
 clone_or_pull_repo( 2) : pull https://github.com/ECA18B/eca18b-nmisp-40-jeapilbyeon
 C:\Users\User\Documents\reposetman_18pfd\reposetman_eca18b\repository\ch40
 fatal: Unable to create 'C:/Users/User/Documents/reposetman_18pfd/reposetman_eca18b/.git/index.lock': File exists.
@@ -332,142 +347,171 @@ may have crashed in this repository earlier:
 remove the file manually to continue.
 
 clone_or_pull_repo( 3) : pull https://github.com/ECA18B/eca18b-nmisp-40-SungYoungHoon
-clone_or_pull_repo(14) : pull https://github.com/ECA18B/eca18b-nmisp-40-kingisme7
-clone_or_pull_repo(15) : pull https://github.com/ECA18B/eca18b-nmisp-40-MunYoonKyung
-clone_or_pull_repo( 0) : pull https://github.com/ECA18B/eca18b-nmisp-40-WooJLee
-clone_or_pull_repo( 1) : pull https://github.com/ECA18B/eca18b-nmisp-40-rkd0797
+C:\Users\User\Documents\reposetman_18pfd\reposetman_eca18b\repository\ch40
+fatal: Unable to create 'C:/Users/User/Documents/reposetman_18pfd/reposetman_eca18b/.git/index.lock': File exists.
+
+Another git process seems to be running in this repository, e.g.
+an editor opened by 'git commit'. Please make sure all processes
+are terminated then try again. If it still fails, a git process
+may have crashed in this repository earlier:
+remove the file manually to continue.
+
 clone_or_pull_repo(10) : pull https://github.com/ECA18B/eca18b-nmisp-40-ljk941219
 clone_or_pull_repo(11) : pull https://github.com/ECA18B/eca18b-nmisp-40-suntakkweon
+clone_or_pull_repo(18) : clone https://github.com/ECA18B/eca18b-nmisp-40-jerrydavidlee
+Cloning into 'eca18b-nmisp-40-jerrydavidlee'...
+
+clone_or_pull_repo( 6) : pull https://github.com/ECA18B/eca18b-nmisp-40-baehyeonji
+clone_or_pull_repo( 7) : pull https://github.com/ECA18B/eca18b-nmisp-40-inhovation37
+clone_or_pull_repo(12) : pull https://github.com/ECA18B/eca18b-nmisp-40-JYK1446
+clone_or_pull_repo(13) : pull https://github.com/ECA18B/eca18b-nmisp-40-seunghyeon-eca18b
 clone_or_pull_repo(16) : pull https://github.com/ECA18B/eca18b-nmisp-40-ChoHyeonDeok
-RepoEvalCountOneCommitLog.eval_repo( 1) start: name=eca18b-nmisp-40-rkd0797
-RepoEvalCountOneCommitLog.eval_repo( 1) end: name=eca18b-nmisp-40-rkd0797 (0.103673 sec)
-RepoEvalCountOneCommitLog.eval_repo( 6) start: name=eca18b-nmisp-40-baehyeonji
-RepoEvalCountOneCommitLog.eval_repo( 6) end: name=eca18b-nmisp-40-baehyeonji (0.0961323 sec)
-RepoEvalCountOneCommitLog.eval_repo(11) start: name=eca18b-nmisp-40-suntakkweon
-RepoEvalCountOneCommitLog.eval_repo(11) end: name=eca18b-nmisp-40-suntakkweon (0.063683 sec)
-RepoEvalCountOneCommitLog.eval_repo(14) start: name=eca18b-nmisp-40-kingisme7
-RepoEvalCountOneCommitLog.eval_repo(14) end: name=eca18b-nmisp-40-kingisme7 (0.0747907 sec)
-RepoEvalCountOneCommitLog.eval_repo( 0) start: name=eca18b-nmisp-40-WooJLee
-RepoEvalCountOneCommitLog.eval_repo( 0) end: name=eca18b-nmisp-40-WooJLee (0.0767367 sec)
-RepoEvalCountOneCommitLog.eval_repo( 4) start: name=eca18b-nmisp-40-rrqweq53
-RepoEvalCountOneCommitLog.eval_repo( 4) end: name=eca18b-nmisp-40-rrqweq53 (0.0938785 sec)
-RepoEvalCountOneCommitLog.eval_repo( 8) start: name=eca18b-nmisp-40-2jaejin
-RepoEvalCountOneCommitLog.eval_repo( 8) end: name=eca18b-nmisp-40-2jaejin (0.109051 sec)
-RepoEvalCountOneCommitLog.eval_repo(13) start: name=eca18b-nmisp-40-seunghyeon-eca18b
-RepoEvalCountOneCommitLog.eval_repo(13) end: name=eca18b-nmisp-40-seunghyeon-eca18b (0.0932083 sec)
-RepoEvalCountOneCommitLog.eval_repo( 2) start: name=eca18b-nmisp-40-jeapilbyeon
-RepoEvalCountOneCommitLog.eval_repo( 2) end: name=eca18b-nmisp-40-jeapilbyeon (0.102358 sec)
-RepoEvalCountOneCommitLog.eval_repo( 7) start: name=eca18b-nmisp-40-inhovation37
-RepoEvalCountOneCommitLog.eval_repo( 7) end: name=eca18b-nmisp-40-inhovation37 (0.0773809 sec)
-RepoEvalCountOneCommitLog.eval_repo(10) start: name=eca18b-nmisp-40-ljk941219
-RepoEvalCountOneCommitLog.eval_repo(10) end: name=eca18b-nmisp-40-ljk941219 (0.0919347 sec)
-RepoEvalCountOneCommitLog.eval_repo(15) start: name=eca18b-nmisp-40-MunYoonKyung
-RepoEvalCountOneCommitLog.eval_repo(15) end: name=eca18b-nmisp-40-MunYoonKyung (0.0700579 sec)
+clone_or_pull_repo(17) : clone https://github.com/ECA18B/eca18b-nmisp-40-seonghyunJIn
+Cloning into 'eca18b-nmisp-40-seonghyunJIn'...
+
 RepoEvalCountOneCommitLog.eval_repo( 3) start: name=eca18b-nmisp-40-SungYoungHoon
-RepoEvalCountOneCommitLog.eval_repo( 3) end: name=eca18b-nmisp-40-SungYoungHoon (0.0610943 sec)
+RepoEvalCountOneCommitLog.eval_repo( 3) end: name=eca18b-nmisp-40-SungYoungHoon (0.0789528 sec)
 RepoEvalCountOneCommitLog.eval_repo( 5) start: name=eca18b-nmisp-40-HanGiNa
-RepoEvalCountOneCommitLog.eval_repo( 5) end: name=eca18b-nmisp-40-HanGiNa (0.0873489 sec)
-RepoEvalCountOneCommitLog.eval_repo( 9) start: name=eca18b-nmisp-40-Na-Young-Lee
-RepoEvalCountOneCommitLog.eval_repo( 9) end: name=eca18b-nmisp-40-Na-Young-Lee (0.0625551 sec)
-RepoEvalCountOneCommitLog.eval_repo(12) start: name=eca18b-nmisp-40-JYK1446
-RepoEvalCountOneCommitLog.eval_repo(12) end: name=eca18b-nmisp-40-JYK1446 (0.0629225 sec)
+RepoEvalCountOneCommitLog.eval_repo( 5) end: name=eca18b-nmisp-40-HanGiNa (0.140005 sec)
+RepoEvalCountOneCommitLog.eval_repo( 8) start: name=eca18b-nmisp-40-2jaejin
+RepoEvalCountOneCommitLog.eval_repo( 8) end: name=eca18b-nmisp-40-2jaejin (0.25597 sec)
 RepoEvalCountOneCommitLog.eval_repo(16) start: name=eca18b-nmisp-40-ChoHyeonDeok
-RepoEvalCountOneCommitLog.eval_repo(16) end: name=eca18b-nmisp-40-ChoHyeonDeok (0.0742185 sec)
-clone_or_pull_repo( 1) : pull https://github.com/ECA18B/eca18c-nmisp-50-ljk941219
-clone_or_pull_repo( 5) : pull https://github.com/ECA18B/eca18c-nmisp-50-kingisme7
-clone_or_pull_repo( 3) : pull https://github.com/ECA18B/eca18c-nmisp-50-JYK1446
-clone_or_pull_repo( 7) : pull https://github.com/ECA18B/eca18c-nmisp-50-2jaejin
+RepoEvalCountOneCommitLog.eval_repo(16) end: name=eca18b-nmisp-40-ChoHyeonDeok (0.0812192 sec)
+RepoEvalCountOneCommitLog.eval_repo( 2) start: name=eca18b-nmisp-40-jeapilbyeon
+RepoEvalCountOneCommitLog.eval_repo( 2) end: name=eca18b-nmisp-40-jeapilbyeon (0.251004 sec)
+RepoEvalCountOneCommitLog.eval_repo( 7) start: name=eca18b-nmisp-40-inhovation37
+RepoEvalCountOneCommitLog.eval_repo( 7) end: name=eca18b-nmisp-40-inhovation37 (0.070313 sec)
+RepoEvalCountOneCommitLog.eval_repo( 9) start: name=eca18b-nmisp-40-Na-Young-Lee
+RepoEvalCountOneCommitLog.eval_repo( 9) end: name=eca18b-nmisp-40-Na-Young-Lee (0.103621 sec)
+RepoEvalCountOneCommitLog.eval_repo(13) start: name=eca18b-nmisp-40-seunghyeon-eca18b
+RepoEvalCountOneCommitLog.eval_repo(13) end: name=eca18b-nmisp-40-seunghyeon-eca18b (0.215257 sec)
+RepoEvalCountOneCommitLog.eval_repo( 1) start: name=eca18b-nmisp-40-rkd0797
+RepoEvalCountOneCommitLog.eval_repo( 1) end: name=eca18b-nmisp-40-rkd0797 (0.267455 sec)
+RepoEvalCountOneCommitLog.eval_repo( 6) start: name=eca18b-nmisp-40-baehyeonji
+RepoEvalCountOneCommitLog.eval_repo( 6) end: name=eca18b-nmisp-40-baehyeonji (0.103659 sec)
+RepoEvalCountOneCommitLog.eval_repo(11) start: name=eca18b-nmisp-40-suntakkweon
+RepoEvalCountOneCommitLog.eval_repo(11) end: name=eca18b-nmisp-40-suntakkweon (0.0658863 sec)
+RepoEvalCountOneCommitLog.eval_repo(12) start: name=eca18b-nmisp-40-JYK1446
+RepoEvalCountOneCommitLog.eval_repo(12) end: name=eca18b-nmisp-40-JYK1446 (0.0577564 sec)
+RepoEvalCountOneCommitLog.eval_repo(14) start: name=eca18b-nmisp-40-kingisme7
+RepoEvalCountOneCommitLog.eval_repo(14) end: name=eca18b-nmisp-40-kingisme7 (0.118138 sec)
+RepoEvalCountOneCommitLog.eval_repo(17) start: name=eca18b-nmisp-40-seonghyunJIn
+RepoEvalCountOneCommitLog.eval_repo(17) end: name=eca18b-nmisp-40-seonghyunJIn (0.0652983 sec)
+RepoEvalCountOneCommitLog.eval_repo( 0) start: name=eca18b-nmisp-40-WooJLee
+RepoEvalCountOneCommitLog.eval_repo( 0) end: name=eca18b-nmisp-40-WooJLee (0.077888 sec)
+RepoEvalCountOneCommitLog.eval_repo( 4) start: name=eca18b-nmisp-40-rrqweq53
+RepoEvalCountOneCommitLog.eval_repo( 4) end: name=eca18b-nmisp-40-rrqweq53 (0.281059 sec)
+RepoEvalCountOneCommitLog.eval_repo(10) start: name=eca18b-nmisp-40-ljk941219
+RepoEvalCountOneCommitLog.eval_repo(10) end: name=eca18b-nmisp-40-ljk941219 (0.180102 sec)
+RepoEvalCountOneCommitLog.eval_repo(15) start: name=eca18b-nmisp-40-MunYoonKyung
+RepoEvalCountOneCommitLog.eval_repo(15) end: name=eca18b-nmisp-40-MunYoonKyung (0.0805206 sec)
+RepoEvalCountOneCommitLog.eval_repo(18) start: name=eca18b-nmisp-40-jerrydavidlee
+RepoEvalCountOneCommitLog.eval_repo(18) end: name=eca18b-nmisp-40-jerrydavidlee (0.0729651 sec)
 clone_or_pull_repo( 0) : pull https://github.com/ECA18B/eca18c-nmisp-50-rkd0797
+clone_or_pull_repo( 7) : pull https://github.com/ECA18B/eca18c-nmisp-50-2jaejin
+clone_or_pull_repo( 9) : pull https://github.com/ECA18B/eca18c-nmisp-50-seonghyunJIn
+clone_or_pull_repo( 1) : pull https://github.com/ECA18B/eca18c-nmisp-50-ljk941219
 clone_or_pull_repo( 4) : pull https://github.com/ECA18B/eca18c-nmisp-50-ChoHyeonDeok
 clone_or_pull_repo( 8) : pull https://github.com/ECA18B/eca18c-nmisp-50-seunghyeon-eca18b
 clone_or_pull_repo( 2) : pull https://github.com/ECA18B/eca18c-nmisp-50-Na-Young-Lee
+clone_or_pull_repo( 5) : pull https://github.com/ECA18B/eca18c-nmisp-50-kingisme7
+clone_or_pull_repo(10) : clone https://github.com/ECA18B/eca18b-nmisp-50-Bohyun-cpf18a
+Cloning into 'eca18b-nmisp-50-Bohyun-cpf18a'...
+
+clone_or_pull_repo( 3) : pull https://github.com/ECA18B/eca18c-nmisp-50-JYK1446
 clone_or_pull_repo( 6) : pull https://github.com/ECA18B/eca18c-nmisp-50-jeapilbyeon
-clone_or_pull_repo( 9) : pull https://github.com/ECA18B/eca18c-nmisp-50-seonghyunJIn
-RepoEvalCountOneCommitLog.eval_repo( 1) start: name=eca18c-nmisp-50-ljk941219
-RepoEvalCountOneCommitLog.eval_repo( 1) end: name=eca18c-nmisp-50-ljk941219 (0.0767586 sec)
-RepoEvalCountOneCommitLog.eval_repo( 4) start: name=eca18c-nmisp-50-ChoHyeonDeok
-RepoEvalCountOneCommitLog.eval_repo( 4) end: name=eca18c-nmisp-50-ChoHyeonDeok (0.0881214 sec)
-RepoEvalCountOneCommitLog.eval_repo( 3) start: name=eca18c-nmisp-50-JYK1446
-RepoEvalCountOneCommitLog.eval_repo( 3) end: name=eca18c-nmisp-50-JYK1446 (0.0771861 sec)
-RepoEvalCountOneCommitLog.eval_repo( 7) start: name=eca18c-nmisp-50-2jaejin
-RepoEvalCountOneCommitLog.eval_repo( 7) end: name=eca18c-nmisp-50-2jaejin (0.0832553 sec)
-RepoEvalCountOneCommitLog.eval_repo( 2) start: name=eca18c-nmisp-50-Na-Young-Lee
-RepoEvalCountOneCommitLog.eval_repo( 2) end: name=eca18c-nmisp-50-Na-Young-Lee (0.0806398 sec)
-RepoEvalCountOneCommitLog.eval_repo( 6) start: name=eca18c-nmisp-50-jeapilbyeon
-RepoEvalCountOneCommitLog.eval_repo( 6) end: name=eca18c-nmisp-50-jeapilbyeon (0.071465 sec)
-RepoEvalCountOneCommitLog.eval_repo( 8) start: name=eca18c-nmisp-50-seunghyeon-eca18b
-RepoEvalCountOneCommitLog.eval_repo( 8) end: name=eca18c-nmisp-50-seunghyeon-eca18b (0.0590017 sec)
+clone_or_pull_repo(11) : clone https://github.com/ECA18B/eca18b-nmisp-50-rrqweq53
+Cloning into 'eca18b-nmisp-50-rrqweq53'...
+
 RepoEvalCountOneCommitLog.eval_repo( 0) start: name=eca18c-nmisp-50-rkd0797
-RepoEvalCountOneCommitLog.eval_repo( 0) end: name=eca18c-nmisp-50-rkd0797 (0.0839469 sec)
+RepoEvalCountOneCommitLog.eval_repo( 0) end: name=eca18c-nmisp-50-rkd0797 (0.0419779 sec)
+RepoEvalCountOneCommitLog.eval_repo( 4) start: name=eca18c-nmisp-50-ChoHyeonDeok
+RepoEvalCountOneCommitLog.eval_repo( 4) end: name=eca18c-nmisp-50-ChoHyeonDeok (0.0430803 sec)
+RepoEvalCountOneCommitLog.eval_repo( 8) start: name=eca18c-nmisp-50-seunghyeon-eca18b
+RepoEvalCountOneCommitLog.eval_repo( 8) end: name=eca18c-nmisp-50-seunghyeon-eca18b (0.0419042 sec)
+RepoEvalCountOneCommitLog.eval_repo( 1) start: name=eca18c-nmisp-50-ljk941219
+RepoEvalCountOneCommitLog.eval_repo( 1) end: name=eca18c-nmisp-50-ljk941219 (0.0450032 sec)
 RepoEvalCountOneCommitLog.eval_repo( 5) start: name=eca18c-nmisp-50-kingisme7
-RepoEvalCountOneCommitLog.eval_repo( 5) end: name=eca18c-nmisp-50-kingisme7 (0.0770841 sec)
+RepoEvalCountOneCommitLog.eval_repo( 5) end: name=eca18c-nmisp-50-kingisme7 (0.0417104 sec)
 RepoEvalCountOneCommitLog.eval_repo( 9) start: name=eca18c-nmisp-50-seonghyunJIn
-RepoEvalCountOneCommitLog.eval_repo( 9) end: name=eca18c-nmisp-50-seonghyunJIn (0.0610068 sec)
+RepoEvalCountOneCommitLog.eval_repo( 9) end: name=eca18c-nmisp-50-seonghyunJIn (0.0412691 sec)
+RepoEvalCountOneCommitLog.eval_repo( 2) start: name=eca18c-nmisp-50-Na-Young-Lee
+RepoEvalCountOneCommitLog.eval_repo( 2) end: name=eca18c-nmisp-50-Na-Young-Lee (0.0438602 sec)
+RepoEvalCountOneCommitLog.eval_repo( 6) start: name=eca18c-nmisp-50-jeapilbyeon
+RepoEvalCountOneCommitLog.eval_repo( 6) end: name=eca18c-nmisp-50-jeapilbyeon (0.0468602 sec)
+RepoEvalCountOneCommitLog.eval_repo(10) start: name=eca18b-nmisp-50-Bohyun-cpf18a
+RepoEvalCountOneCommitLog.eval_repo(10) end: name=eca18b-nmisp-50-Bohyun-cpf18a (0.0437179 sec)
+RepoEvalCountOneCommitLog.eval_repo( 3) start: name=eca18c-nmisp-50-JYK1446
+RepoEvalCountOneCommitLog.eval_repo( 3) end: name=eca18c-nmisp-50-JYK1446 (0.0529943 sec)
+RepoEvalCountOneCommitLog.eval_repo( 7) start: name=eca18c-nmisp-50-2jaejin
+RepoEvalCountOneCommitLog.eval_repo( 7) end: name=eca18c-nmisp-50-2jaejin (0.0508325 sec)
+RepoEvalCountOneCommitLog.eval_repo(11) start: name=eca18b-nmisp-50-rrqweq53
+RepoEvalCountOneCommitLog.eval_repo(11) end: name=eca18b-nmisp-50-rrqweq53 (0.0400064 sec)
 @timeit : starting 'main' 
 @timeit : starting 'process_section' 
 @timeit : starting 'get_github_url_list' 
-'get_github_url_list' 0.00991488 (sec)
+'get_github_url_list' 0.00142169 (sec)
 process_section() : # repositories = 25
 @timeit : starting 'clone_or_pull_repo_list' 
-'clone_or_pull_repo_list' 27.871 (sec)
+'clone_or_pull_repo_list' 23.2589 (sec)
 @timeit : starting 'count_commits' 
 @timeit : starting 'write_tables' 
-'write_tables' 0.0249407 (sec)
-'count_commits' 2.89847 (sec)
-'process_section' 30.7794 (sec)
+'write_tables' 0.0260959 (sec)
+'count_commits' 3.06309 (sec)
+'process_section' 26.3235 (sec)
 @timeit : starting 'process_section' 
 @timeit : starting 'get_github_url_list' 
-'get_github_url_list' 0.0067749 (sec)
+'get_github_url_list' 0.0028348 (sec)
 process_section() : # repositories = 25
 @timeit : starting 'clone_or_pull_repo_list' 
-'clone_or_pull_repo_list' 28.4189 (sec)
+'clone_or_pull_repo_list' 19.096 (sec)
 @timeit : starting 'count_commits' 
 @timeit : starting 'write_tables' 
-'write_tables' 0.0239267 (sec)
-'count_commits' 2.19302 (sec)
-'process_section' 30.6187 (sec)
+'write_tables' 0.0259168 (sec)
+'count_commits' 1.62584 (sec)
+'process_section' 20.7247 (sec)
 @timeit : starting 'process_section' 
 @timeit : starting 'get_github_url_list' 
-'get_github_url_list' 0.0015316 (sec)
+'get_github_url_list' 0.00797534 (sec)
 process_section() : # repositories = 19
 @timeit : starting 'clone_or_pull_repo_list' 
-'clone_or_pull_repo_list' 22.0392 (sec)
+'clone_or_pull_repo_list' 15.3619 (sec)
 @timeit : starting 'count_commits' 
 @timeit : starting 'write_tables' 
-'write_tables' 0.0414498 (sec)
-'count_commits' 1.45239 (sec)
-'process_section' 23.4932 (sec)
+'write_tables' 0.0202796 (sec)
+'count_commits' 0.998149 (sec)
+'process_section' 16.368 (sec)
 @timeit : starting 'process_section' 
 @timeit : starting 'get_github_url_list' 
-'get_github_url_list' 0 (sec)
+'get_github_url_list' 0.00597763 (sec)
 process_section() : # repositories = 20
 @timeit : starting 'clone_or_pull_repo_list' 
-'clone_or_pull_repo_list' 27.3299 (sec)
+'clone_or_pull_repo_list' 16.3036 (sec)
 @timeit : starting 'count_commits' 
 @timeit : starting 'write_tables' 
-'write_tables' 0.0515788 (sec)
-'count_commits' 1.19232 (sec)
-'process_section' 28.5234 (sec)
+'write_tables' 0.0201621 (sec)
+'count_commits' 1.00015 (sec)
+'process_section' 17.3098 (sec)
 @timeit : starting 'process_section' 
 @timeit : starting 'get_github_url_list' 
-'get_github_url_list' 0.000993729 (sec)
-process_section() : # repositories = 17
+'get_github_url_list' 0.00175595 (sec)
+process_section() : # repositories = 19
 @timeit : starting 'clone_or_pull_repo_list' 
-'clone_or_pull_repo_list' 24.6699 (sec)
+'clone_or_pull_repo_list' 20.7645 (sec)
 @timeit : starting 'count_commits' 
 @timeit : starting 'write_tables' 
-'write_tables' 0.0402775 (sec)
-'count_commits' 0.942286 (sec)
-'process_section' 25.6143 (sec)
+'write_tables' 0.0320227 (sec)
+'count_commits' 1.21104 (sec)
+'process_section' 21.9773 (sec)
 @timeit : starting 'process_section' 
 @timeit : starting 'get_github_url_list' 
-'get_github_url_list' 0.000990629 (sec)
-process_section() : # repositories = 10
+'get_github_url_list' 0.0141001 (sec)
+process_section() : # repositories = 12
 @timeit : starting 'clone_or_pull_repo_list' 
-'clone_or_pull_repo_list' 12.2687 (sec)
+'clone_or_pull_repo_list' 10.8827 (sec)
 @timeit : starting 'count_commits' 
 @timeit : starting 'write_tables' 
-'write_tables' 0.0419836 (sec)
-'count_commits' 0.779816 (sec)
-'process_section' 13.0495 (sec)
-'main' 152.082 (sec)
+'write_tables' 0.0232973 (sec)
+'count_commits' 0.488315 (sec)
+'process_section' 11.3851 (sec)
+'main' 114.089 (sec)

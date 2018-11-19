@@ -1,5 +1,7 @@
 |    |   total  |
 |:--:|:----:|
+| eca18b-nmisp-50-Bohyun-cpf18a | 0  |
+| eca18b-nmisp-50-rrqweq53 | 0  |
 | eca18c-nmisp-50-2jaejin | 0  |
 | eca18c-nmisp-50-ChoHyeonDeok | 0  |
 | eca18c-nmisp-50-JYK1446 | 0  |
