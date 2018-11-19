@@ -753,7 +753,7 @@ class RepoEvalCountOneCommitLog(RepoEval):
             'log', # must be the first
             '--encoding=utf-8',
             '--numstat',
-            '--pretty=format:' """\"\"\"{'sha':'%H', 'author':u'''%an''', 'email':u'%ae', 'date':'%ad', 'subject': u'''%s'''}\"\"\"""",
+            '--pretty=format:' """\"\"\"{'sha':'%H', 'author':u'''%an''', 'email':u'%ae', 'date':'%ad', 'subject': u'''  %s  '''}\"\"\"""",
         ]
 
         if after:
