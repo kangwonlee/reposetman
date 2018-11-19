@@ -39,21 +39,17 @@ class TestGit(unittest.TestCase):
     def test_git_log_oneline(self):
         """
         test git log command
-        >>> git log --follow --oneline git.py
+        >>> git log --oneline git.py
         check first two commits included in the message
         """
-        msg = git.git(("log", "--follow", "--oneline", "git.py"), bVerbose=False)
+        msg = git.git(("log", "--oneline", __file__), bVerbose=False)
 
-        expected0_str = '7dbdb92 Initial commit'
-        # print "\ntest_git_log_oneline() msg ="
-        # print msg
-
-        print(f'test_git_log_oneline() : msg={msg}')
+        assert_message = f"git message = {msg}"
 
         try:
-            self.assertIn(expected0_str, msg)
+            self.assertTrue(msg, msg=assert_message)
         except UnicodeDecodeError:
-            self.assertIn(expected0_str, msg)
+            self.assertTrue(msg, msg=assert_message)
 
     def test_get_last_sha(self):
 
