@@ -282,7 +282,7 @@ class TestRepoEvalRunEach(TestRepoEvalRunEachBase):
 
     def test_run_script_input(self):
         # function under test
-        msgo, msge = self.e.run_script_input([self.config['operation']['python_path'], 'input_example.py'])
+        msgo, msge = self.e.run_script_input([self.config['operation']['python_path'], os.path.join(os.path.split(__file__)[0], 'input_example.py')])
         self.assertFalse(msge, msg='\nstderr : %s' % msge)
         self.assertTrue(msgo, msg='\nstderr : %s' % msge)
 
