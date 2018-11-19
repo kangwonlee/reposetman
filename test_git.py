@@ -25,16 +25,13 @@ class TestGit(unittest.TestCase):
         check "Author:", "Date:", "commit" strings are all included in the message
         """
         msg = git.git(("log", __file__), bVerbose=False)
-        # print "\ntest_git_log() msg ="
-        # print msg
+
         try:
-            self.assertIn("Author:", msg, msg='"%s" not in "%s"' % ("Author:", msg))
-            self.assertIn("Date:", msg, msg='"%s" not in "%s"' % ("Date:", msg))
-            self.assertIn("commit", msg, msg='"%s" not in "%s"' % ("commit", msg))
+            for token in ("Author:", "Date:", "commit"):
+                self.assertIn(token, msg, msg=f'"{token}" not in "{msg}"')
         except UnicodeDecodeError:
-            self.assertIn("Author:", msg, msg='"%s" not in "%s"' % ("Author:", msg))
-            self.assertIn("Date:", msg, msg='"%s" not in "%s"' % ("Date:", msg))
-            self.assertIn("commit", msg, msg='"%s" not in "%s"' % ("commit", msg))
+            for token in ("Author:", "Date:", "commit"):
+                self.assertIn(token, msg, msg=f'"{token}" not in "{msg}"')
 
     def test_git_log_oneline(self):
         """
