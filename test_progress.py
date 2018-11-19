@@ -574,7 +574,7 @@ class TestSysArgv(unittest.TestCase):
 
     def test_get_argn(self):
         
-        result = progress.get_argn('sys_argv_example_00.py')
+        result = progress.get_argn(os.path.join(os.path.split(__file__)[0], 'sys_argv_example_00.py'))
 
         expected = 3
 
