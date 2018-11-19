@@ -9,6 +9,7 @@ class TestGit(unittest.TestCase):
     def test_git(self):
         msg = git.git("", bVerbose=False)
         expected = "git help"
+
         # https://stackoverflow.com/questions/606191/convert-bytes-to-a-string
         self.assertIn(expected, msg, msg='"%s" not in "%s"' % (expected, msg))
 
@@ -20,10 +21,10 @@ class TestGit(unittest.TestCase):
     def test_git_log(self):
         """
         test git log command
-        >>> git log --follow git.py
+        >>> git log test_git.py
         check "Author:", "Date:", "commit" strings are all included in the message
         """
-        msg = git.git(("log", "--follow", "git.py"), bVerbose=False)
+        msg = git.git(("log", __file__), bVerbose=False)
         # print "\ntest_git_log() msg ="
         # print msg
         try:
