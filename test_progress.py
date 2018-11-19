@@ -501,6 +501,22 @@ class TestRepoEvalCountOneCommitLog(unittest.TestCase):
         self.assertEqual(expected['date'], result['date'])
         self.assertEqual(expected['subject'], result['subject'])
 
+    def test_get_commit_dict_02(self):
+        """
+        This test tries to figure out if git log with formatting is suitable to extract information
+        """
+        txt = '"""{\'sha\':\'shashashashasha\', \'author\':u\'\'\'authorauthorauthorauthor\'\'\', \'email\':u\'emailemailemail\', \'date\':\'datedatedate\', \'subject\': u\'\'\'Merge branch \'hotfix/branch_figure\'\'\'\'}"""'
+
+        result = self.e.get_commit_dict(txt)
+        expected = {'sha': 'shashashashasha', 
+                    'author': 'authorauthorauthorauthor', 
+                    'email': 'emailemailemail', 
+                    'date': 'datedatedate', 
+                    'subject': 'Merge branch \'hotfix/branch_figure\''}
+        self.assertEqual(expected['sha'], result['sha'])
+        self.assertEqual(expected['date'], result['date'])
+        self.assertEqual(expected['subject'], result['subject'])
+
     def get_input_string(self, filename, sha):
         # obtain input string
 
