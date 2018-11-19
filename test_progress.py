@@ -463,8 +463,11 @@ class TestRepoEvalCountOneCommitLog(unittest.TestCase):
             self.assertAlmostEqual(expected_eval_dict[filename], expected_eval_dict[filename])
 
     def test_get_commit_dict_00(self):
-        txt = '{\'sha\':\'2e8a2aa412433fe9e5982fb63e6228cbcc833991\', \'author\':u\'User-PC\\User\', \'email\':u\'email@domain.name\', \'date\':\'Fri Mar 16 15:21:00 2018 +0900\', \'subject\': u"""print world"""}'
-
+        txt = '"""{\'sha\':\'2e8a2aa412433fe9e5982fb63e6228cbcc833991\', '\
+            '\'author\':u\'User-PC\\User\', '\
+            '\'email\':u\'email@domain.name\', '\
+            '\'date\':\'Fri Mar 16 15:21:00 2018 +0900\', '\
+            '\'subject\': u\'\'\'  print world  \'\'\'}"""'
         result = self.e.get_commit_dict(txt)
 
         expected = {
@@ -472,10 +475,10 @@ class TestRepoEvalCountOneCommitLog(unittest.TestCase):
             'author': u'User-PC\\User',
             'email':u'email@domain.name',
             'date':'Fri Mar 16 15:21:00 2018 +0900',
-            'subject': u'print world',
+            'subject': u'  print world  ',
         }
 
-        self.assertDictEqual(expected, result)
+        self.assertDictEqual(expected, result, msg=f"type(result) = {type(result)}")
 
     def test_get_commit_dict_01(self):
         """
