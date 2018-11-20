@@ -315,8 +315,13 @@ def read_txt(fname, encoding='utf-8'):
     """
     Read a file with encoding
     """
-    with open(fname, 'r', encoding='utf-8') as f:
-        txt = f.read()
+    try:
+        with open(fname, 'r', encoding='utf-8') as f:
+            txt = f.read()
+    except UnicodeDecodeError:
+        print(f'{__file__}.read_txt({fname}) : retrying to read in cp949')
+        with open(fname, 'r', encoding='cp949') as f:
+            txt = f.read()
 
     return txt
 
