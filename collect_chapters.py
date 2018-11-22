@@ -104,10 +104,7 @@ def init_or_update_umbrella_repos(users_dict, umbrella_folder):
 
         # section loop
         for section in users_dict[user]:
-            # get remote list
-            remote_list = [remote_line.strip() for remote_line in git.git(('remote',), bVerbose=False).splitlines()]
-
-            if section not in remote_list:
+            if section not in get_remote_list():
                 print(f'remote add {section}')
                 git.git(('remote', 'add', section, users_dict[user][section]))
                 print('git remote -v')
@@ -124,6 +121,11 @@ def init_or_update_umbrella_repos(users_dict, umbrella_folder):
         os.chdir(start_folder)
 
     os.chdir(start_folder)
+
+
+def get_remote_list():
+    return [remote_line.strip() for remote_line in git.git(('remote',), bVerbose=False).splitlines()]
+
 
 def init_user_umbrella_repo(user_dict):
     # initialize user umbrella repo
