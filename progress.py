@@ -878,6 +878,8 @@ class RepoEvalCountOneCommitLog(RepoEval):
                         print('line = %r' % line)
                         print('last_commit_dict = %r' % last_commit_dict)
 
+        self.filter_commit_list(commits_list)
+
         # total number of commits
         # to make it the first element
         # Sorting feature may use this feature
@@ -886,6 +888,13 @@ class RepoEvalCountOneCommitLog(RepoEval):
         eval_dict[column_key] = len(commits_list)
 
         return column_set, eval_dict
+
+    def filter_commit_list(self, commits_list):
+        # remove if email is in exclude list
+        for k in range((len(commits_list) - 1), -1, -1):
+            if commits_list[k]['email'] in self.exclude_email_tuple:
+                del commits_list[k]
+
 
     def get_commit_dict(self, line):
         # to use git log output as input to python
