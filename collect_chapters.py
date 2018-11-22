@@ -41,12 +41,17 @@ def main(argv):
                 )
 
     else:
+        print('updating subtrees')
         participant_folder_list = init_or_update_umbrella_repos(
             transpose_dict(
                 get_sections_dict(config)
                 ), 
             umbrella_folder
         )
+
+        with open('participant_folder_list.txt', 'w') as folder_list_file:
+            for folder_info in participant_folder_list:
+                folder_list_file.write(folder_info['path']+'\n')
 
     generate_reports(participant_folder_list, config)
 
