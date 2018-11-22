@@ -289,8 +289,9 @@ def count_commits(config, section, repo_list):
     # git log interval settings
     after = config[section].get('after', None)
     before = config[section].get('before', None)
+    exclude_email_tuple = tuple(ast.literal_eval(config['operation']['initial_email_addresses']))
 
-    commit_counter = RepoEvalCountOneCommitLog(after, before)
+    commit_counter = RepoEvalCountOneCommitLog(after, before, exclude_email_tuple)
     commit_count = commit_counter.eval_repo_list(repo_list)
 
     # if the header row seems to include '\' character in the header row
