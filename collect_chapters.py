@@ -26,7 +26,7 @@ def main(argv):
     # make the umbrella_folder if missing
     if not os.path.exists(umbrella_folder):
         os.makedirs(umbrella_folder)
-        config['operation']['update_repo'] = False
+        config['operation']['update_repo'] = 'False'
 
     if (os.path.exists('participant_folder_list.txt') and ('True' != config['operation']['update_repo'])):
         print('reading list file')
