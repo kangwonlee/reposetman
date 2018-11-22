@@ -113,15 +113,7 @@ class ProgressReportBuilder(object):
 
         # evaluate repositories within the section
         if 'True' == self.config[section]['count_commits']:
-            commit_count_txt, commit_count_md, commit_count_html = count_commits(self.config, section, repo_list) 
-            results.update({
-                'count_commits':
-                    {
-                    'txt': commit_count_txt, 
-                    'md': commit_count_md, 
-                    'html': commit_count_html
-                    }
-            }) 
+            call_commit_count(self.config, section, repo_list, results) 
         if 'True' == self.config[section]['pound_count']:
             pound_reports = pound_count(self.config, section, repo_list)
             results.update({
@@ -253,15 +245,7 @@ def process_section(config, re_git_log, section):
 
     # evaluate repositories within the section
     if 'True' == config[section]['count_commits']:
-        commit_count_txt, commit_count_md, commit_count_html = count_commits(config, section, repo_list) 
-        results.update({
-            'count_commits':
-                {
-                'txt': commit_count_txt, 
-                'md': commit_count_md, 
-                'html': commit_count_html
-                }
-        }) 
+        call_commit_count(config, section, repo_list, results) 
     if 'True' == config[section]['pound_count']:
         pound_reports = pound_count(config, section, repo_list)
         results.update({
@@ -284,6 +268,17 @@ def process_section(config, re_git_log, section):
         }) 
 
     return results
+
+def call_commit_count(config, section, repo_list, results):
+    commit_count_txt, commit_count_md, commit_count_html = count_commits(config, section, repo_list) 
+    results.update({
+        'count_commits':
+            {
+            'txt': commit_count_txt, 
+            'md': commit_count_md, 
+            'html': commit_count_html
+            }
+    }) 
 
 
 @timeit.timeit
