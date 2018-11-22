@@ -21,7 +21,8 @@ def main(argv):
     if not os.path.exists(umbrella_folder):
         os.makedirs(umbrella_folder)
 
-    init_or_update_umbrella_repos(transpose_dict(get_sections_dict(config)), umbrella_folder)
+    repo_list = init_or_update_umbrella_repos(transpose_dict(get_sections_dict(config)), umbrella_folder)
+    pprint.pprint(repo_list)
 
 
 def get_sections_dict(config):
@@ -92,6 +93,8 @@ def init_or_update_umbrella_repos(users_dict, umbrella_folder):
 
     repo_list = []
 
+    # because it seems not desirable to update multiple subtrees at once
+    # if parallelize, in the user == participant level
     for user in users_dict:
         user_folder = os.path.abspath(os.path.join(umbrella_folder, user))
         if not os.path.exists(user_folder):
