@@ -113,15 +113,7 @@ class ProgressReportBuilder(object):
 
         # evaluate repositories within the section
         if 'True' == self.config[section]['count_commits']:
-            commit_count_txt, commit_count_md, commit_count_html = count_commits(self.config, section, repo_list) 
-            results.update({
-                'count_commits':
-                    {
-                    'txt': commit_count_txt, 
-                    'md': commit_count_md, 
-                    'html': commit_count_html
-                    }
-            }) 
+            call_commit_count(self.config, section, repo_list, results) 
         if 'True' == self.config[section]['pound_count']:
             pound_reports = pound_count(self.config, section, repo_list)
             results.update({
@@ -253,15 +245,7 @@ def process_section(config, re_git_log, section):
 
     # evaluate repositories within the section
     if 'True' == config[section]['count_commits']:
-        commit_count_txt, commit_count_md, commit_count_html = count_commits(config, section, repo_list) 
-        results.update({
-            'count_commits':
-                {
-                'txt': commit_count_txt, 
-                'md': commit_count_md, 
-                'html': commit_count_html
-                }
-        }) 
+        call_commit_count(config, section, repo_list, results) 
     if 'True' == config[section]['pound_count']:
         pound_reports = pound_count(config, section, repo_list)
         results.update({
@@ -285,6 +269,17 @@ def process_section(config, re_git_log, section):
 
     return results
 
+def call_commit_count(config, section, repo_list, results):
+    commit_count_txt, commit_count_md, commit_count_html = count_commits(config, section, repo_list) 
+    results.update({
+        'count_commits':
+            {
+            'txt': commit_count_txt, 
+            'md': commit_count_md, 
+            'html': commit_count_html
+            }
+    }) 
+
 
 @timeit.timeit
 def count_commits(config, section, repo_list):
@@ -294,8 +289,9 @@ def count_commits(config, section, repo_list):
     # git log interval settings
     after = config[section].get('after', None)
     before = config[section].get('before', None)
+    exclude_email_tuple = tuple(ast.literal_eval(config['operation']['initial_email_addresses']))
 
-    commit_counter = RepoEvalCountOneCommitLog(after, before)
+    commit_counter = RepoEvalCountOneCommitLog(after, before, exclude_email_tuple)
     commit_count = commit_counter.eval_repo_list(repo_list)
 
     # if the header row seems to include '\' character in the header row
@@ -615,7 +611,8 @@ class RepoEval(object):
         is_pycharm_path = '.idea' in path
         is_vscode_path = '.vscode' in path
         is_pycache_path = '__pycache__' in path
-        b_ignore = any((is_dot_git_path, is_xcode_path, is_pycharm_path, is_vscode_path, is_pycache_path))
+        is_ipynb_checkpoints_path = '.ipynb_checkpoints' in path
+        b_ignore = any((is_dot_git_path, is_xcode_path, is_pycharm_path, is_vscode_path, is_pycache_path, is_ipynb_checkpoints_path))
         return b_ignore
 
     def is_ignore_filename(self, filename):
@@ -736,10 +733,11 @@ class RepoEvalCountOneCommitLog(RepoEval):
     """
     Obtain information on all files from one git log
     """
-    def __init__(self, after=None, before=None):    
+    def __init__(self, after=None, before=None, exclude_email_tuple=[]):    
         super(RepoEvalCountOneCommitLog, self).__init__()
         self.after = after
         self.before = before
+        self.exclude_email_tuple = exclude_email_tuple
 
     def get_git_cmd(self, after=None, before=None):
         # To let git generate string compatible with python ast as much as possible
@@ -752,7 +750,8 @@ class RepoEvalCountOneCommitLog(RepoEval):
             'log', # must be the first
             '--encoding=utf-8',
             '--numstat',
-            """--pretty=format:"{'sha':'%H', 'author':u'''%an''', 'email':u'%ae', 'date':'%ad', 'subject': u'''%s'''}\"""",
+            '--all',
+            """--pretty=format:"{'sha':'%H', 'author':u'''%an''', 'email':u'%ae', 'date':'%ad', 'subject': u'''%f'''}\"""",
         ]
 
         if after:
@@ -864,6 +863,13 @@ class RepoEvalCountOneCommitLog(RepoEval):
                         for files_in_commit in temporary_file_list:
                             eval_dict[files_in_commit] = eval_dict.get(files_in_commit, 0) + point
 
+                        # if it is still not a dict
+                        if isinstance(last_commit_dict, str):
+                            # try to convert it again
+                            print(f'last_commit_dict = {repr(last_commit_dict)}')
+                            last_commit_dict = ast.literal_eval(last_commit_dict)
+                            if not isinstance(last_commit_dict, dict):
+                                raise ValueError(f'last_commit_dict = {repr(last_commit_dict)}')
                         last_commit_dict['files'] = temporary_file_list
                     else:
                         print('\n{class_name}.convert_git_log_to_table() : end of file list but temporary_file_list empty'.format(
@@ -871,6 +877,8 @@ class RepoEvalCountOneCommitLog(RepoEval):
                         ))
                         print('line = %r' % line)
                         print('last_commit_dict = %r' % last_commit_dict)
+
+        self.filter_commit_list(commits_list)
 
         # total number of commits
         # to make it the first element
@@ -880,6 +888,13 @@ class RepoEvalCountOneCommitLog(RepoEval):
         eval_dict[column_key] = len(commits_list)
 
         return column_set, eval_dict
+
+    def filter_commit_list(self, commits_list):
+        # remove if email is in exclude list
+        for k in range((len(commits_list) - 1), -1, -1):
+            if commits_list[k]['email'] in self.exclude_email_tuple:
+                del commits_list[k]
+
 
     def get_commit_dict(self, line):
         # to use git log output as input to python
@@ -891,6 +906,7 @@ class RepoEvalCountOneCommitLog(RepoEval):
         except SyntaxError:
             # https://stackoverflow.com/questions/1347791/unicode-error-unicodeescape-codec-cant-decode-bytes-cannot-open-text-file
             # if `line` includes a string such as '\uabc' or '\Uabc', `ast.literal_eval()` assumes it is a escape sequence for the unicode
+            line = line.replace(r'\USER', r'_USER')
             line = line.replace(r'\U', r'\\U')
             line = line.replace(r'\u', r'\\u')
             try:
@@ -1013,13 +1029,14 @@ class RepoEvalPoundByteCounter(RepoEvalPoundLineCounter):
 
 
 class RepoEvalPoundByteCounterExcludingRef(RepoEvalPoundByteCounter):
+    reference_cfg_filename = 'reference.cfg'
     def __init__(self):
         super(RepoEvalPoundByteCounterExcludingRef, self).__init__()
 
-        if os.path.exists('reference.cfg'):
+        if os.path.exists(self.reference_cfg_filename):
             self.comments_ref = unique_list.unique_list()
             self.config_ref = configparser.ConfigParser()
-            self.config_ref.read('reference.cfg')
+            self.config_ref.read(self.reference_cfg_filename)
 
             reference_comment_filename = self.config_ref['operation']['comment_output_file']
 
@@ -1028,7 +1045,50 @@ class RepoEvalPoundByteCounterExcludingRef(RepoEvalPoundByteCounter):
                     self.comments_ref.add(line.strip())
 
         else:
-            raise IOError("'Can't find reference.cfg file")
+            self.init_reference_cfg_file()
+
+    def init_reference_cfg_file(self):
+        """
+        Initialize reference config file and raise error
+        """
+        config_ref = configparser.ConfigParser()
+        #sample cfg file
+        r'''
+        [operation]
+        folder=data\ref
+        comment_output_file=reference_comment.txt
+        [urls]
+        a=https://github.com/<github id>/<repository a name>
+        b=https://github.com/<github id>/<repository b name>
+        c=https://github.com/<github id>/<repository c name>
+        [commits]
+        a=<hash value of reference commit in repo a>
+        b=<hash value of reference commit in repo b>
+        c=<hash value of reference commit in repo c>
+        '''
+        config_ref['operation'] = {
+            # will clone reference repositories to this folder
+            'folder': os.path.join('data', 'ref'),
+            # will write sample comment set to this file
+            'comment_output_file' : 'reference_comment.txt',
+        }
+        config_ref['urls'] = {
+            # urls of the reference repositories
+            'a':'reference repository a url here',
+            'b':'reference repository b url here',
+            'c':'reference repository c url here',
+        }
+        config_ref['commits'] = {
+            # hashes of reference commits here
+            'a':'reference repository a base hash here',
+            'b':'reference repository b base hash here',
+            'c':'reference repository c base hash here',
+        }
+
+        with open(self.reference_cfg_filename, 'w') as ref_cfg_file:
+            config_ref.write(ref_cfg_file)
+
+        raise FileNotFoundError(f'please configure {self.reference_cfg_filename}, run reference.py, and restart')
 
     def get_line_point(self, comment, b_verbose=False):
         if comment.strip() not in self.comments_ref:

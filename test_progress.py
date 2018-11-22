@@ -3,6 +3,7 @@ import configparser
 import datetime
 import glob
 import os
+import shutil
 import subprocess
 import tempfile
 import time
@@ -245,17 +246,39 @@ class TestRepoEvalPoundCounter(unittest.TestCase):
 folder = os.getcwd()
 
 
-class TestRepoEvalRunEach(unittest.TestCase):
+class TestRepoEvalRunEachBase(unittest.TestCase):
+    config_filename = 'test_run_each.cfg'
+    def init_test_run_each(self):
+        if not os.path.exists(self.config_filename):
+            config = configparser.ConfigParser()
+
+            config['operation'] = {
+                'python_path': shutil.which('python')
+            }
+
+            config['tests'] = {
+                'count_commits': True,
+                'run_all': True,
+                'pound_count': True,
+            }
+
+            with open(self.config_filename, 'w') as cfg_file:
+                config.write(cfg_file)
+
     def setUp(self):
-        os.chdir(folder)
         self.config = configparser.ConfigParser()
-        assert os.path.exists('test_run_each.cfg'), f'cwd = {os.getcwd()}'
-        self.config.read('test_run_each.cfg')
-        self.e = progress.RepoEvalRunEach(self.config['operation']['python_path'])
+        if not os.path.exists(self.config_filename):
+            self.init_test_run_each()
+
+        self.config.read(self.config_filename)
+        self.e = progress.RepoEvalRunEachSkipSome(self.config['operation']['python_path'])
 
     def tearDown(self):
         del self.e
         del self.config
+
+
+class TestRepoEvalRunEach(TestRepoEvalRunEachBase):
 
     def test_run_script_input(self):
         # function under test
@@ -282,11 +305,7 @@ class TestRepoEvalRunEach(unittest.TestCase):
                     self.assertTrue(msgo, msg='\n{file}\nstderr : {stderr}'.format(file=py_file, stderr=msge))
 
 
-class TestRepoEvalRunEachSkipSome(unittest.TestCase):
-    def setUp(self):
-        self.config = configparser.ConfigParser()
-        self.config.read('test_run_each.cfg')
-        self.e = progress.RepoEvalRunEachSkipSome(self.config['operation']['python_path'])
+class TestRepoEvalRunEachSkipSome(TestRepoEvalRunEachBase):
     
     def test_is_input_just_comments(self):
         txt = '# coding: utf-8\n' \

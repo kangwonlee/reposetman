@@ -13,7 +13,7 @@ class TestGit(unittest.TestCase):
         self.assertIn(expected, msg, msg='"%s" not in "%s"' % (expected, msg))
 
     def test_git_config(self):
-        msg = git.git("config", bVerbose=False)
+        msg = git.git(["config"], bVerbose=False)
         expected = "usage: git config"
         self.assertIn(expected, msg, msg='"%s" not in "%s"' % (expected, msg))
 
@@ -23,7 +23,7 @@ class TestGit(unittest.TestCase):
         >>> git log --follow git.py
         check "Author:", "Date:", "commit" strings are all included in the message
         """
-        msg = git.git("log --follow git.py", bVerbose=False)
+        msg = git.git(("log", "--follow", "git.py"), bVerbose=False)
         # print "\ntest_git_log() msg ="
         # print msg
         try:
@@ -41,7 +41,7 @@ class TestGit(unittest.TestCase):
         >>> git log --follow --oneline git.py
         check first two commits included in the message
         """
-        msg = git.git("log --follow --oneline git.py", bVerbose=False)
+        msg = git.git(("log", "--follow", "--oneline", "git.py"), bVerbose=False)
 
         expected0_str = '7dbdb92 Initial commit'
         # print "\ntest_git_log_oneline() msg ="
