@@ -21,7 +21,7 @@ def main(argv):
     if not os.path.exists(umbrella_folder):
         os.makedirs(umbrella_folder)
 
-    build_umbrella_repos(transpose_dict(get_sections_dict(config)), umbrella_folder)
+    init_or_update_umbrella_repos(transpose_dict(get_sections_dict(config)), umbrella_folder)
 
 
 def get_sections_dict(config):
@@ -99,16 +99,7 @@ def init_or_update_umbrella_repos(users_dict, umbrella_folder):
         if not os.path.exists('.git'):
             # initialize user umbrella repo
 
-            print('git init')
-            msg = git.git(('init',))
-            print(msg)
-
-            # repository info as the first commit
-            with open('repo_list.txt', 'w') as repo_list_file:
-                repo_list_file.write(pprint.pformat(users_dict[user]))
-
-            git.git(('add', 'repo_list.txt'))
-            git.git(('commit', '-m', '"initial commit"'))
+            init_user_umbrella_repo(users_dict[user])
             # end initializing user umbrella repo
 
         # section loop
@@ -133,6 +124,21 @@ def init_or_update_umbrella_repos(users_dict, umbrella_folder):
         os.chdir(start_folder)
 
     os.chdir(start_folder)
+
+def init_user_umbrella_repo(user_dict):
+    # initialize user umbrella repo
+
+    print('git init')
+    msg = git.git(('init',))
+    print(msg)
+
+    # repository info as the first commit
+    with open('repo_list.txt', 'w') as repo_list_file:
+        repo_list_file.write(pprint.pformat(user_dict))
+
+    git.git(('add', 'repo_list.txt'))
+    git.git(('commit', '-m', '"initial commit"'))
+    # end initializing user umbrella repo
 
 
 if "__main__" == __name__:
