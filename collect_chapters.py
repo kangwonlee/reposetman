@@ -69,7 +69,7 @@ def transpose_dict(sections_dict):
     return ids_dict
 
 
-def build_umbrella_repos(users_dict, umbrella_folder):
+def init_or_update_umbrella_repos(users_dict, umbrella_folder):
     """
     Input
     =====
@@ -91,27 +91,43 @@ def build_umbrella_repos(users_dict, umbrella_folder):
     start_folder = os.getcwd()
 
     for user in users_dict:
-        user_folder = os.path.join(umbrella_folder, user)
+        user_folder = os.path.abspath(os.path.join(umbrella_folder, user))
         if not os.path.exists(user_folder):
             os.makedirs(user_folder)
 
         os.chdir(user_folder)
-        print('git init')
-        msg = git.git(('init',))
-        print(msg)
+        if not os.path.exists('.git'):
+            # initialize user umbrella repo
 
-        # repository info as the first commit
-        with open('repo_list.txt', 'w') as repo_list_file:
-            repo_list_file.write(pprint.pformat(users_dict[user]))
+            print('git init')
+            git.git(('init',))
 
-        git.git(('add', 'repo_list.txt'))
-        git.git(('commit', '-m', '"initial commit"'))
+            # repository info as the first commit
+            with open('repo_list.txt', 'w') as repo_list_file:
+                repo_list_file.write(pprint.pformat(users_dict[user]))
+
+            git.git(('add', 'repo_list.txt'))
+            git.git(('commit', '-m', 'initial commit'))
+            # end initializing user umbrella repo
 
         # section loop
         for section in users_dict[user]:
-            git.git(('remote', 'add', section, users_dict[user][section]))
-            git.git(('remote', '-v'))
-            git.git(('subtree', 'add', f'--prefix={section}', section, 'master'))
+            # get remote list
+            remote_list = [remote_line.strip() for remote_line in git.git(('remote',), bVerbose=False).splitlines()]
+
+            if section not in remote_list:
+                print(f'remote add {section}')
+                git.git(('remote', 'add', section, users_dict[user][section]))
+                print('git remote -v')
+                git.git(('remote', '-v'))
+
+            if not os.path.exists(os.path.join(user_folder, section)):
+                print(f"folder missing : {os.path.join(user_folder, section)}")
+                print('subtree add')
+                git.git(('subtree', 'add', f'--prefix={section}', section, 'master'))
+            else:
+                print('subtree pull')
+                git.git(('subtree', 'pull', f'--prefix={section}', section, 'master'))
 
         os.chdir(start_folder)
 
