@@ -1,6 +1,9 @@
 """
-Collect repositories of the chapters into a submodule
+Collect repositories of the chapters into a subtree
+
+Generate Report
 """
+
 import ast
 import configparser
 import os
@@ -8,8 +11,10 @@ import pprint
 import sys
 import urllib.parse as up
 
-import regex_test as ret
 import git
+import progress
+import regex_test as ret
+
 
 
 def main(argv):
