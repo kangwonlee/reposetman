@@ -90,6 +90,8 @@ def init_or_update_umbrella_repos(users_dict, umbrella_folder):
 
     start_folder = os.getcwd()
 
+    repo_list = []
+
     for user in users_dict:
         user_folder = os.path.abspath(os.path.join(umbrella_folder, user))
         if not os.path.exists(user_folder):
@@ -118,9 +120,12 @@ def init_or_update_umbrella_repos(users_dict, umbrella_folder):
                 print('subtree pull')
                 git.git(('subtree', 'pull', f'--prefix={section}', section, 'master'))
 
+        repo_list.append(user_folder)
         os.chdir(start_folder)
 
     os.chdir(start_folder)
+
+    return repo_list
 
 
 def get_remote_list():
