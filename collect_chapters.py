@@ -16,7 +16,6 @@ import progress
 import regex_test as ret
 
 
-
 def main(argv):
     config = configparser.ConfigParser()
     config.read(argv[0])
@@ -26,8 +25,27 @@ def main(argv):
     if not os.path.exists(umbrella_folder):
         os.makedirs(umbrella_folder)
 
-    repo_list = init_or_update_umbrella_repos(transpose_dict(get_sections_dict(config)), umbrella_folder)
-    pprint.pprint(repo_list)
+    if (os.path.exists('participant_folder_list.txt') and ('True' != config['operation']['update_repo'])):
+        participant_folder_list = []
+
+        with open('participant_folder_list.txt', 'r') as pl_file:
+            for path in pl_file.readlines():
+                participant_folder_list.append(
+                    {
+                        'name': os.path.split(path)[-1],
+                        'path': path.strip(),
+                    }
+                )
+
+    else:
+        participant_folder_list = init_or_update_umbrella_repos(
+            transpose_dict(
+                get_sections_dict(config)
+                ), 
+            umbrella_folder
+        )
+
+    generate_reports(participant_folder_list, config)
 
 
 def get_sections_dict(config):
@@ -153,6 +171,10 @@ def init_user_umbrella_repo(user_dict):
     git.git(('add', 'repo_list.txt'))
     git.git(('commit', '-m', 'initial commit'))
     # end initializing user umbrella repo
+
+
+def generate_reports(repo_list, config, results = {}):
+    progress.call_commit_count(config, 'umbrella', repo_list, results)
 
 
 if "__main__" == __name__:
