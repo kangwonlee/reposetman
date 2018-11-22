@@ -13,6 +13,7 @@ Year : 2018
 
 import ast
 import configparser
+import fractions
 import itertools
 import multiprocessing
 import os
@@ -870,7 +871,7 @@ class RepoEvalCountOneCommitLog(RepoEval):
 
             # end of files list
             if temporary_file_list:
-                point = 1.0 / len(temporary_file_list)
+                point = fractions.Fraction(1, len(temporary_file_list))
 
                 # build commit count table
                 # loop over files in commit
