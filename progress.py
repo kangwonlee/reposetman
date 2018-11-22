@@ -748,6 +748,7 @@ class RepoEvalCountOneCommitLog(RepoEval):
             'log', # must be the first
             '--encoding=utf-8',
             '--numstat',
+            '--all',
             """--pretty=format:"{'sha':'%H', 'author':u'''%an''', 'email':u'%ae', 'date':'%ad', 'subject': u'''%f'''}\"""",
         ]
 
