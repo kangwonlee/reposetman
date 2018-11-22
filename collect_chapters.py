@@ -146,7 +146,7 @@ def init_or_update_umbrella_repos(users_dict, umbrella_folder):
                 print('subtree pull')
                 git.git(('subtree', 'pull', f'--prefix={section}', section, 'master'))
 
-        repo_list.append(user_folder)
+        repo_list.append({'name': user, 'path': user_folder})
         os.chdir(start_folder)
 
     os.chdir(start_folder)
