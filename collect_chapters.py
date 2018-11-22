@@ -14,8 +14,10 @@ import urllib.parse as up
 import git
 import progress
 import regex_test as ret
+import timeit
 
 
+@timeit.timeit
 def main(argv):
     config = configparser.ConfigParser()
     config.read(argv[0])
@@ -56,6 +58,7 @@ def main(argv):
     generate_reports(participant_folder_list, config)
 
 
+@timeit.timeit
 def get_sections_dict(config):
     """
     Using the config info, build dict containing list of repositories of all sections
@@ -152,6 +155,7 @@ def get_sections_dict(config):
     return sections_dict
 
 
+@timeit.timeit
 def transpose_dict(sections_dict):
     """
     Input
@@ -182,6 +186,7 @@ def transpose_dict(sections_dict):
     return ids_dict
 
 
+@timeit.timeit
 def init_or_update_umbrella_repos(users_dict, umbrella_folder):
     """
     Input
@@ -247,6 +252,7 @@ def get_remote_list():
     return [remote_line.strip() for remote_line in git.git(('remote',), bVerbose=False).splitlines()]
 
 
+@timeit.timeit
 def init_user_umbrella_repo(user_dict):
     # initialize user umbrella repo
 
@@ -262,6 +268,7 @@ def init_user_umbrella_repo(user_dict):
     # end initializing user umbrella repo
 
 
+@timeit.timeit
 def generate_reports(repo_list, config, results = {}):
     progress.call_commit_count(config, 'umbrella', repo_list, results)
 
