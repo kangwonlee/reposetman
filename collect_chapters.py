@@ -51,11 +51,104 @@ def main(argv):
 def get_sections_dict(config):
     """
     Using the config info, build dict containing list of repositories of all sections
+
+    Output
+    ======
+
+    sections_dict
+    + section_a
+    ++ urls
+    +++ url_a_00
+    +++ url_a_01
+    +++ url_a_02
+    ++ user_ids
+    +++ user_id_00
+    +++ user_id_01
+    +++ user_id_02
+
+    + section_b
+    ++ urls
+    +++ url_b_00
+    +++ url_b_01
+    +++ url_b_02
+    ++ user_ids
+    +++ user_id_00
+    +++ user_id_01
+    +++ user_id_02
+
     """
     sections_dict = {}
 
+    urls_path_list = []
+
+    url_parse_dict = {}
+
+    """
+    sections_dict
+    + section_a
+    ++ urls
+    +++ url_a_00
+    +++ url_a_01
+    +++ url_a_02
+
+    + section_b
+    ++ urls
+    +++ url_b_00
+    +++ url_b_01
+    +++ url_b_02
+    """
+
     for section in ast.literal_eval(config['operation']['sections']):
-        sections_dict[section] = ret.get_github_url_list(config[section]['list'].strip())
+        sections_dict[section] = {
+            'urls':ret.get_github_url_list(config[section]['list'].strip()),
+        }
+
+        url_parse_dict[section] = []
+
+        for url in sections_dict[section]['urls']:
+            url_parse_dict[section].append(up.urlparse(url))
+            urls_path_list.append(url_parse_dict[section][-1].path)
+
+    # count number of characters at each position of path
+    # find its average
+    # first position exceeding average -> id_starts_here
+    # parse.path[id_starts_here:] -> user_id
+    id_starts_here = None    
+    char_set_size_list = [len(set(chars)) for chars in zip(*urls_path_list)]
+    average = (sum(char_set_size_list) * 1.0) / len(char_set_size_list)
+    for k, size in enumerate(char_set_size_list):
+        if size > average:
+            id_starts_here = k
+            break
+
+    """
+    sections_dict
+    + section_a
+    ++ urls
+    +++ url_a_00
+    +++ url_a_01
+    +++ url_a_02
+    ++ user_ids
+    +++ user_id_00
+    +++ user_id_01
+    +++ user_id_02
+
+    + section_b
+    ++ urls
+    +++ url_b_00
+    +++ url_b_01
+    +++ url_b_02
+    ++ user_ids
+    +++ user_id_00
+    +++ user_id_01
+    +++ user_id_02
+    """
+
+    # set user ids of each repository
+    for section in sections_dict:
+        sections_dict[section]['user_ids'] = []
+        for parse in url_parse_dict[section]:
+            sections_dict[section]['user_ids'].append(os.path.splitext(parse.path)[0][id_starts_here:])
 
     return sections_dict
 
@@ -76,10 +169,7 @@ def transpose_dict(sections_dict):
     ids_dict = {}
 
     for section in sections_dict:
-        for url in sections_dict[section]:
-            parse = up.urlparse(url)
-            # user_id is the last part of the url path except extension if there is
-            user_id = os.path.splitext(os.path.split(parse.path)[-1])[0].split('-')[-1]
+        for url, user_id in zip(sections_dict[section]['urls'], sections_dict[section]['user_ids']):
             # add url to the table
             user_dict = ids_dict.get(user_id, {})
             if not url.endswith('.git'):
