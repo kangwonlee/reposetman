@@ -16,7 +16,10 @@ def main(argv):
     config = configparser.ConfigParser()
     config.read(argv[0])
 
-    pprint.pprint(transpose_dict(get_sections_dict(config)))
+    umbrella_folder = config['operation']['umbrella']
+    # make the umbrella_folder if missing
+    if not os.path.exists(umbrella_folder):
+        os.makedirs(umbrella_folder)
 
 
 def get_sections_dict(config):
