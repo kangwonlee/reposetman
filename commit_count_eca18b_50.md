@@ -1,13 +1,13 @@
 |    |   total  |  00_Ordinary_Differential_Equation_Exact_Solution.ipynb  |  10_Forward_Euler.ipynb  |  15_Forward_Euler_Higher_Order.ipynb  |  20_Modified_Euler.ipynb  |  slopes_t_x.png  |  slopes_t_x.svg  |
 |:--:|:----:|:----:|:----:|:----:|:----:|:----:|:----:|
 | eca18b-nmisp-50-rrqweq53 | 5 |  | 1.0 | 1.0 | 3.0 |  |   |
-| eca18c-nmisp-50-2jaejin | 4 | 0.5 | 0.7499999999999999 | 0.16666666666666666 | 1.75 | 0.41666666666666663 | 0.41666666666666663  |
+| eca18c-nmisp-50-2jaejin | 5 | 0.5 | 0.7499999999999999 | 0.6666666666666666 | 2.2499999999999996 | 0.41666666666666663 | 0.41666666666666663  |
+| eca18c-nmisp-50-rkd0797 | 4 |  |  | 2.0 | 2.0 |  |   |
 | eca18c-nmisp-50-seunghyeon-eca18b | 3 |  |  | 2.5 | 0.5 |  |   |
 | eca18b-nmisp-50-MunYoonKyung | 2 |  |  | 1.0 | 1.0 |  |   |
 | eca18c-nmisp-50-Na-Young-Lee | 2 |  |  | 1.0 | 1.0 |  |   |
 | eca18c-nmisp-50-kingisme7 | 2 |  | 0.5 | 1.0 | 0.5 |  |   |
 | eca18c-nmisp-50-ljk941219 | 2 |  |  | 1.0 | 1.0 |  |   |
-| eca18c-nmisp-50-rkd0797 | 2 |  |  | 1.0 | 1.0 |  |   |
 | eca18c-nmisp-50-jeapilbyeon | 1 |  |  | 1.0 |  |  |   |
 | eca18b-nmisp-50-Bohyun-cpf18a | 0 |  |  |  |  |  |   |
 | eca18b-nmisp-50-HanGiNa | 0 |  |  |  |  |  |   |
