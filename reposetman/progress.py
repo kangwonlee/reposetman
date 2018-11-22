@@ -113,15 +113,7 @@ class ProgressReportBuilder(object):
 
         # evaluate repositories within the section
         if 'True' == self.config[section]['count_commits']:
-            commit_count_txt, commit_count_md, commit_count_html = count_commits(self.config, section, repo_list) 
-            results.update({
-                'count_commits':
-                    {
-                    'txt': commit_count_txt, 
-                    'md': commit_count_md, 
-                    'html': commit_count_html
-                    }
-            }) 
+            call_commit_count(self.config, section, repo_list, results) 
         if 'True' == self.config[section]['pound_count']:
             pound_reports = pound_count(self.config, section, repo_list)
             results.update({
@@ -253,15 +245,7 @@ def process_section(config, re_git_log, section):
 
     # evaluate repositories within the section
     if 'True' == config[section]['count_commits']:
-        commit_count_txt, commit_count_md, commit_count_html = count_commits(config, section, repo_list) 
-        results.update({
-            'count_commits':
-                {
-                'txt': commit_count_txt, 
-                'md': commit_count_md, 
-                'html': commit_count_html
-                }
-        }) 
+        call_commit_count(config, section, repo_list, results) 
     if 'True' == config[section]['pound_count']:
         pound_reports = pound_count(config, section, repo_list)
         results.update({
@@ -285,6 +269,17 @@ def process_section(config, re_git_log, section):
 
     return results
 
+def call_commit_count(config, section, repo_list, results):
+    commit_count_txt, commit_count_md, commit_count_html = count_commits(config, section, repo_list) 
+    results.update({
+        'count_commits':
+            {
+            'txt': commit_count_txt, 
+            'md': commit_count_md, 
+            'html': commit_count_html
+            }
+    }) 
+
 
 @timeit.timeit
 def count_commits(config, section, repo_list):
@@ -294,8 +289,9 @@ def count_commits(config, section, repo_list):
     # git log interval settings
     after = config[section].get('after', None)
     before = config[section].get('before', None)
+    exclude_email_tuple = tuple(ast.literal_eval(config['operation']['initial_email_addresses']))
 
-    commit_counter = RepoEvalCountOneCommitLog(after, before)
+    commit_counter = RepoEvalCountOneCommitLog(after, before, exclude_email_tuple)
     commit_count = commit_counter.eval_repo_list(repo_list)
 
     # if the header row seems to include '\' character in the header row
@@ -737,10 +733,11 @@ class RepoEvalCountOneCommitLog(RepoEval):
     """
     Obtain information on all files from one git log
     """
-    def __init__(self, after=None, before=None):    
+    def __init__(self, after=None, before=None, exclude_email_tuple=[]):    
         super(RepoEvalCountOneCommitLog, self).__init__()
         self.after = after
         self.before = before
+        self.exclude_email_tuple = exclude_email_tuple
 
     def get_git_cmd(self, after=None, before=None):
         # To let git generate string compatible with python ast as much as possible
@@ -753,7 +750,8 @@ class RepoEvalCountOneCommitLog(RepoEval):
             'log', # must be the first
             '--encoding=utf-8',
             '--numstat',
-            """--pretty=format:"{'sha':'%H', 'author':u'''%an''', 'email':u'%ae', 'date':'%ad', 'subject': u'''%s'''}\"""",
+            '--all',
+            """--pretty=format:"{'sha':'%H', 'author':u'''%an''', 'email':u'%ae', 'date':'%ad', 'subject': u'''%f'''}\"""",
         ]
 
         if after:
@@ -880,6 +878,8 @@ class RepoEvalCountOneCommitLog(RepoEval):
                         print('line = %r' % line)
                         print('last_commit_dict = %r' % last_commit_dict)
 
+        self.filter_commit_list(commits_list)
+
         # total number of commits
         # to make it the first element
         # Sorting feature may use this feature
@@ -888,6 +888,13 @@ class RepoEvalCountOneCommitLog(RepoEval):
         eval_dict[column_key] = len(commits_list)
 
         return column_set, eval_dict
+
+    def filter_commit_list(self, commits_list):
+        # remove if email is in exclude list
+        for k in range((len(commits_list) - 1), -1, -1):
+            if commits_list[k]['email'] in self.exclude_email_tuple:
+                del commits_list[k]
+
 
     def get_commit_dict(self, line):
         # to use git log output as input to python
