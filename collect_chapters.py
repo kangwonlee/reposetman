@@ -56,6 +56,11 @@ def transpose_dict(sections_dict):
             user_id = os.path.splitext(os.path.split(parse.path)[-1])[0].split('-')[-1]
             # add url to the table
             user_dict = ids_dict.get(user_id, {})
+            if not url.endswith('.git'):
+                # add admin id to url
+                # remove '/' if at the end
+                # add .git
+                url = git.set_id_to_url(url, ret.config['Admin']['id']).strip('/') + '.git'
             user_dict[section] = url
             ids_dict[user_id] = user_dict
 
