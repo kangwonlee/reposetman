@@ -1,7 +1,6 @@
 """
 Collect repositories of the chapters into a submodule
 """
-
 import ast
 import configparser
 import os
@@ -10,6 +9,7 @@ import sys
 import urllib.parse as up
 
 import regex_test as ret
+import git
 
 
 def main(argv):
@@ -20,6 +20,8 @@ def main(argv):
     # make the umbrella_folder if missing
     if not os.path.exists(umbrella_folder):
         os.makedirs(umbrella_folder)
+
+    build_umbrella_repos(transpose_dict(get_sections_dict(config)), umbrella_folder)
 
 
 def get_sections_dict(config):
@@ -65,6 +67,55 @@ def transpose_dict(sections_dict):
             ids_dict[user_id] = user_dict
 
     return ids_dict
+
+
+def build_umbrella_repos(users_dict, umbrella_folder):
+    """
+    Input
+    =====
+    user_id00: {section0: repo0_00, section1: repo1_00, ...},
+    user_id01: {section0: repo0_01, section1: repo1_01, ...},
+
+    umbrella repository
+    + user_id00
+    ++ subtree section0 : repo0_00
+    ++ subtree section1 : repo1_00
+    ++ ...
+
+    + user_id01
+    ++ subtree section0 : repo0_01
+    ++ subtree section1 : repo1_01
+    ++ ...
+    """
+
+    start_folder = os.getcwd()
+
+    for user in users_dict:
+        user_folder = os.path.join(umbrella_folder, user)
+        if not os.path.exists(user_folder):
+            os.makedirs(user_folder)
+
+        os.chdir(user_folder)
+        print('git init')
+        msg = git.git(('init',))
+        print(msg)
+
+        # repository info as the first commit
+        with open('repo_list.txt', 'w') as repo_list_file:
+            repo_list_file.write(pprint.pformat(users_dict[user]))
+
+        git.git(('add', 'repo_list.txt'))
+        git.git(('commit', '-m', '"initial commit"'))
+
+        # section loop
+        for section in users_dict[user]:
+            git.git(('remote', 'add', section, users_dict[user][section]))
+            git.git(('remote', '-v'))
+            git.git(('subtree', 'add', f'--prefix={section}', section, 'master'))
+
+        os.chdir(start_folder)
+
+    os.chdir(start_folder)
 
 
 if "__main__" == __name__:
