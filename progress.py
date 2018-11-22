@@ -895,6 +895,13 @@ class RepoEvalCountOneCommitLog(RepoEval):
             if commits_list[k]['email'] in self.exclude_email_tuple:
                 del commits_list[k]
 
+        for c_dict in commits_list:
+            assert c_dict['email'] not in self.exclude_email_tuple, f"{c_dict['email']} in {self.exclude_email_tuple}"
+            assert '.travis.yml' not in c_dict['files'], f".travis.yml in {c_dict}\n" \
+                f"len(c_dict['files']) = {len(c_dict['files'])}\n" \
+                f"c_dict['files'] = {c_dict['files']}\n" \
+                f"'a' in c_dict['files'] = {'a' in c_dict['files']}\n" \
+                f"'.travis.yml' in c_dict['files'] = {'.travis.yml' in c_dict['files']}"
 
     def get_commit_dict(self, line):
         # to use git log output as input to python
