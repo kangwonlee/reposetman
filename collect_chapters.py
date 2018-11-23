@@ -170,8 +170,12 @@ def transpose_dict(sections_dict):
     """
     Input
     =====
-    section0: [repo0_00, repo0_01, ...],
-    section1: [repo1_00, repo1_01, ...],
+    section0: 
+        'urls': [repo0_00, repo0_01, ...],
+        'ids' : [id00, id01, ...]
+    section1: 
+        'urls': [repo1_00, repo1_01, ...],
+        'ids' : [id00, id01, ...]
 
     Output
     =====
