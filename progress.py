@@ -628,7 +628,7 @@ class RepoEval(object):
     
     @staticmethod
     def is_dot_git(filename):
-        return '.git' in filename
+        return '.git' == filename
 
     def eval_file_base(self, filename):
         """
