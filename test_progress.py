@@ -441,24 +441,31 @@ class TestRepoEvalCountOneCommitLog(unittest.TestCase):
             self.assertIn(item, test_line)
 
     def test_convert_git_log_to_table(self):
-        txt = """{'sha':'6f5eefb', 'author':'KangWon LEE', 'email':'kangwon.lee@kpu.ac.kr', 'date':'Wed Jun 21 13:35:31 2017 +0900', 'subject': \"\"\"corrected typo\"\"\"}\n""" \
-              '''1	1	hw09/hw09.md\n''' \
-              '''\n''' \
-              """{'sha':'5371667', 'author':'KangWon LEE CPF17A 170531 wk14', 'email':'kangwon_fwd@naver.com', 'date':'Wed May 31 20:34:55 2017 +0900', 'subject': \"\"\"Merge branch 'CPF17A/wk14'\"\"\"}\n""" \
-              """{'sha':'382bd01', 'author':'KangWon LEE CPF17A 170531 wk14', 'email':'kangwon_fwd@naver.com', 'date':'Wed May 31 20:16:56 2017 +0900', 'subject': \"\"\"ex47 : test_map()\"\"\"}\n""" \
-              '''15	0	ex47_nose_tests/ex47_nose_tests.py\n''' \
-              '''\n''' \
-              """{'sha':'3f7f254', 'author':'KangWon LEE CPF17A 170531 wk14', 'email':'kangwon_fwd@naver.com', 'date':'Wed May 31 20:13:39 2017 +0900', 'subject': \"\"\"ex47 : test_room(), test_room_paths()\"\"\"}\n""" \
-              '''29	0	ex47_nose_tests/ex47_nose_tests.py\n''' \
-              '''\n'''
+        # sample multiline input text
+        txt = '__reposetman_new_commit_start__"{\'sha\':\'0333282e3184bc17b16d42a313897a6c35ded482\', '\
+                '\'author\':u\'\'\'Kang Won LEE\'\'\', '\
+                '\'email\':u\'kangwon.lee@kpu.ac.kr\', '\
+                '\'date\':\'Fri Sep 14 01:44:09 2018 +0900\', '\
+                '\'subject\': u\'\'\'first-commit\'\'\'}"\n'\
+                '185\t0\t00.ipynb\n'\
+                '257\t0\t01.ipynb\n'\
+                '404\t0\t02.ipynb\n'\
+                '\n'\
+                '__reposetman_new_commit_start__"{\'sha\':\'83274fd5396a2e81e0ad067371cebed8f54e547f\', '\
+                '\'author\':u\'\'\'Kangwon Lee (Education)\'\'\', '\
+                '\'email\':u\'kangwonlee@users.noreply.github.com\', '\
+                '\'date\':\'Thu Sep 13 09:42:31 2018 -0700\', '\
+                '\'subject\': u\'\'\'Initial-commit\'\'\'}"\n'\
+                '104\t0\t.gitignore\n'
 
         result_columns, result_index = self.e.convert_git_log_to_table(txt)
 
-        expected_files_set = set(['hw09/hw09.md', 'ex47_nose_tests/ex47_nose_tests.py'])
-        expected_eval_dict = {'hw09/hw09.md': 1.0, 'ex47_nose_tests/ex47_nose_tests.py': 2.0}
+        expected_files_set = {'02.ipynb', '00.ipynb', '01.ipynb',  '.gitignore'}
+        expected_eval_dict = {'01.ipynb': 1.0, '00.ipynb':1.0, '02.ipynb': 1.0, '.gitignore':1.0}
 
-        self.assertFalse(expected_files_set - set(result_columns))
-        self.assertFalse(expected_files_set - set(result_index.keys()))
+        self.assertFalse(expected_files_set - set(result_columns), f"set(result_columns) = {set(result_columns)}")
+        self.assertFalse(expected_files_set - set(result_index.keys()), f"set(result_index.keys()) = {set(result_index.keys())}")
+
         for filename in expected_files_set:
             self.assertAlmostEqual(expected_eval_dict[filename], expected_eval_dict[filename])
 
