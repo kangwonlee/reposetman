@@ -1,17 +1,17 @@
 	 total	00_linear_algebra_in_python.ipynb	10_vector_addition_subtraction.ipynb	20_vector_dot_cross_product.ipynb	30_3D_line_plane.ipynb
-eca18b-nmisp-40-rrqweq53	8	2.0	2.0	4.0	
-eca18b-nmisp-40-2jaejin	6	1.0	3.0	1.5	0.5
-eca18b-nmisp-40-rkd0797	6	2.0	1.0	2.0	1.0
-eca18b-nmisp-40-jeapilbyeon	4	1.0	1.0	1.0	1.0
-eca18b-nmisp-40-seunghyeon-eca18b	4		2.0	1.0	1.0
-eca18b-nmisp-40-ljk941219	3	1.0		1.0	1.0
-eca18b-nmisp-40-seonghyunJIn	3	1.0	1.0	1.0	
-eca18b-nmisp-40-ChoHyeonDeok	1			1.0	
-eca18b-nmisp-40-HanGiNa	1	0.5		0.5	
-eca18b-nmisp-40-Na-Young-Lee	1	1.0			
-eca18b-nmisp-40-baehyeonji	1		0.5	0.5	
-eca18b-nmisp-40-jerrydavidlee	1	0.25	0.25	0.25	0.25
-eca18b-nmisp-40-kingisme7	1		0.5	0.5	
+eca18b-nmisp-40-rrqweq53	8	2	2	4	
+eca18b-nmisp-40-2jaejin	6	1	3	3/2	1/2
+eca18b-nmisp-40-rkd0797	6	2	1	2	1
+eca18b-nmisp-40-jeapilbyeon	4	1	1	1	1
+eca18b-nmisp-40-seunghyeon-eca18b	4		2	1	1
+eca18b-nmisp-40-ljk941219	3	1		1	1
+eca18b-nmisp-40-seonghyunJIn	3	1	1	1	
+eca18b-nmisp-40-ChoHyeonDeok	1			1	
+eca18b-nmisp-40-HanGiNa	1	1/2		1/2	
+eca18b-nmisp-40-Na-Young-Lee	1	1			
+eca18b-nmisp-40-baehyeonji	1		1/2	1/2	
+eca18b-nmisp-40-jerrydavidlee	1	1/4	1/4	1/4	1/4
+eca18b-nmisp-40-kingisme7	1		1/2	1/2	
 eca18b-nmisp-40-JYK1446	0				
 eca18b-nmisp-40-MunYoonKyung	0				
 eca18b-nmisp-40-SungYoungHoon	0				
