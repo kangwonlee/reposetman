@@ -826,13 +826,21 @@ class RepoEvalCountOneCommitLog(RepoEval):
             git_log_lines = git_log_block.splitlines()
 
             # process first line
+            # using git log output as input to python
             last_commit_dict = self.get_commit_dict(git_log_lines[0])
 
+            if isinstance(last_commit_dict, (str, bytes)):
+                # if double quote is wrapping the output from the git log
+                last_commit_dict = self.get_commit_dict(git_log_lines[0].strip('"'))
+
+            if isinstance(last_commit_dict, (str, bytes)):
             # to use git log output as input to python
-            last_commit_dict = self.get_commit_dict(git_log_lines[0])
+                last_commit_dict = self.get_commit_dict(last_commit_dict)
 
-            assert isinstance(last_commit_dict, dict), f"git_log_lines[0] = {git_log_lines[0]}\n" \
-                f"last_commit_dict = {last_commit_dict}"
+            assert isinstance(last_commit_dict, dict), f"git_log_lines[0] = {repr(git_log_lines[0])}\n" \
+                f"convert_git_log_to_table(): last_commit_dict = {last_commit_dict}" \
+                f"convert_git_log_to_table(): isinstance(last_commit_dict, dict) = {isinstance(last_commit_dict, dict)}" \
+                f"convert_git_log_to_table(): type(last_commit_dict) = {type(last_commit_dict)}"
 
             # filer using email address
             if last_commit_dict['email'] in self.exclude_email_tuple:
