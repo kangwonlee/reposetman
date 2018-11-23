@@ -20,21 +20,43 @@ import timeit
 
 @timeit.timeit
 def main(argv):
+    # read configuration file
     config = configparser.ConfigParser()
     config.read(argv[0])
 
+    # get umbrella folder location
+    # TODO : consider rename umbrella to summary
     umbrella_folder = config['operation']['umbrella']
+
     # make the umbrella_folder if missing
     if not os.path.exists(umbrella_folder):
         os.makedirs(umbrella_folder)
+        # if the umbrella_folder was missing, alway try to update
         config['operation']['update_repo'] = 'False'
 
+    # to save time, if list file is available and 
+    # config says so, read from the folder list file
+    # TODO : consider moving folder list filename to cfg file
     if (os.path.exists('participant_folder_list.txt') and ('True' != config['operation']['update_repo'])):
+
+        # TODO : consider refactoring into a function
         print('reading list file')
 
+        # for report generators
         participant_folder_list = []
+        """
+        [
+            {'name': user_id_00, 'path': path_to_summary_folder/user_id_00},
+            {'name': user_id_01, 'path': path_to_summary_folder/user_id_01},
+            {'name': user_id_02, 'path': path_to_summary_folder/user_id_02},
+            ...
+        ]
+        """
 
+        # TODO : consider moving folder list filename to cfg file
         with open('participant_folder_list.txt', 'r') as pl_file:
+            # TODO : consider read text and then convert for more testable code?
+            # TODO : is list comprehension beneficial?
             for path in pl_file.readlines():
                 participant_folder_list.append(
                     {
@@ -42,7 +64,7 @@ def main(argv):
                         'path': path.strip(),
                     }
                 )
-
+        # end of reading folder list file
     else:
         print('updating subtrees')
         participant_folder_list = init_or_update_umbrella_repos(
@@ -52,8 +74,10 @@ def main(argv):
             umbrella_folder
         )
 
+        # TODO : is it required to overwrite everytime?
         write_folder_list_file(participant_folder_list)
 
+    # reports about users with chapters
     generate_reports(participant_folder_list, config)
 
 
