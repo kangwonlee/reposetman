@@ -82,6 +82,9 @@ def main(argv):
 
 
 def write_folder_list_file(participant_folder_list):
+    # TODO : consider moving folder list filename to cfg file
+    # storing paths only
+    # last part of path == id
     with open('participant_folder_list.txt', 'w') as folder_list_file:
         for folder_info in participant_folder_list:
             folder_list_file.write(folder_info['path']+'\n')
