@@ -51,11 +51,15 @@ def main(argv):
             umbrella_folder
         )
 
-        with open('participant_folder_list.txt', 'w') as folder_list_file:
-            for folder_info in participant_folder_list:
-                folder_list_file.write(folder_info['path']+'\n')
+        write_folder_list_file(participant_folder_list)
 
     generate_reports(participant_folder_list, config)
+
+
+def write_folder_list_file(participant_folder_list):
+    with open('participant_folder_list.txt', 'w') as folder_list_file:
+        for folder_info in participant_folder_list:
+            folder_list_file.write(folder_info['path']+'\n')
 
 
 @timeit.timeit
