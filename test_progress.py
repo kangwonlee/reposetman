@@ -414,8 +414,6 @@ class TestRepoEvalCountOneCommitLog(unittest.TestCase):
         # function under test
         result = self.e.get_git_cmd('1990-01-01', '2018-08-31')
 
-        expected = 'log --pretty=format:"{\'sha\':\'%H\', \'author\':u\'\'\'%an\'\'\', \'email\':u\'%ae\', \'date\':\'%ad\', \'subject\': u\\\"\\\"\\\"%s\\\"\\\"\\\"}" --after=\'@@@zzz###\' --before=\'###zzz@@@\' --encoding=utf-8 --numstat'
-
         command = list(result)
         command.insert(0, 'git')
 
@@ -435,7 +433,7 @@ class TestRepoEvalCountOneCommitLog(unittest.TestCase):
         test_line = str(stdout.splitlines()[0], encoding='utf-8')
 
         # check if the line contains all the information correctly
-        expected_list = ['7dbdb9', 'KangWon LEE', 'kangwon.lee@kpu.ac.kr', 'Wed Jul 4 18:48:00 2018 +0900', 'Initial commit']
+        expected_list = ['7dbdb9', 'KangWon LEE', 'kangwon.lee@kpu.ac.kr', 'Wed Jul 4 18:48:00 2018 +0900', 'Initial-commit']
 
         for item in expected_list:
             self.assertIn(item, test_line)
