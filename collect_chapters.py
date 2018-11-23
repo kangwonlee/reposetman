@@ -99,48 +99,38 @@ def get_sections_dict(config):
     ======
 
     sections_dict
-    + section_a
-    ++ urls
-    +++ url_a_00
-    +++ url_a_01
-    +++ url_a_02
-    ++ user_ids
-    +++ user_id_00
-    +++ user_id_01
-    +++ user_id_02
+    {
+        'section_a':{
+            'urls':[
+                url_a_00, url_a_01, url_a_02, ...
+            ],
+            'user_ids':[
+                user_id_00, user_id_01, user_id_02, ...
+            ]
+        }
+        'section_b':{
+            'urls':[
+                url_b_00, url_b_01, url_b_02, ...
+            ],
+            'user_ids':[
+                user_id_00, user_id_01, user_id_02, ...
+            ]
+        }
+    }
 
-    + section_b
-    ++ urls
-    +++ url_b_00
-    +++ url_b_01
-    +++ url_b_02
-    ++ user_ids
-    +++ user_id_00
-    +++ user_id_01
-    +++ user_id_02
+    sections may have different participant (== user) sets
 
     """
+
+    # result
     sections_dict = {}
 
     urls_path_list = []
 
+    # to extract user ids
     url_parse_dict = {}
 
-    """
-    sections_dict
-    + section_a
-    ++ urls
-    +++ url_a_00
-    +++ url_a_01
-    +++ url_a_02
-
-    + section_b
-    ++ urls
-    +++ url_b_00
-    +++ url_b_01
-    +++ url_b_02
-    """
-
+    # section loop
     for section in ast.literal_eval(config['operation']['sections']):
         sections_dict[section] = {
             'urls':ret.get_github_url_list(config[section]['list'].strip()),
@@ -148,6 +138,7 @@ def get_sections_dict(config):
 
         url_parse_dict[section] = []
 
+        # to extract user ids from the urls later
         for url in sections_dict[section]['urls']:
             url_parse_dict[section].append(up.urlparse(url))
             urls_path_list.append(url_parse_dict[section][-1].path)
@@ -155,34 +146,21 @@ def get_sections_dict(config):
     # os.path.split(parse.path)[-1][id_starts_here:] -> user_id
     id_starts_here = len(config['operation']['repo_prefix_sample'].strip())
 
-    """
-    sections_dict
-    + section_a
-    ++ urls
-    +++ url_a_00
-    +++ url_a_01
-    +++ url_a_02
-    ++ user_ids
-    +++ user_id_00
-    +++ user_id_01
-    +++ user_id_02
-
-    + section_b
-    ++ urls
-    +++ url_b_00
-    +++ url_b_01
-    +++ url_b_02
-    ++ user_ids
-    +++ user_id_00
-    +++ user_id_01
-    +++ user_id_02
-    """
-
     # set user ids of each repository
     for section in sections_dict:
         sections_dict[section]['user_ids'] = []
+
+        # parsed url loop
         for parse in url_parse_dict[section]:
-            sections_dict[section]['user_ids'].append(os.path.splitext(os.path.split(parse.path.strip('/'))[-1])[0][id_starts_here:])
+            sections_dict[section]['user_ids'].append(
+                os.path.splitext(
+                    os.path.split(
+                        parse.path.strip('/')
+                        )[-1]  # last part of the path
+                    )[0][id_starts_here:]   # extract id
+                )
+
+    # TODO : is it desirable to separate id extraction?
 
     return sections_dict
 
