@@ -217,40 +217,44 @@ def init_or_update_umbrella_repos(users_dict, umbrella_folder):
     # because it seems not desirable to update multiple subtrees at once
     # if parallelize, in the user == participant level
     for user, section_url_dict in users_dict.items():
-        user_folder = os.path.abspath(os.path.join(umbrella_folder, user))
-        if not os.path.exists(user_folder):
-            os.makedirs(user_folder)
-
-        start_folder = os.getcwd()
-        os.chdir(user_folder)
-        if not os.path.exists('.git'):
-            # initialize user umbrella repo
-
-            init_user_umbrella_repo(section_url_dict)
-            # end initializing user umbrella repo
-
-        # section loop
-        for section in section_url_dict:
-            if section not in get_remote_list():
-                print(f'remote add {section}')
-                git.git(('remote', 'add', section, section_url_dict[section]))
-                print('git remote -v')
-                git.git(('remote', '-v'))
-
-            if not os.path.exists(os.path.join(user_folder, section)):
-                print(f"folder missing : {os.path.join(user_folder, section)}")
-                print('subtree add')
-                git.git(('subtree', 'add', f'--prefix={section}', section, 'master'))
-            else:
-                print('subtree pull')
-                git.git(('subtree', 'pull', f'--prefix={section}', section, 'master'))
-
-        os.chdir(start_folder)
-        repo_list.append({'name': user, 'path': user_folder})
+        repo_list.append(init_or_update_user_umbrella(user, section_url_dict, umbrella_folder))
 
     os.chdir(start_folder)
 
     return repo_list
+
+
+def init_or_update_user_umbrella(user, section_url_dict, umbrella_folder):
+    user_folder = os.path.abspath(os.path.join(umbrella_folder, user))
+    if not os.path.exists(user_folder):
+        os.makedirs(user_folder)
+
+    start_folder = os.getcwd()
+    os.chdir(user_folder)
+    if not os.path.exists('.git'):
+        # initialize user umbrella repo
+
+        init_user_umbrella_repo(section_url_dict)
+        # end initializing user umbrella repo
+
+    # section loop
+    for section in section_url_dict:
+        if section not in get_remote_list():
+            print(f'remote add {section}')
+            git.git(('remote', 'add', section, section_url_dict[section]))
+            print('git remote -v')
+            git.git(('remote', '-v'))
+
+        if not os.path.exists(os.path.join(user_folder, section)):
+            print(f"folder missing : {os.path.join(user_folder, section)}")
+            print('subtree add')
+            git.git(('subtree', 'add', f'--prefix={section}', section, 'master'))
+        else:
+            print('subtree pull')
+            git.git(('subtree', 'pull', f'--prefix={section}', section, 'master'))
+
+    os.chdir(start_folder)    
+    return {'name': user, 'path': user_folder}
 
 
 def get_remote_list():
