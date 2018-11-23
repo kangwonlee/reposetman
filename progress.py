@@ -13,6 +13,7 @@ Year : 2018
 
 import ast
 import configparser
+import fractions
 import itertools
 import multiprocessing
 import os
@@ -733,11 +734,12 @@ class RepoEvalCountOneCommitLog(RepoEval):
     """
     Obtain information on all files from one git log
     """
-    def __init__(self, after=None, before=None, exclude_email_tuple=[]):    
+    def __init__(self, after=None, before=None, exclude_email_tuple=[], split_token = '__reposetman_new_commit_start__'):    
         super(RepoEvalCountOneCommitLog, self).__init__()
         self.after = after
         self.before = before
         self.exclude_email_tuple = exclude_email_tuple
+        self.split_token = split_token
 
     def get_git_cmd(self, after=None, before=None):
         # To let git generate string compatible with python ast as much as possible
@@ -751,7 +753,7 @@ class RepoEvalCountOneCommitLog(RepoEval):
             '--encoding=utf-8',
             '--numstat',
             '--all',
-            """--pretty=format:"{'sha':'%H', 'author':u'''%an''', 'email':u'%ae', 'date':'%ad', 'subject': u'''%f'''}\"""",
+            f"""--pretty=format:{self.split_token}"{{'sha':'%H', 'author':u'''%an''', 'email':u'%ae', 'date':'%ad', 'subject': u'''%f'''}}\"""",
         ]
 
         if after:
@@ -810,29 +812,49 @@ class RepoEvalCountOneCommitLog(RepoEval):
         commits_list = []
         eval_dict = {}
 
-        git_log_split_lines = git_log.splitlines()
-        # add one more line at the end
-        # to add files of the last commit to the eval_dict
-        git_log_split_lines.append('')
+        git_log_split_blocks = git_log.split(self.split_token)
+
+        if not git_log_split_blocks[0]:
+            git_log_split_blocks.pop(0)
 
         temporary_file_list = unique_list.unique_list(['no commit yet'])
 
         last_commit_dict = {'subject':'no commit yet'}
 
         # commit log line loop
-        for line in git_log_split_lines:
-            if line and (('sha' in line) and ('author' in line) and ('email' in line) and ('date' in line) and ('subject' in line)):
-                # new commit
+        for git_log_block in git_log_split_blocks:
+            git_log_lines = git_log_block.splitlines()
 
-                # to use git log output as input to python
-                last_commit_dict = self.get_commit_dict(line)
+            # process first line
+            # using git log output as input to python
+            last_commit_dict = self.get_commit_dict(git_log_lines[0])
 
-                # keep note of commits
-                commits_list.append(last_commit_dict)
+            if isinstance(last_commit_dict, (str, bytes)):
+                # if double quote is wrapping the output from the git log
+                last_commit_dict = self.get_commit_dict(git_log_lines[0].strip('"'))
 
-                # reset storage for 'files in commit'
-                temporary_file_list = unique_list.unique_list()
-            else:
+            if isinstance(last_commit_dict, (str, bytes)):
+            # to use git log output as input to python
+                last_commit_dict = self.get_commit_dict(last_commit_dict)
+
+            assert isinstance(last_commit_dict, dict), f"git_log_lines[0] = {repr(git_log_lines[0])}\n" \
+                f"convert_git_log_to_table(): last_commit_dict = {last_commit_dict}" \
+                f"convert_git_log_to_table(): isinstance(last_commit_dict, dict) = {isinstance(last_commit_dict, dict)}" \
+                f"convert_git_log_to_table(): type(last_commit_dict) = {type(last_commit_dict)}"
+
+            # filer using email address
+            if last_commit_dict['email'] in self.exclude_email_tuple:
+                last_commit_dict = {}
+                continue
+
+            # keep note of commits
+            commits_list.append(last_commit_dict)
+
+            # reset storage for 'files in commit'
+            temporary_file_list = unique_list.unique_list()
+
+            # process file list
+            for line in git_log_lines[1:]:
                 # lines below the new commit
                 line_strip = line.strip()
 
@@ -854,31 +876,28 @@ class RepoEvalCountOneCommitLog(RepoEval):
 
                         # to count the number of
                         temporary_file_list.add(column_key)
-                else:
-                    # end of files list
-                    if temporary_file_list:
-                        point = 1.0 / len(temporary_file_list)
 
-                        # loop over files in commit
-                        for files_in_commit in temporary_file_list:
-                            eval_dict[files_in_commit] = eval_dict.get(files_in_commit, 0) + point
+            # end of files list
+            if temporary_file_list:
+                point = fractions.Fraction(1, len(temporary_file_list))
 
-                        # if it is still not a dict
-                        if isinstance(last_commit_dict, str):
-                            # try to convert it again
-                            print(f'last_commit_dict = {repr(last_commit_dict)}')
-                            last_commit_dict = ast.literal_eval(last_commit_dict)
-                            if not isinstance(last_commit_dict, dict):
-                                raise ValueError(f'last_commit_dict = {repr(last_commit_dict)}')
-                        last_commit_dict['files'] = temporary_file_list
-                    else:
-                        print('\n{class_name}.convert_git_log_to_table() : end of file list but temporary_file_list empty'.format(
-                            class_name=self.get_class_name(),
-                        ))
-                        print('line = %r' % line)
-                        print('last_commit_dict = %r' % last_commit_dict)
+                # build commit count table
+                # loop over files in commit
+                for files_in_commit in temporary_file_list:
+                    eval_dict[files_in_commit] = eval_dict.get(files_in_commit, 0) + point
 
-        self.filter_commit_list(commits_list)
+                # if it is still not a dict
+                if isinstance(last_commit_dict, str):
+                    # try to convert it again
+                    print(f'last_commit_dict = {repr(last_commit_dict)}')
+                    last_commit_dict = ast.literal_eval(last_commit_dict)
+                    if not isinstance(last_commit_dict, dict):
+                        raise ValueError(f'last_commit_dict = {repr(last_commit_dict)}')
+                last_commit_dict['files'] = temporary_file_list
+            else:
+                print(f'\n{self.get_class_name()}.convert_git_log_to_table() : end of file list but temporary_file_list empty')
+                print(f'line = {line}')
+                print('last_commit_dict =', repr(last_commit_dict))
 
         # total number of commits
         # to make it the first element
@@ -895,6 +914,13 @@ class RepoEvalCountOneCommitLog(RepoEval):
             if commits_list[k]['email'] in self.exclude_email_tuple:
                 del commits_list[k]
 
+        for c_dict in commits_list:
+            assert c_dict['email'] not in self.exclude_email_tuple, f"{c_dict['email']} in {self.exclude_email_tuple}"
+            assert '.travis.yml' not in c_dict['files'], f".travis.yml in {c_dict}\n" \
+                f"len(c_dict['files']) = {len(c_dict['files'])}\n" \
+                f"c_dict['files'] = {c_dict['files']}\n" \
+                f"'a' in c_dict['files'] = {'a' in c_dict['files']}\n" \
+                f"'.travis.yml' in c_dict['files'] = {'.travis.yml' in c_dict['files']}"
 
     def get_commit_dict(self, line):
         # to use git log output as input to python
