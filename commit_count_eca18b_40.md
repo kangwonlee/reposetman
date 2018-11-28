@@ -3,6 +3,7 @@
 | eca18b-nmisp-40-rrqweq53 | 8 | 2 | 2 | 4 |   |
 | eca18b-nmisp-40-2jaejin | 6 | 1 | 3 | 3/2 | 1/2  |
 | eca18b-nmisp-40-rkd0797 | 6 | 2 | 1 | 2 | 1  |
+| eca18b-nmisp-40-kingisme7 | 5 | 3 | 3/2 | 1/2 |   |
 | eca18b-nmisp-40-jeapilbyeon | 4 | 1 | 1 | 1 | 1  |
 | eca18b-nmisp-40-seunghyeon-eca18b | 4 |  | 2 | 1 | 1  |
 | eca18b-nmisp-40-ljk941219 | 3 | 1 |  | 1 | 1  |
@@ -12,7 +13,6 @@
 | eca18b-nmisp-40-Na-Young-Lee | 1 | 1 |  |  |   |
 | eca18b-nmisp-40-baehyeonji | 1 |  | 1/2 | 1/2 |   |
 | eca18b-nmisp-40-jerrydavidlee | 1 | 1/4 | 1/4 | 1/4 | 1/4  |
-| eca18b-nmisp-40-kingisme7 | 1 |  | 1/2 | 1/2 |   |
 | eca18b-nmisp-40-JYK1446 | 0 |  |  |  |   |
 | eca18b-nmisp-40-MunYoonKyung | 0 |  |  |  |   |
 | eca18b-nmisp-40-SungYoungHoon | 0 |  |  |  |   |
