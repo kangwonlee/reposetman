@@ -282,7 +282,7 @@ class TestRepoEvalRunEach(TestRepoEvalRunEachBase):
 
     def test_run_script_input(self):
         # function under test
-        msgo, msge = self.e.run_script_input([self.config['operation']['python_path'], 'input_example.py'])
+        msgo, msge = self.e.run_script_input([self.config['operation']['python_path'], os.path.join(os.path.split(__file__)[0], 'input_example.py')])
         self.assertFalse(msge, msg='\nstderr : %s' % msge)
         self.assertTrue(msgo, msg='\nstderr : %s' % msge)
 
@@ -414,8 +414,6 @@ class TestRepoEvalCountOneCommitLog(unittest.TestCase):
         # function under test
         result = self.e.get_git_cmd('1990-01-01', '2018-08-31')
 
-        expected = 'log --pretty=format:"{\'sha\':\'%H\', \'author\':u\'\'\'%an\'\'\', \'email\':u\'%ae\', \'date\':\'%ad\', \'subject\': u\\\"\\\"\\\"%s\\\"\\\"\\\"}" --after=\'@@@zzz###\' --before=\'###zzz@@@\' --encoding=utf-8 --numstat'
-
         command = list(result)
         command.insert(0, 'git')
 
@@ -435,60 +433,94 @@ class TestRepoEvalCountOneCommitLog(unittest.TestCase):
         test_line = str(stdout.splitlines()[0], encoding='utf-8')
 
         # check if the line contains all the information correctly
-        expected_list = ['7dbdb9', 'KangWon LEE', 'kangwon.lee@kpu.ac.kr', 'Wed Jul 4 18:48:00 2018 +0900', 'Initial commit']
+        expected_list = ['7dbdb9', 'KangWon LEE', 'kangwon.lee@kpu.ac.kr', 'Wed Jul 4 18:48:00 2018 +0900', 'Initial-commit']
 
         for item in expected_list:
             self.assertIn(item, test_line)
 
     def test_convert_git_log_to_table(self):
-        txt = """{'sha':'6f5eefb', 'author':'KangWon LEE', 'email':'kangwon.lee@kpu.ac.kr', 'date':'Wed Jun 21 13:35:31 2017 +0900', 'subject': \"\"\"corrected typo\"\"\"}\n""" \
-              '''1	1	hw09/hw09.md\n''' \
-              '''\n''' \
-              """{'sha':'5371667', 'author':'KangWon LEE CPF17A 170531 wk14', 'email':'kangwon_fwd@naver.com', 'date':'Wed May 31 20:34:55 2017 +0900', 'subject': \"\"\"Merge branch 'CPF17A/wk14'\"\"\"}\n""" \
-              """{'sha':'382bd01', 'author':'KangWon LEE CPF17A 170531 wk14', 'email':'kangwon_fwd@naver.com', 'date':'Wed May 31 20:16:56 2017 +0900', 'subject': \"\"\"ex47 : test_map()\"\"\"}\n""" \
-              '''15	0	ex47_nose_tests/ex47_nose_tests.py\n''' \
-              '''\n''' \
-              """{'sha':'3f7f254', 'author':'KangWon LEE CPF17A 170531 wk14', 'email':'kangwon_fwd@naver.com', 'date':'Wed May 31 20:13:39 2017 +0900', 'subject': \"\"\"ex47 : test_room(), test_room_paths()\"\"\"}\n""" \
-              '''29	0	ex47_nose_tests/ex47_nose_tests.py\n''' \
-              '''\n'''
+        # sample multiline input text
+        txt = '__reposetman_new_commit_start__"{\'sha\':\'0333282e3184bc17b16d42a313897a6c35ded482\', '\
+                '\'author\':u\'\'\'Kang Won LEE\'\'\', '\
+                '\'email\':u\'kangwon.lee@kpu.ac.kr\', '\
+                '\'date\':\'Fri Sep 14 01:44:09 2018 +0900\', '\
+                '\'subject\': u\'\'\'first-commit\'\'\'}"\n'\
+                '185\t0\t00.ipynb\n'\
+                '257\t0\t01.ipynb\n'\
+                '404\t0\t02.ipynb\n'\
+                '\n'\
+                '__reposetman_new_commit_start__"{\'sha\':\'83274fd5396a2e81e0ad067371cebed8f54e547f\', '\
+                '\'author\':u\'\'\'Kangwon Lee (Education)\'\'\', '\
+                '\'email\':u\'kangwonlee@users.noreply.github.com\', '\
+                '\'date\':\'Thu Sep 13 09:42:31 2018 -0700\', '\
+                '\'subject\': u\'\'\'Initial-commit\'\'\'}"\n'\
+                '104\t0\t.gitignore\n'
 
         result_columns, result_index = self.e.convert_git_log_to_table(txt)
 
-        expected_files_set = set(['hw09/hw09.md', 'ex47_nose_tests/ex47_nose_tests.py'])
-        expected_eval_dict = {'hw09/hw09.md': 1.0, 'ex47_nose_tests/ex47_nose_tests.py': 2.0}
+        expected_files_set = {'02.ipynb', '00.ipynb', '01.ipynb',  '.gitignore'}
+        expected_eval_dict = {'01.ipynb': 1.0, '00.ipynb':1.0, '02.ipynb': 1.0, '.gitignore':1.0}
 
-        self.assertFalse(expected_files_set - set(result_columns))
-        self.assertFalse(expected_files_set - set(result_index.keys()))
+        self.assertFalse(expected_files_set - set(result_columns), f"set(result_columns) = {set(result_columns)}")
+        self.assertFalse(expected_files_set - set(result_index.keys()), f"set(result_index.keys()) = {set(result_index.keys())}")
+
         for filename in expected_files_set:
             self.assertAlmostEqual(expected_eval_dict[filename], expected_eval_dict[filename])
 
     def test_get_commit_dict_00(self):
-        txt = '{\'sha\':\'2e8a2aa412433fe9e5982fb63e6228cbcc833991\', \'author\':u\'User-PC\\User\', \'email\':u\'email@domain.name\', \'date\':\'Fri Mar 16 15:21:00 2018 +0900\', \'subject\': u"""print world"""}'
-
+        txt = '{\'sha\':\'3a3e9a2f73e7edca47edae11fccfd9e508b63478\', \'author\':u\'\'\'LAPTOP-XXXXX\\USER\'\'\', \'email\':u\'email@domain.name\', \'date\':\'Thu Oct 4 22:06:46 2018 +0900\', \'subject\': u\'\'\'22222\'\'\'}'
         result = self.e.get_commit_dict(txt)
 
         expected = {
-            'sha': '2e8a2aa412433fe9e5982fb63e6228cbcc833991',
-            'author': u'User-PC\\User',
+            'sha': '3a3e9a2f73e7edca47edae11fccfd9e508b63478',
+            'author': u'LAPTOP-XXXXX_USER',
             'email':u'email@domain.name',
-            'date':'Fri Mar 16 15:21:00 2018 +0900',
-            'subject': u'print world',
+            'date':'Thu Oct 4 22:06:46 2018 +0900',
+            'subject': u'22222',
         }
 
-        self.assertDictEqual(expected, result)
+        self.assertDictEqual(expected, result, msg=f"type(result) = {type(result)}")
 
     def test_get_commit_dict_01(self):
         """
         This test tries to figure out if git log with formatting is suitable to extract information
         """
-        txt = '{\'sha\':\'9bfd20b43355df5fceb8098356f5a3267020872e\', \'author\':u\'\'\'Limchaekwang\'\'\', \'email\':u\'sksmsekgnsdl@naver.com\', \'date\':\'Fri Apr 13 21:58:07 2018 +0900\', \'subject\': u\'\'\'ex08복습!(\\n은 새 줄에서 시작, """안에 어떤 내용이든 쓸 수 있음)\'\'\'}'
+        txt = '"{\'sha\':\'9bfd20b43355df5fceb8098356f5a3267020872e\', '\
+                '\'author\':u\'\'\'Name\'\'\', '\
+                '\'email\':u\'email@domain.name\', '\
+                '\'date\':\'Fri Apr 13 21:58:07 2018 +0900\', '\
+                '\'subject\': u\'\'\'ex08-n\'\'\'}"'
+
+        # see if input text is valid
+        ast_tree = ast.parse(txt)
+        print(ast_tree)
 
         result = self.e.get_commit_dict(txt)
         expected = {'sha': '9bfd20b43355df5fceb8098356f5a3267020872e', 
                     'author': 'Name', 
                     'email': 'email@domain.name', 
                     'date': 'Fri Apr 13 21:58:07 2018 +0900', 
-                    'subject': 'ex08복습!(\n은 새 줄에서 시작, """안에 어떤 내용이든 쓸 수 있음)'}
+                    'subject': 'ex08-n'}
+        self.assertEqual(expected['sha'], result['sha'])
+        self.assertEqual(expected['date'], result['date'])
+        self.assertEqual(expected['subject'], result['subject'])
+
+    def test_get_commit_dict_02(self):
+        """
+        This test tries to figure out if git log with formatting is suitable to extract information
+        """
+        txt = '"""{\'sha\':\'shashashashasha\', '\
+        '\'author\':u\'\'\'authorauthorauthorauthor\'\'\', '\
+        '\'email\':u\'emailemailemail\', '\
+        '\'date\':\'datedatedate\', '\
+        '\'subject\': u\'\'\'  Merge branch \'hotfix/branch_figure\'  \'\'\'}"""'
+
+        result = self.e.get_commit_dict(txt)
+        expected = {'sha': 'shashashashasha', 
+                    'author': 'authorauthorauthorauthor', 
+                    'email': 'emailemailemail', 
+                    'date': 'datedatedate', 
+                    'subject': 'Merge branch \'hotfix/branch_figure\''}
         self.assertEqual(expected['sha'], result['sha'])
         self.assertEqual(expected['date'], result['date'])
         self.assertEqual(expected['subject'], result['subject'])
@@ -574,7 +606,7 @@ class TestSysArgv(unittest.TestCase):
 
     def test_get_argn(self):
         
-        result = progress.get_argn('sys_argv_example_00.py')
+        result = progress.get_argn(os.path.join(os.path.split(__file__)[0], 'sys_argv_example_00.py'))
 
         expected = 3
 
@@ -601,7 +633,7 @@ class TestFromSysImportArgv(unittest.TestCase):
 
     def test_get_argn(self):
         
-        result = progress.get_argn('from_sys_argv_example_00.py')
+        result = progress.get_argn(os.path.join(os.path.split(__file__)[0], 'from_sys_argv_example_00.py'))
 
         expected = 2
 

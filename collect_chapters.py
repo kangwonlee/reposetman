@@ -3,9 +3,10 @@ Collect repositories of the chapters into a subtree
 
 Generate Report
 """
-
 import ast
 import configparser
+import itertools
+import multiprocessing as mp
 import os
 import pprint
 import sys
@@ -19,21 +20,43 @@ import timeit
 
 @timeit.timeit
 def main(argv):
+    # read configuration file
     config = configparser.ConfigParser()
     config.read(argv[0])
 
+    # get umbrella folder location
+    # TODO : consider rename umbrella to summary
     umbrella_folder = config['operation']['umbrella']
+
     # make the umbrella_folder if missing
     if not os.path.exists(umbrella_folder):
         os.makedirs(umbrella_folder)
+        # if the umbrella_folder was missing, alway try to update
         config['operation']['update_repo'] = 'False'
 
+    # to save time, if list file is available and 
+    # config says so, read from the folder list file
+    # TODO : consider moving folder list filename to cfg file
     if (os.path.exists('participant_folder_list.txt') and ('True' != config['operation']['update_repo'])):
+
+        # TODO : consider refactoring into a function
         print('reading list file')
 
+        # for report generators
         participant_folder_list = []
+        """
+        [
+            {'name': user_id_00, 'path': path_to_summary_folder/user_id_00},
+            {'name': user_id_01, 'path': path_to_summary_folder/user_id_01},
+            {'name': user_id_02, 'path': path_to_summary_folder/user_id_02},
+            ...
+        ]
+        """
 
+        # TODO : consider moving folder list filename to cfg file
         with open('participant_folder_list.txt', 'r') as pl_file:
+            # TODO : consider read text and then convert for more testable code?
+            # TODO : is list comprehension beneficial?
             for path in pl_file.readlines():
                 participant_folder_list.append(
                     {
@@ -41,7 +64,7 @@ def main(argv):
                         'path': path.strip(),
                     }
                 )
-
+        # end of reading folder list file
     else:
         print('updating subtrees')
         participant_folder_list = init_or_update_umbrella_repos(
@@ -51,11 +74,20 @@ def main(argv):
             umbrella_folder
         )
 
-        with open('participant_folder_list.txt', 'w') as folder_list_file:
-            for folder_info in participant_folder_list:
-                folder_list_file.write(folder_info['path']+'\n')
+        # TODO : is it required to overwrite everytime?
+        write_folder_list_file(participant_folder_list)
 
+    # reports about users with chapters
     generate_reports(participant_folder_list, config)
+
+
+def write_folder_list_file(participant_folder_list):
+    # TODO : consider moving folder list filename to cfg file
+    # storing paths only
+    # last part of path == id
+    with open('participant_folder_list.txt', 'w') as folder_list_file:
+        for folder_info in participant_folder_list:
+            folder_list_file.write(folder_info['path']+'\n')
 
 
 @timeit.timeit
@@ -67,48 +99,38 @@ def get_sections_dict(config):
     ======
 
     sections_dict
-    + section_a
-    ++ urls
-    +++ url_a_00
-    +++ url_a_01
-    +++ url_a_02
-    ++ user_ids
-    +++ user_id_00
-    +++ user_id_01
-    +++ user_id_02
+    {
+        'section_a':{
+            'urls':[
+                url_a_00, url_a_01, url_a_02, ...
+            ],
+            'user_ids':[
+                user_id_00, user_id_01, user_id_02, ...
+            ]
+        }
+        'section_b':{
+            'urls':[
+                url_b_00, url_b_01, url_b_02, ...
+            ],
+            'user_ids':[
+                user_id_00, user_id_01, user_id_02, ...
+            ]
+        }
+    }
 
-    + section_b
-    ++ urls
-    +++ url_b_00
-    +++ url_b_01
-    +++ url_b_02
-    ++ user_ids
-    +++ user_id_00
-    +++ user_id_01
-    +++ user_id_02
+    sections may have different participant (== user) sets
 
     """
+
+    # result
     sections_dict = {}
 
     urls_path_list = []
 
+    # to extract user ids
     url_parse_dict = {}
 
-    """
-    sections_dict
-    + section_a
-    ++ urls
-    +++ url_a_00
-    +++ url_a_01
-    +++ url_a_02
-
-    + section_b
-    ++ urls
-    +++ url_b_00
-    +++ url_b_01
-    +++ url_b_02
-    """
-
+    # section loop
     for section in ast.literal_eval(config['operation']['sections']):
         sections_dict[section] = {
             'urls':ret.get_github_url_list(config[section]['list'].strip()),
@@ -116,6 +138,7 @@ def get_sections_dict(config):
 
         url_parse_dict[section] = []
 
+        # to extract user ids from the urls later
         for url in sections_dict[section]['urls']:
             url_parse_dict[section].append(up.urlparse(url))
             urls_path_list.append(url_parse_dict[section][-1].path)
@@ -123,34 +146,21 @@ def get_sections_dict(config):
     # os.path.split(parse.path)[-1][id_starts_here:] -> user_id
     id_starts_here = len(config['operation']['repo_prefix_sample'].strip())
 
-    """
-    sections_dict
-    + section_a
-    ++ urls
-    +++ url_a_00
-    +++ url_a_01
-    +++ url_a_02
-    ++ user_ids
-    +++ user_id_00
-    +++ user_id_01
-    +++ user_id_02
-
-    + section_b
-    ++ urls
-    +++ url_b_00
-    +++ url_b_01
-    +++ url_b_02
-    ++ user_ids
-    +++ user_id_00
-    +++ user_id_01
-    +++ user_id_02
-    """
-
     # set user ids of each repository
     for section in sections_dict:
         sections_dict[section]['user_ids'] = []
+
+        # parsed url loop
         for parse in url_parse_dict[section]:
-            sections_dict[section]['user_ids'].append(os.path.splitext(os.path.split(parse.path.strip('/'))[-1])[0][id_starts_here:])
+            sections_dict[section]['user_ids'].append(
+                os.path.splitext(
+                    os.path.split(
+                        parse.path.strip('/')
+                        )[-1]  # last part of the path
+                    )[0][id_starts_here:]   # extract id
+                )
+
+    # TODO : is it desirable to separate id extraction?
 
     return sections_dict
 
@@ -160,8 +170,12 @@ def transpose_dict(sections_dict):
     """
     Input
     =====
-    section0: [repo0_00, repo0_01, ...],
-    section1: [repo1_00, repo1_01, ...],
+    section0: 
+        'urls': [repo0_00, repo0_01, ...],
+        'ids' : [id00, id01, ...]
+    section1: 
+        'urls': [repo1_00, repo1_01, ...],
+        'ids' : [id00, id01, ...]
 
     Output
     =====
@@ -187,7 +201,7 @@ def transpose_dict(sections_dict):
 
 
 @timeit.timeit
-def init_or_update_umbrella_repos(users_dict, umbrella_folder):
+def init_or_update_umbrella_repos(users_dict, umbrella_folder, b_parallel=True):
     """
     Input
     =====
@@ -206,46 +220,76 @@ def init_or_update_umbrella_repos(users_dict, umbrella_folder):
     ++ ...
     """
 
+
+
     start_folder = os.getcwd()
 
-    repo_list = []
+    def gen_folder_user_dict(user_dict_item):
+        for user, user_dict in user_dict_item:
+            yield umbrella_folder, user, user_dict
 
-    # because it seems not desirable to update multiple subtrees at once
-    # if parallelize, in the user == participant level
-    for user in users_dict:
-        user_folder = os.path.abspath(os.path.join(umbrella_folder, user))
-        if not os.path.exists(user_folder):
-            os.makedirs(user_folder)
+    if b_parallel:
 
-        os.chdir(user_folder)
-        if not os.path.exists('.git'):
-            # initialize user umbrella repo
+        p = mp.Pool(mp.cpu_count())
 
-            init_user_umbrella_repo(users_dict[user])
-            # end initializing user umbrella repo
+        # iterate over users_dict.items() repeating umbrella_folder
+        repo_list = p.starmap(
+            init_or_update_user_umbrella, 
+            gen_folder_user_dict(users_dict.items()),
+        )
 
-        # section loop
-        for section in users_dict[user]:
-            if section not in get_remote_list():
-                print(f'remote add {section}')
-                git.git(('remote', 'add', section, users_dict[user][section]))
-                print('git remote -v')
-                git.git(('remote', '-v'))
+        p.close()
+        p.join()
 
-            if not os.path.exists(os.path.join(user_folder, section)):
-                print(f"folder missing : {os.path.join(user_folder, section)}")
-                print('subtree add')
-                git.git(('subtree', 'add', f'--prefix={section}', section, 'master'))
-            else:
-                print('subtree pull')
-                git.git(('subtree', 'pull', f'--prefix={section}', section, 'master'))
+    else:
 
-        repo_list.append({'name': user, 'path': user_folder})
-        os.chdir(start_folder)
+        # iterate over users_dict.items() repeating umbrella_folder
+        repo_list = itertools.starmap(
+            init_or_update_user_umbrella, 
+            gen_folder_user_dict(users_dict.items()),
+        )
 
     os.chdir(start_folder)
 
     return repo_list
+
+
+def init_or_update_user_umbrella(umbrella_folder, user, section_url_dict):
+
+    assert os.path.exists(umbrella_folder), f'init_or_update_user_umbrella: missing folder {umbrella_folder}'
+    assert isinstance(user, str), f'init_or_update_user_umbrella: type({user}) = {type(user)}'
+    assert isinstance(section_url_dict, dict), f'init_or_update_user_umbrella: type({section_url_dict}) = {type(section_url_dict)}'
+
+    user_folder = os.path.abspath(os.path.join(umbrella_folder, user))
+    if not os.path.exists(user_folder):
+        os.makedirs(user_folder)
+
+    start_folder = os.getcwd()
+    os.chdir(user_folder)
+    if not os.path.exists('.git'):
+        # initialize user umbrella repo
+
+        init_user_umbrella_repo(section_url_dict)
+        # end initializing user umbrella repo
+
+    # section loop
+    for section in section_url_dict:
+        if section not in get_remote_list():
+            print(f'remote add {section}')
+            git.git(('remote', 'add', section, section_url_dict[section]))
+            print('git remote -v')
+            git.git(('remote', '-v'))
+
+        if not os.path.exists(os.path.join(user_folder, section)):
+            print(f"folder missing : {os.path.join(user_folder, section)}")
+            print('subtree add')
+            git.git(('subtree', 'add', f'--prefix={section}', section, 'master'))
+        else:
+            print('subtree pull')
+            git.git(('subtree', 'pull', f'--prefix={section}', section, 'master'))
+
+    os.chdir(start_folder)    
+    return {'name': user, 'path': user_folder}
 
 
 def get_remote_list():
