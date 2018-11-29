@@ -3,9 +3,10 @@ Collect repositories of the chapters into a subtree
 
 Generate Report
 """
-
 import ast
 import configparser
+import itertools
+import multiprocessing as mp
 import os
 import pprint
 import sys
@@ -26,7 +27,7 @@ def main(argv):
     # make the umbrella_folder if missing
     if not os.path.exists(umbrella_folder):
         os.makedirs(umbrella_folder)
-        config['operation']['update_repo'] = False
+        config['operation']['update_repo'] = 'False'
 
     if (os.path.exists('participant_folder_list.txt') and ('True' != config['operation']['update_repo'])):
         print('reading list file')
@@ -51,11 +52,15 @@ def main(argv):
             umbrella_folder
         )
 
-        with open('participant_folder_list.txt', 'w') as folder_list_file:
-            for folder_info in participant_folder_list:
-                folder_list_file.write(folder_info['path']+'\n')
+        write_folder_list_file(participant_folder_list)
 
     generate_reports(participant_folder_list, config)
+
+
+def write_folder_list_file(participant_folder_list):
+    with open('participant_folder_list.txt', 'w') as folder_list_file:
+        for folder_info in participant_folder_list:
+            folder_list_file.write(folder_info['path']+'\n')
 
 
 @timeit.timeit
@@ -187,7 +192,7 @@ def transpose_dict(sections_dict):
 
 
 @timeit.timeit
-def init_or_update_umbrella_repos(users_dict, umbrella_folder):
+def init_or_update_umbrella_repos(users_dict, umbrella_folder, b_parallel=True):
     """
     Input
     =====
@@ -206,46 +211,76 @@ def init_or_update_umbrella_repos(users_dict, umbrella_folder):
     ++ ...
     """
 
+
+
     start_folder = os.getcwd()
 
-    repo_list = []
+    def gen_folder_user_dict(user_dict_item):
+        for user, user_dict in user_dict_item:
+            yield umbrella_folder, user, user_dict
 
-    # because it seems not desirable to update multiple subtrees at once
-    # if parallelize, in the user == participant level
-    for user in users_dict:
-        user_folder = os.path.abspath(os.path.join(umbrella_folder, user))
-        if not os.path.exists(user_folder):
-            os.makedirs(user_folder)
+    if b_parallel:
 
-        os.chdir(user_folder)
-        if not os.path.exists('.git'):
-            # initialize user umbrella repo
+        p = mp.Pool(mp.cpu_count())
 
-            init_user_umbrella_repo(users_dict[user])
-            # end initializing user umbrella repo
+        # iterate over users_dict.items() repeating umbrella_folder
+        repo_list = p.starmap(
+            init_or_update_user_umbrella, 
+            gen_folder_user_dict(users_dict.items()),
+        )
 
-        # section loop
-        for section in users_dict[user]:
-            if section not in get_remote_list():
-                print(f'remote add {section}')
-                git.git(('remote', 'add', section, users_dict[user][section]))
-                print('git remote -v')
-                git.git(('remote', '-v'))
+        p.close()
+        p.join()
 
-            if not os.path.exists(os.path.join(user_folder, section)):
-                print(f"folder missing : {os.path.join(user_folder, section)}")
-                print('subtree add')
-                git.git(('subtree', 'add', f'--prefix={section}', section, 'master'))
-            else:
-                print('subtree pull')
-                git.git(('subtree', 'pull', f'--prefix={section}', section, 'master'))
+    else:
 
-        repo_list.append({'name': user, 'path': user_folder})
-        os.chdir(start_folder)
+        # iterate over users_dict.items() repeating umbrella_folder
+        repo_list = itertools.starmap(
+            init_or_update_user_umbrella, 
+            gen_folder_user_dict(users_dict.items()),
+        )
 
     os.chdir(start_folder)
 
     return repo_list
+
+
+def init_or_update_user_umbrella(umbrella_folder, user, section_url_dict):
+
+    assert os.path.exists(umbrella_folder), f'init_or_update_user_umbrella: missing folder {umbrella_folder}'
+    assert isinstance(user, str), f'init_or_update_user_umbrella: type({user}) = {type(user)}'
+    assert isinstance(section_url_dict, dict), f'init_or_update_user_umbrella: type({section_url_dict}) = {type(section_url_dict)}'
+
+    user_folder = os.path.abspath(os.path.join(umbrella_folder, user))
+    if not os.path.exists(user_folder):
+        os.makedirs(user_folder)
+
+    start_folder = os.getcwd()
+    os.chdir(user_folder)
+    if not os.path.exists('.git'):
+        # initialize user umbrella repo
+
+        init_user_umbrella_repo(section_url_dict)
+        # end initializing user umbrella repo
+
+    # section loop
+    for section in section_url_dict:
+        if section not in get_remote_list():
+            print(f'remote add {section}')
+            git.git(('remote', 'add', section, section_url_dict[section]))
+            print('git remote -v')
+            git.git(('remote', '-v'))
+
+        if not os.path.exists(os.path.join(user_folder, section)):
+            print(f"folder missing : {os.path.join(user_folder, section)}")
+            print('subtree add')
+            git.git(('subtree', 'add', f'--prefix={section}', section, 'master'))
+        else:
+            print('subtree pull')
+            git.git(('subtree', 'pull', f'--prefix={section}', section, 'master'))
+
+    os.chdir(start_folder)    
+    return {'name': user, 'path': user_folder}
 
 
 def get_remote_list():
