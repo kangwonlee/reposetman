@@ -118,15 +118,7 @@ class ProgressReportBuilder(object):
         if 'True' == self.config[section]['pound_count']:
             call_pound_count(self.config, section, repo_list, results)
         if 'True' == self.config[section]['run_all']:
-            run_all_txt, run_all_md, run_all_html = run_all(self.config, section, repo_list)
-            results.update({
-                'run_all':
-                    {
-                    'txt': run_all_txt, 
-                    'md': run_all_md, 
-                    'html': run_all_html
-                    }
-            }) 
+            call_run_all(self.config, section, repo_list, results) 
 
         return results
 
@@ -242,17 +234,20 @@ def process_section(config, re_git_log, section):
     if 'True' == config[section]['pound_count']:
         call_pound_count(config, section, repo_list, results)
     if 'True' == config[section]['run_all']:
-        run_all_txt, run_all_md, run_all_html = run_all(config, section, repo_list)
-        results.update({
-            'run_all':
-                {
-                'txt': run_all_txt, 
-                'md': run_all_md, 
-                'html': run_all_html
-                }
-        }) 
+        call_run_all(config, section, repo_list, results) 
 
     return results
+
+def call_run_all(config, section, repo_list, results):
+    run_all_txt, run_all_md, run_all_html = run_all(config, section, repo_list)
+    results.update({
+        'run_all':
+            {
+            'txt': run_all_txt, 
+            'md': run_all_md, 
+            'html': run_all_html
+            }
+    }) 
 
 
 def call_pound_count(config, section, repo_list, results):
