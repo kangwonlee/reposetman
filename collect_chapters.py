@@ -275,7 +275,7 @@ def init_or_update_user_umbrella(umbrella_folder, user, section_url_dict):
     # section loop
     for section in section_url_dict:
         if section not in get_remote_list():
-            print(f'remote add {section}')
+            print(f'remote add {section} {section_url_dict[section]}')
             git.git(('remote', 'add', section, section_url_dict[section]))
             print('git remote -v')
             git.git(('remote', '-v'))
@@ -285,7 +285,7 @@ def init_or_update_user_umbrella(umbrella_folder, user, section_url_dict):
             print('subtree add')
             git.git(('subtree', 'add', f'--prefix={section}', section, 'master'))
         else:
-            print('subtree pull')
+            print(f'subtree pull {section_url_dict[section]}')
             git.git(('subtree', 'pull', f'--prefix={section}', section, 'master'))
 
     os.chdir(start_folder)    
