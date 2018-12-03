@@ -20,21 +20,43 @@ import timeit
 
 @timeit.timeit
 def main(argv):
+    # read configuration file
     config = configparser.ConfigParser()
     config.read(argv[0])
 
+    # get umbrella folder location
+    # TODO : consider rename umbrella to summary
     umbrella_folder = config['operation']['umbrella']
+
     # make the umbrella_folder if missing
     if not os.path.exists(umbrella_folder):
         os.makedirs(umbrella_folder)
+        # if the umbrella_folder was missing, alway try to update
         config['operation']['update_repo'] = 'False'
 
+    # to save time, if list file is available and 
+    # config says so, read from the folder list file
+    # TODO : consider moving folder list filename to cfg file
     if (os.path.exists('participant_folder_list.txt') and ('True' != config['operation']['update_repo'])):
+
+        # TODO : consider refactoring into a function
         print('reading list file')
 
+        # for report generators
         participant_folder_list = []
+        """
+        [
+            {'name': user_id_00, 'path': path_to_summary_folder/user_id_00},
+            {'name': user_id_01, 'path': path_to_summary_folder/user_id_01},
+            {'name': user_id_02, 'path': path_to_summary_folder/user_id_02},
+            ...
+        ]
+        """
 
+        # TODO : consider moving folder list filename to cfg file
         with open('participant_folder_list.txt', 'r') as pl_file:
+            # TODO : consider read text and then convert for more testable code?
+            # TODO : is list comprehension beneficial?
             for path in pl_file.readlines():
                 participant_folder_list.append(
                     {
@@ -42,7 +64,7 @@ def main(argv):
                         'path': path.strip(),
                     }
                 )
-
+        # end of reading folder list file
     else:
         print('updating subtrees')
         participant_folder_list = init_or_update_umbrella_repos(
@@ -52,12 +74,17 @@ def main(argv):
             umbrella_folder
         )
 
+        # TODO : is it required to overwrite everytime?
         write_folder_list_file(participant_folder_list)
 
+    # reports about users with chapters
     generate_reports(participant_folder_list, config)
 
 
 def write_folder_list_file(participant_folder_list):
+    # TODO : consider moving folder list filename to cfg file
+    # storing paths only
+    # last part of path == id
     with open('participant_folder_list.txt', 'w') as folder_list_file:
         for folder_info in participant_folder_list:
             folder_list_file.write(folder_info['path']+'\n')
@@ -72,48 +99,38 @@ def get_sections_dict(config):
     ======
 
     sections_dict
-    + section_a
-    ++ urls
-    +++ url_a_00
-    +++ url_a_01
-    +++ url_a_02
-    ++ user_ids
-    +++ user_id_00
-    +++ user_id_01
-    +++ user_id_02
+    {
+        'section_a':{
+            'urls':[
+                url_a_00, url_a_01, url_a_02, ...
+            ],
+            'user_ids':[
+                user_id_00, user_id_01, user_id_02, ...
+            ]
+        }
+        'section_b':{
+            'urls':[
+                url_b_00, url_b_01, url_b_02, ...
+            ],
+            'user_ids':[
+                user_id_00, user_id_01, user_id_02, ...
+            ]
+        }
+    }
 
-    + section_b
-    ++ urls
-    +++ url_b_00
-    +++ url_b_01
-    +++ url_b_02
-    ++ user_ids
-    +++ user_id_00
-    +++ user_id_01
-    +++ user_id_02
+    sections may have different participant (== user) sets
 
     """
+
+    # result
     sections_dict = {}
 
     urls_path_list = []
 
+    # to extract user ids
     url_parse_dict = {}
 
-    """
-    sections_dict
-    + section_a
-    ++ urls
-    +++ url_a_00
-    +++ url_a_01
-    +++ url_a_02
-
-    + section_b
-    ++ urls
-    +++ url_b_00
-    +++ url_b_01
-    +++ url_b_02
-    """
-
+    # section loop
     for section in ast.literal_eval(config['operation']['sections']):
         sections_dict[section] = {
             'urls':ret.get_github_url_list(config[section]['list'].strip()),
@@ -121,6 +138,7 @@ def get_sections_dict(config):
 
         url_parse_dict[section] = []
 
+        # to extract user ids from the urls later
         for url in sections_dict[section]['urls']:
             url_parse_dict[section].append(up.urlparse(url))
             urls_path_list.append(url_parse_dict[section][-1].path)
@@ -128,34 +146,21 @@ def get_sections_dict(config):
     # os.path.split(parse.path)[-1][id_starts_here:] -> user_id
     id_starts_here = len(config['operation']['repo_prefix_sample'].strip())
 
-    """
-    sections_dict
-    + section_a
-    ++ urls
-    +++ url_a_00
-    +++ url_a_01
-    +++ url_a_02
-    ++ user_ids
-    +++ user_id_00
-    +++ user_id_01
-    +++ user_id_02
-
-    + section_b
-    ++ urls
-    +++ url_b_00
-    +++ url_b_01
-    +++ url_b_02
-    ++ user_ids
-    +++ user_id_00
-    +++ user_id_01
-    +++ user_id_02
-    """
-
     # set user ids of each repository
     for section in sections_dict:
         sections_dict[section]['user_ids'] = []
+
+        # parsed url loop
         for parse in url_parse_dict[section]:
-            sections_dict[section]['user_ids'].append(os.path.splitext(os.path.split(parse.path.strip('/'))[-1])[0][id_starts_here:])
+            sections_dict[section]['user_ids'].append(
+                os.path.splitext(
+                    os.path.split(
+                        parse.path.strip('/')
+                        )[-1]  # last part of the path
+                    )[0][id_starts_here:]   # extract id
+                )
+
+    # TODO : is it desirable to separate id extraction?
 
     return sections_dict
 
@@ -165,8 +170,12 @@ def transpose_dict(sections_dict):
     """
     Input
     =====
-    section0: [repo0_00, repo0_01, ...],
-    section1: [repo1_00, repo1_01, ...],
+    section0: 
+        'urls': [repo0_00, repo0_01, ...],
+        'ids' : [id00, id01, ...]
+    section1: 
+        'urls': [repo1_00, repo1_01, ...],
+        'ids' : [id00, id01, ...]
 
     Output
     =====
