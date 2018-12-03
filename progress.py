@@ -116,15 +116,7 @@ class ProgressReportBuilder(object):
         if 'True' == self.config[section]['count_commits']:
             call_commit_count(self.config, section, repo_list, results) 
         if 'True' == self.config[section]['pound_count']:
-            pound_reports = pound_count(self.config, section, repo_list)
-            results.update({
-                'pound_counts':
-                    {
-                        'txt': pound_reports[0],
-                        'md': pound_reports[1],
-                        'html': pound_reports[2],
-                    }
-            })
+            call_pound_count(self.config, section, repo_list, results)
         if 'True' == self.config[section]['run_all']:
             run_all_txt, run_all_md, run_all_html = run_all(self.config, section, repo_list)
             results.update({
@@ -248,15 +240,7 @@ def process_section(config, re_git_log, section):
     if 'True' == config[section]['count_commits']:
         call_commit_count(config, section, repo_list, results) 
     if 'True' == config[section]['pound_count']:
-        pound_reports = pound_count(config, section, repo_list)
-        results.update({
-            'pound_counts':
-                {
-                    'txt': pound_reports[0],
-                    'md': pound_reports[1],
-                    'html': pound_reports[2],
-                }
-        })
+        call_pound_count(config, section, repo_list, results)
     if 'True' == config[section]['run_all']:
         run_all_txt, run_all_md, run_all_html = run_all(config, section, repo_list)
         results.update({
@@ -269,6 +253,18 @@ def process_section(config, re_git_log, section):
         }) 
 
     return results
+
+
+def call_pound_count(config, section, repo_list, results):
+    pound_reports = pound_count(config, section, repo_list)
+    results.update({
+        'pound_counts':
+            {
+                'txt': pound_reports[0],
+                'md': pound_reports[1],
+                'html': pound_reports[2],
+            }
+    })
 
 
 def call_commit_count(config, section, repo_list, results):
