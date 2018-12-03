@@ -315,6 +315,7 @@ def init_user_umbrella_repo(user_dict):
 @timeit.timeit
 def generate_reports(repo_list, config, results = {}):
     progress.call_commit_count(config, 'umbrella', repo_list, results)
+    progress.call_pound_count(config, 'umbrella', repo_list, results)
 
 
 if "__main__" == __name__:
