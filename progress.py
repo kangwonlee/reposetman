@@ -270,6 +270,7 @@ def process_section(config, re_git_log, section):
 
     return results
 
+
 def call_commit_count(config, section, repo_list, results):
     commit_count_txt, commit_count_md, commit_count_html = count_commits(config, section, repo_list) 
     results.update({
