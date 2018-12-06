@@ -2,7 +2,7 @@
 |:--:|:----:|:----:|:----:|:----:|:----:|:----:|
 | eca18b-nmisp-01-rkd0797 | 14 |  | 5 | 3 | 6 |   |
 | eca18b-nmisp-00-seunghyeon-eca18b | 11 | 11 |  |  |  |   |
-| eca18b-nmisp-01-Bohyun-cpf18a | 9 |  | 3 | 1 | 5 |   |
+| eca18b-nmisp-01-Bohyun-cpf18a | 11 |  | 4 | 1 | 6 |   |
 | eca18b-nmisp-01-Na-Young-Lee | 8 |  | 5 | 1 | 2 |   |
 | eca18b-nmisp-01-ljk941219 | 6 |  | 3 | 3/2 | 3/2 |   |
 | eca18b-nmisp-01-2jaejin | 4 |  | 5/4 | 5/4 | 5/4 | 1/4  |

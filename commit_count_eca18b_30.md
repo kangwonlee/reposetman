@@ -3,9 +3,9 @@
 | eca18b-nmisp-30-rkd0797 | 16 | 5 | 4 | 5 | 1 | 1  |
 | eca18b-nmisp-30-kingisme7 | 6 | 2 | 2 | 2 |  |   |
 | eca18b-nmisp-30-2jaejin | 4 | 11/6 | 11/6 | 1/3 |  |   |
+| eca18b-nmisp-30-Bohyun-cpf18a | 4 | 5/4 | 1/4 | 9/4 | 1/4 |   |
 | eca18b-nmisp-30-ljk941219 | 4 | 1 |  | 7/3 | 1/3 | 1/3  |
 | eca18b-nmisp-30-rrqweq53 | 4 | 10/3 | 1/3 | 1/3 |  |   |
-| eca18b-nmisp-30-Bohyun-cpf18a | 3 | 1 |  | 2 |  |   |
 | eca18b-nmisp-30-Na-Young-Lee | 3 | 1 |  | 2 |  |   |
 | eca18b-nmisp-30-seunghyeon-eca18b | 3 | 2 |  | 1 |  |   |
 | eca18b-nmisp-30-ChoHyeonDeok | 2 |  |  | 1 | 1 |   |
