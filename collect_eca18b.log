@@ -233,14 +233,10 @@ From https://github.com/ECA18B/eca18b-nmisp-30-ljk941219
  * branch            master     -> FETCH_HEAD
 
 subtree pull
-Merge made by the 'recursive' strategy.
- eca18b_40/00_linear_algebra_in_python.ipynb    |  45 +++--
- eca18b_40/10_vector_addition_subtraction.ipynb | 226 +++++++++++++++++++------
- 2 files changed, 208 insertions(+), 63 deletions(-)
+Already up to date.
 
 From https://github.com/ECA18B/eca18b-nmisp-40-ljk941219
  * branch            master     -> FETCH_HEAD
-   19cfec4..61d37c3  master     -> eca18b_40/master
 
 subtree pull
 Already up to date.
@@ -327,14 +323,10 @@ From https://github.com/ECA18B/eca18b-nmisp-40-kingisme7
  * branch            master     -> FETCH_HEAD
 
 subtree pull
-Merge made by the 'recursive' strategy.
- eca18b_50/10_Forward_Euler.ipynb              | 81 +++++++++++++++++++++-----
- eca18b_50/15_Forward_Euler_Higher_Order.ipynb | 84 +++++++++++++++++++++------
- 2 files changed, 134 insertions(+), 31 deletions(-)
+Already up to date.
 
 From https://github.com/ECA18B/eca18c-nmisp-50-kingisme7
  * branch            master     -> FETCH_HEAD
-   67a6be0..c3750f6  master     -> eca18b_50/master
 
 subtree pull
 Already up to date.
@@ -367,14 +359,10 @@ From https://github.com/ECA18B/eca18b-nmisp-30-seunghyeon-eca18b
  * branch            master     -> FETCH_HEAD
 
 subtree pull
-Merge made by the 'recursive' strategy.
- eca18b_40/00_linear_algebra_in_python.ipynb    | 159 +++++++++++++++++++++----
- eca18b_40/10_vector_addition_subtraction.ipynb | 139 ++++++++++++++-------
- 2 files changed, 238 insertions(+), 60 deletions(-)
+Already up to date.
 
 From https://github.com/ECA18B/eca18b-nmisp-40-seunghyeon-eca18b
  * branch            master     -> FETCH_HEAD
-   8ef7fa1..84865ea  master     -> eca18b_40/master
 
 subtree pull
 Already up to date.
@@ -599,61 +587,34 @@ From https://github.com/ECA18B/eca18b-nmisp-01-rlaehdwn66
  * branch            master     -> FETCH_HEAD
 
 subtree pull
-Merge made by the 'recursive' strategy.
- eca18b_00/00_introduction.ipynb | 40 ++++++++++++++++++++--------------------
- 1 file changed, 20 insertions(+), 20 deletions(-)
+Already up to date.
 
 From https://github.com/ECA18B/eca18b-nmisp-00-Bohyun-cpf18a
  * branch            master     -> FETCH_HEAD
-   342b8d0..aa614a2  master     -> eca18b_00/master
 
 subtree pull
-Merge made by the 'recursive' strategy.
- eca18b_10/10_sequential.ipynb     | 43 ++++++++++++++++++++++++---------------
- eca18b_10/30_newton_raphson.ipynb |  3 +--
- 2 files changed, 28 insertions(+), 18 deletions(-)
+Already up to date.
 
 From https://github.com/ECA18B/eca18b-nmisp-01-Bohyun-cpf18a
  * branch            master     -> FETCH_HEAD
-   3ed8f61..673cb7d  master     -> eca18b_10/master
 
 subtree pull
-Merge made by the 'recursive' strategy.
- eca18b_20/00_interpolation.ipynb | 302 +++++++++++++++++++++++++++++++++------
- eca18b_20/05_probability.ipynb   | 133 +++++++++++++++--
- eca18b_20/10_statistics.ipynb    | 249 ++++++++++++++++++--------------
- 3 files changed, 517 insertions(+), 167 deletions(-)
+Already up to date.
 
 From https://github.com/ECA18B/eca18b-nmisp-20-Bohyun-cpf18a
  * branch            master     -> FETCH_HEAD
-   bc31477..db84ce6  master     -> eca18b_20/master
 
 subtree pull
-Merge made by the 'recursive' strategy.
- eca18b_30/00_zeroth_order.ipynb       |  91 ++++++++++++++++++++
- eca18b_30/01_first_order.ipynb        |  87 +++++++++++++++----
- eca18b_30/02_second_order.ipynb       |   3 +-
- eca18b_30/10_T_section_centroid.ipynb | 154 ++++++++++++++++++++++++++--------
- 4 files changed, 285 insertions(+), 50 deletions(-)
+Already up to date.
 
 From https://github.com/ECA18B/eca18b-nmisp-30-Bohyun-cpf18a
  * branch            master     -> FETCH_HEAD
-   1aadcbc..b5b2668  master     -> eca18b_30/master
 
 subtree pull
-Merge made by the 'recursive' strategy.
- ...nary_Differential_Equation_Exact_Solution.ipynb |   2 +-
- eca18b_50/10_Forward_Euler.ipynb                   | 131 ++++++++++++++++-----
- eca18b_50/15_Forward_Euler_Higher_Order.ipynb      | 123 ++++++++++++++-----
- eca18b_50/20_Modified_Euler.ipynb                  |  73 +++++++++---
- eca18b_50/30_Runge_Kutta.ipynb                     |  33 ++++--
- eca18b_50/35_Runge_Kutta_Higher_Order.ipynb        |  75 +++++++++---
- eca18b_50/40_comparing_with_num_int.ipynb          |   2 +-
- 7 files changed, 340 insertions(+), 99 deletions(-)
+Already up to date.
 
 From https://github.com/ECA18B/eca18b-nmisp-50-Bohyun-cpf18a
  * branch            master     -> FETCH_HEAD
-   7db341b..40c86ca  master     -> eca18b_50/master
 
 subtree pull
 Already up to date.
@@ -878,87 +839,87 @@ From https://github.com/ECA18B/eca18b-nmisp-40-SungYoungHoon
  * branch            master     -> FETCH_HEAD
 
 RepoEvalCountOneCommitLog.eval_repo( 2) start: name=ljk941219
-RepoEvalCountOneCommitLog.eval_repo( 2) end: name=ljk941219 (2.02018 sec)
+RepoEvalCountOneCommitLog.eval_repo( 2) end: name=ljk941219 (2.91084 sec)
 RepoEvalCountOneCommitLog.eval_repo( 5) start: name=jerrydavidlee
-RepoEvalCountOneCommitLog.eval_repo( 5) end: name=jerrydavidlee (0.939591 sec)
+RepoEvalCountOneCommitLog.eval_repo( 5) end: name=jerrydavidlee (1.346 sec)
 RepoEvalCountOneCommitLog.eval_repo( 7) start: name=rrqweq53
-RepoEvalCountOneCommitLog.eval_repo( 7) end: name=rrqweq53 (2.77852 sec)
-RepoEvalCountOneCommitLog.eval_repo(13) start: name=inhovation37
-RepoEvalCountOneCommitLog.eval_repo(13) end: name=inhovation37 (1.74829 sec)
-RepoEvalCountOneCommitLog.eval_repo(16) start: name=seojanghyeon
-RepoEvalCountOneCommitLog.eval_repo(16) end: name=seojanghyeon (0.193659 sec)
-RepoEvalCountOneCommitLog.eval_repo(17) start: name=dlwns333
-RepoEvalCountOneCommitLog.eval_repo(17) end: name=dlwns333 (0.247937 sec)
-RepoEvalCountOneCommitLog.eval_repo(19) start: name=ohbongkwon
-RepoEvalCountOneCommitLog.eval_repo(19) end: name=ohbongkwon (0.511744 sec)
-RepoEvalCountOneCommitLog.eval_repo(23) start: name=SungYoungHoon
-RepoEvalCountOneCommitLog.eval_repo(23) end: name=SungYoungHoon (0.230422 sec)
-RepoEvalCountOneCommitLog.eval_repo(26) start: name=Taeyoung-cpf18c
-RepoEvalCountOneCommitLog.eval_repo(26) end: name=Taeyoung-cpf18c (0.136578 sec)
-RepoEvalCountOneCommitLog.eval_repo( 0) start: name=rkd0797
-RepoEvalCountOneCommitLog.eval_repo( 0) end: name=rkd0797 (2.49702 sec)
-RepoEvalCountOneCommitLog.eval_repo( 6) start: name=ChoHyeonDeok
-RepoEvalCountOneCommitLog.eval_repo( 6) end: name=ChoHyeonDeok (1.06467 sec)
-RepoEvalCountOneCommitLog.eval_repo( 9) start: name=HanGiNa
-RepoEvalCountOneCommitLog.eval_repo( 9) end: name=HanGiNa (1.0223 sec)
-RepoEvalCountOneCommitLog.eval_repo(12) start: name=suntakkweon
-RepoEvalCountOneCommitLog.eval_repo(12) end: name=suntakkweon (1.54294 sec)
+RepoEvalCountOneCommitLog.eval_repo( 7) end: name=rrqweq53 (3.21334 sec)
 RepoEvalCountOneCommitLog.eval_repo(14) start: name=jeapilbyeon
-RepoEvalCountOneCommitLog.eval_repo(14) end: name=jeapilbyeon (2.20059 sec)
-RepoEvalCountOneCommitLog.eval_repo(22) start: name=qkrwhdrud
-RepoEvalCountOneCommitLog.eval_repo(22) end: name=qkrwhdrud (0.311483 sec)
-RepoEvalCountOneCommitLog.eval_repo(25) start: name=beyonding12
-RepoEvalCountOneCommitLog.eval_repo(25) end: name=beyonding12 (0.0769241 sec)
-RepoEvalCountOneCommitLog.eval_repo(27) start: name=TaeyoungJeong
-RepoEvalCountOneCommitLog.eval_repo(27) end: name=TaeyoungJeong (0.100053 sec)
+RepoEvalCountOneCommitLog.eval_repo(14) end: name=jeapilbyeon (1.9623 sec)
+RepoEvalCountOneCommitLog.eval_repo(23) start: name=SungYoungHoon
+RepoEvalCountOneCommitLog.eval_repo(23) end: name=SungYoungHoon (0.30973 sec)
+RepoEvalCountOneCommitLog.eval_repo(26) start: name=Taeyoung-cpf18c
+RepoEvalCountOneCommitLog.eval_repo(26) end: name=Taeyoung-cpf18c (0.119141 sec)
 RepoEvalCountOneCommitLog.eval_repo( 1) start: name=2jaejin
-RepoEvalCountOneCommitLog.eval_repo( 1) end: name=2jaejin (3.50598 sec)
-RepoEvalCountOneCommitLog.eval_repo( 8) start: name=WooJLee
-RepoEvalCountOneCommitLog.eval_repo( 8) end: name=WooJLee (1.07544 sec)
+RepoEvalCountOneCommitLog.eval_repo( 1) end: name=2jaejin (5.25132 sec)
+RepoEvalCountOneCommitLog.eval_repo( 9) start: name=HanGiNa
+RepoEvalCountOneCommitLog.eval_repo( 9) end: name=HanGiNa (0.898954 sec)
 RepoEvalCountOneCommitLog.eval_repo(11) start: name=seunghyeon-eca18b
-RepoEvalCountOneCommitLog.eval_repo(11) end: name=seunghyeon-eca18b (3.11836 sec)
-RepoEvalCountOneCommitLog.eval_repo(18) start: name=seonghyunJIn
-RepoEvalCountOneCommitLog.eval_repo(18) end: name=seonghyunJIn (0.774036 sec)
-RepoEvalCountOneCommitLog.eval_repo(24) start: name=baehyeonji
-RepoEvalCountOneCommitLog.eval_repo(24) end: name=baehyeonji (0.776831 sec)
+RepoEvalCountOneCommitLog.eval_repo(11) end: name=seunghyeon-eca18b (2.7054 sec)
+RepoEvalCountOneCommitLog.eval_repo(19) start: name=ohbongkwon
+RepoEvalCountOneCommitLog.eval_repo(19) end: name=ohbongkwon (0.576097 sec)
+RepoEvalCountOneCommitLog.eval_repo(22) start: name=qkrwhdrud
+RepoEvalCountOneCommitLog.eval_repo(22) end: name=qkrwhdrud (0.267217 sec)
+RepoEvalCountOneCommitLog.eval_repo(25) start: name=beyonding12
+RepoEvalCountOneCommitLog.eval_repo(25) end: name=beyonding12 (0.109512 sec)
+RepoEvalCountOneCommitLog.eval_repo(27) start: name=TaeyoungJeong
+RepoEvalCountOneCommitLog.eval_repo(27) end: name=TaeyoungJeong (0.10518 sec)
 RepoEvalCountOneCommitLog.eval_repo( 3) start: name=JYK1446
-RepoEvalCountOneCommitLog.eval_repo( 3) end: name=JYK1446 (1.89898 sec)
+RepoEvalCountOneCommitLog.eval_repo( 3) end: name=JYK1446 (2.75501 sec)
 RepoEvalCountOneCommitLog.eval_repo( 4) start: name=Na-Young-Lee
-RepoEvalCountOneCommitLog.eval_repo( 4) end: name=Na-Young-Lee (1.8591 sec)
+RepoEvalCountOneCommitLog.eval_repo( 4) end: name=Na-Young-Lee (2.71336 sec)
 RepoEvalCountOneCommitLog.eval_repo(10) start: name=kingisme7
-RepoEvalCountOneCommitLog.eval_repo(10) end: name=kingisme7 (2.39746 sec)
+RepoEvalCountOneCommitLog.eval_repo(10) end: name=kingisme7 (1.86627 sec)
+RepoEvalCountOneCommitLog.eval_repo(13) start: name=inhovation37
+RepoEvalCountOneCommitLog.eval_repo(13) end: name=inhovation37 (0.975903 sec)
+RepoEvalCountOneCommitLog.eval_repo(16) start: name=seojanghyeon
+RepoEvalCountOneCommitLog.eval_repo(16) end: name=seojanghyeon (0.200067 sec)
+RepoEvalCountOneCommitLog.eval_repo(17) start: name=dlwns333
+RepoEvalCountOneCommitLog.eval_repo(17) end: name=dlwns333 (0.267941 sec)
+RepoEvalCountOneCommitLog.eval_repo(18) start: name=seonghyunJIn
+RepoEvalCountOneCommitLog.eval_repo(18) end: name=seonghyunJIn (0.761926 sec)
+RepoEvalCountOneCommitLog.eval_repo(24) start: name=baehyeonji
+RepoEvalCountOneCommitLog.eval_repo(24) end: name=baehyeonji (0.688624 sec)
+RepoEvalCountOneCommitLog.eval_repo( 0) start: name=rkd0797
+RepoEvalCountOneCommitLog.eval_repo( 0) end: name=rkd0797 (3.75011 sec)
+RepoEvalCountOneCommitLog.eval_repo( 6) start: name=ChoHyeonDeok
+RepoEvalCountOneCommitLog.eval_repo( 6) end: name=ChoHyeonDeok (1.48429 sec)
+RepoEvalCountOneCommitLog.eval_repo( 8) start: name=WooJLee
+RepoEvalCountOneCommitLog.eval_repo( 8) end: name=WooJLee (1.45383 sec)
+RepoEvalCountOneCommitLog.eval_repo(12) start: name=suntakkweon
+RepoEvalCountOneCommitLog.eval_repo(12) end: name=suntakkweon (1.00197 sec)
 RepoEvalCountOneCommitLog.eval_repo(15) start: name=MunYoonKyung
-RepoEvalCountOneCommitLog.eval_repo(15) end: name=MunYoonKyung (1.83909 sec)
+RepoEvalCountOneCommitLog.eval_repo(15) end: name=MunYoonKyung (1.42786 sec)
 RepoEvalCountOneCommitLog.eval_repo(20) start: name=rlaehdwn66
-RepoEvalCountOneCommitLog.eval_repo(20) end: name=rlaehdwn66 (0.119982 sec)
+RepoEvalCountOneCommitLog.eval_repo(20) end: name=rlaehdwn66 (0.140792 sec)
 RepoEvalCountOneCommitLog.eval_repo(21) start: name=Bohyun-cpf18a
-RepoEvalCountOneCommitLog.eval_repo(21) end: name=Bohyun-cpf18a (1.21214 sec)
+RepoEvalCountOneCommitLog.eval_repo(21) end: name=Bohyun-cpf18a (1.44417 sec)
 @timeit : starting 'main' 
 updating subtrees
 @timeit : starting 'get_sections_dict' 
 @timeit : starting 'get_github_url_list' 
-'get_github_url_list' 0 (sec)
+'get_github_url_list' 0.0069809 (sec)
+@timeit : starting 'get_github_url_list' 
+'get_github_url_list' 0.00697565 (sec)
+@timeit : starting 'get_github_url_list' 
+'get_github_url_list' 0.00597835 (sec)
+@timeit : starting 'get_github_url_list' 
+'get_github_url_list' 0.00199151 (sec)
 @timeit : starting 'get_github_url_list' 
 'get_github_url_list' 0 (sec)
 @timeit : starting 'get_github_url_list' 
-'get_github_url_list' 0.000989676 (sec)
-@timeit : starting 'get_github_url_list' 
 'get_github_url_list' 0 (sec)
 @timeit : starting 'get_github_url_list' 
-'get_github_url_list' 0 (sec)
-@timeit : starting 'get_github_url_list' 
-'get_github_url_list' 0.000997305 (sec)
-@timeit : starting 'get_github_url_list' 
-'get_github_url_list' 0 (sec)
-'get_sections_dict' 0.00599456 (sec)
+'get_github_url_list' 0.00101662 (sec)
+'get_sections_dict' 0.0259399 (sec)
 @timeit : starting 'transpose_dict' 
-'transpose_dict' 0.00498176 (sec)
+'transpose_dict' 0.00497985 (sec)
 @timeit : starting 'init_or_update_umbrella_repos' 
-'init_or_update_umbrella_repos' 160.277 (sec)
+'init_or_update_umbrella_repos' 198.304 (sec)
 @timeit : starting 'generate_reports' 
 @timeit : starting 'count_commits' 
 @timeit : starting 'write_tables' 
-'write_tables' 0.0377977 (sec)
-'count_commits' 11.1586 (sec)
-'generate_reports' 11.1586 (sec)
-'main' 171.457 (sec)
+'write_tables' 0.0450242 (sec)
+'count_commits' 13.0137 (sec)
+'generate_reports' 13.0137 (sec)
+'main' 211.37 (sec)
