@@ -47,7 +47,7 @@ class TestUpdate(unittest.TestCase):
 
     def test_get_proj_id(self):
         # function under test
-        result = ret.get_proj_id('2082652342 가나다  https://abc@github.com/CPF18A/18pfa_lpthw-abc.git')
+        result = ret.get_repo_name('2082652342 가나다  https://abc@github.com/CPF18A/18pfa_lpthw-abc.git')
         expected = '18pfa_lpthw-abc'
         self.assertIn(expected, result)
 

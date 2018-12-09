@@ -55,7 +55,7 @@ def get_proj_id_list(filename=config['repository']['listFile']):
     """
     txt = read_txt(filename)
     # using regular expression, find all repository names
-    found = get_proj_id(txt)
+    found = get_repo_name(txt)
 
     # delete text object after use    
     del txt
@@ -74,7 +74,7 @@ def get_github_urls(txt):
     return re.findall(r"(https://github.com/.+?/.+?)[\"\s]", txt)
 
 
-def get_proj_id(txt):
+def get_repo_name(txt):
     return re.findall("https://.*?@github.com/.+[/,](.+).git", txt)
 
 
