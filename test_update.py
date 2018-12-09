@@ -45,7 +45,7 @@ class TestUpdate(unittest.TestCase):
                 self.assertIn(key, proj_info_dict[expected_repo_name])
                 self.assertEqual(expected_dict[expected_repo_name][key], proj_info_dict[expected_repo_name][key])
 
-    def test_get_proj_id(self):
+    def test_get_repo_name(self):
         # function under test
         result = ret.get_repo_name('2082652342 가나다  https://abc@github.com/CPF18A/18pfa_lpthw-abc.git')
         expected = '18pfa_lpthw-abc'
