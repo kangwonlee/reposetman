@@ -1761,6 +1761,14 @@ class MarkdownTableWriter(TextTableWriter):
         return self.cell_formatter.format(sep=self.col_sep, value=repo_name)
 
 
+class MarkdownTableWriterRepoLinks(MarkdownTableWriter):
+    cell_formatter = '{sep} [{value}]({url}) '
+
+    def start_row(self, repo_name):
+        # first part of each row below header
+        return self.cell_formatter.format(sep=self.col_sep, value=repo_name, url=f'https://github.com/{self.section}/{repo_name}')
+
+
 class HtmlTableWriter(MarkdownTableWriter):
     # class variables
     # TODO : more maintanable version
