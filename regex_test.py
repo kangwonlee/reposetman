@@ -11,6 +11,9 @@ import timeit
 import unique_list
 
 
+# TODO : organize current url data storage into an integrated url database
+
+
 cfg_filename = 'regex_test.cfg'
 
 
