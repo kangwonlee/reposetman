@@ -18,9 +18,14 @@ cfg_filename = 'regex_test.cfg'
 
 
 def init_regex_test_cfg():
+    """
+    for local test
+    """
     list_filename = 'test_list.txt'
     repo_path = 'sample'
+
     if not os.path.exists(cfg_filename):
+        # a template for a configuration file
         config = configparser.ConfigParser()
         config['repository'] = {
             'listFile': list_filename,
