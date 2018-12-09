@@ -24,26 +24,25 @@ def init_regex_test_cfg():
     list_filename = 'test_list.txt'
     repo_path = 'sample'
 
-    if not os.path.exists(cfg_filename):
-        # a template for a configuration file
-        config = configparser.ConfigParser()
-        config['repository'] = {
-            'listFile': list_filename,
-            'path': repo_path,
-        }
-        config['Admin'] = {
-            'id': 'please configure github id'
-        }
+    # a template for a configuration file
+    config = configparser.ConfigParser()
+    config['repository'] = {
+        'listFile': list_filename,
+        'path': repo_path,
+    }
+    config['Admin'] = {
+        'id': 'please configure github id'
+    }
 
-        with open(cfg_filename, 'w') as cfg_file:
-            config.write(cfg_file)
-        raise FileNotFoundError(f'Please configure github id in {cfg_filename} and restart')
+    with open(cfg_filename, 'w') as cfg_file:
+        config.write(cfg_file)
 
 
 config = configparser.ConfigParser()
 
 if not os.path.exists(cfg_filename):
     init_regex_test_cfg()
+    raise FileNotFoundError(f'Please configure github id in {cfg_filename} and restart')
 
 config.read(cfg_filename)
 
