@@ -1,8 +1,18 @@
 import re
 import subprocess
 import unittest
+import urllib.request
 
 import git
+
+
+# https://stackoverflow.com/questions/50558000
+def internet_on():
+    try:
+        response = urllib.request.urlopen('https://www.google.com')
+        return True
+    except :
+        return False
 
 
 class TestGit(unittest.TestCase):
@@ -117,6 +127,7 @@ class TestGit(unittest.TestCase):
         result_in_expected = [result_sha in expected_dict for result_sha in result_dict]
         self.assertTrue(any(result_in_expected))
 
+    @unittest.skip(not internet_on())
     def test_ls_remote_tag(self):
         # function under test
         result_sha_tag_list = git.ls_remote_tag()
