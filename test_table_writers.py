@@ -42,11 +42,15 @@ class TestTextTableWriter(unittest.TestCase):
         self.d = progress.RepoTable()
         for row_title in self.row_title_list:
             for column_title in self.column_title_list:
-                self.d.set_row_column(row_title, column_title, row_title+column_title)
+                self.d.set_row_column(row_title, column_title, 
+                self.get_row_column_item(row_title, column_title))
 
         self.section = 'test_section'
         self.file_prefix = 'test_output'
         self.path = os.path.split(__file__)[0]
+
+    def get_row_column_item(self, row, column):
+        return row + column
 
     def test_gen_rows(self):
         writer = progress.TextTableWriter(
@@ -63,7 +67,7 @@ class TestTextTableWriter(unittest.TestCase):
         for row_title in self.row_title_list:
             row_item_list = [row_title]
             for column_title in self.column_title_list:
-                row_item_list.append(row_title + column_title)
+                row_item_list.append(self.get_row_column_item(row_title, column_title))
             row_str = writer.col_sep.join(row_item_list) + writer.row_sep
             expected_list.append(row_str)
 
