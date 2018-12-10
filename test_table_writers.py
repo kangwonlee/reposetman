@@ -1,3 +1,4 @@
+import os
 import unittest
 
 import progress
@@ -31,3 +32,38 @@ class TestMarkdownTableWriterRepoLinks(unittest.TestCase):
         expected = rf'| [abc](https://github.com/{self.section}/{self.reponame1}) '
         result = self.m.start_row(self.reponame1)
         self.assertEqual(expected, result)
+
+
+class TestTextTableWriter(unittest.TestCase):
+    def test_gen_rows(self):
+
+        row_title_list = [f'test_row_{i:}' for i in range(3)]
+        column_title_list = [f'test_column_{i:}' for i in range(3)]
+
+        d = progress.RepoTable()
+        for row_title in row_title_list:
+            for column_title in column_title_list:
+                d.set_row_column(row_title, column_title, row_title+column_title)
+
+        section = 'test_section'
+        file_prefix = 'test_output'
+        path = os.path.split(__file__)[0]
+
+        writer = progress.TextTableWriter(
+            d,
+            section,
+            row_title_list,
+            filename_prefix=file_prefix,
+            path=path,
+        )
+
+        expected_list = [
+            '\ttest_column_0\ttest_column_1\ttest_column_2\n',
+            'test_row_0\ttest_row_0test_column_0\ttest_row_0test_column_1\ttest_row_0test_column_2\n',
+            'test_row_1\ttest_row_1test_column_0\ttest_row_1test_column_1\ttest_row_1test_column_2\n',
+            'test_row_2\ttest_row_2test_column_0\ttest_row_2test_column_1\ttest_row_2test_column_2\n',
+            ]
+
+
+        for expected_str, result_str in zip(expected_list, writer.gen_rows()):
+            self.assertEqual(expected_str, result_str)
