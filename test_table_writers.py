@@ -50,6 +50,7 @@ class BaseTestTableWriterTable(unittest.TestCase):
         self.path = os.path.split(__file__)[0]
 
     def get_row_column_item(self, row, column):
+        # decide an element for table[row][column]
         return row + column
 
 
