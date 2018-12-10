@@ -30,6 +30,9 @@ import timeit
 import unique_list
 
 
+# TODO : Add tests for table writers
+
+
 # https://stackoverflow.com/questions/1681836/how-to-debug-a-memoryerror-in-python-tools-for-tracking-memory-use
 def get_size_of(one, name):
     # may need to investigate MemoryError
