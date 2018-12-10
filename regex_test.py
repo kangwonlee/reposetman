@@ -75,6 +75,9 @@ def get_github_urls(txt):
 
 
 def get_repo_name(txt):
+    # TODO : more flexible input string
+    #        '2082652342 가나다  https://abc@github.com/CPF18A/18pfa_lpthw-abc.git'
+    #        '2082652342 가나다  https://github.com/CPF18A/18pfa_lpthw-abc.git'
     return re.findall("https://.*?@github.com/.+[/,](.+).git", txt)
 
 
