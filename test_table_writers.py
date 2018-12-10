@@ -66,6 +66,8 @@ class TestTextTableWriter(unittest.TestCase):
         return expected_list
 
     def test_gen_rows(self):
+        # TODO : common base class for various table writers possible?
+
         writer = progress.TextTableWriter(
             self.d,
             self.section,
