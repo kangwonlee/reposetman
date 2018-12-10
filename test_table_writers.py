@@ -35,26 +35,26 @@ class TestMarkdownTableWriterRepoLinks(unittest.TestCase):
 
 
 class TestTextTableWriter(unittest.TestCase):
-    def test_gen_rows(self):
-
-        row_title_list = [f'test_row_{i:}' for i in range(3)]
+    def setUp(self):
+        self.row_title_list = [f'test_row_{i:}' for i in range(3)]
         column_title_list = [f'test_column_{i:}' for i in range(3)]
 
-        d = progress.RepoTable()
-        for row_title in row_title_list:
+        self.d = progress.RepoTable()
+        for row_title in self.row_title_list:
             for column_title in column_title_list:
-                d.set_row_column(row_title, column_title, row_title+column_title)
+                self.d.set_row_column(row_title, column_title, row_title+column_title)
 
-        section = 'test_section'
-        file_prefix = 'test_output'
-        path = os.path.split(__file__)[0]
+        self.section = 'test_section'
+        self.file_prefix = 'test_output'
+        self.path = os.path.split(__file__)[0]
 
+    def test_gen_rows(self):
         writer = progress.TextTableWriter(
-            d,
-            section,
-            row_title_list,
-            filename_prefix=file_prefix,
-            path=path,
+            self.d,
+            self.section,
+            self.row_title_list,
+            filename_prefix=self.file_prefix,
+            path=self.path,
         )
 
         expected_list = [
@@ -63,7 +63,6 @@ class TestTextTableWriter(unittest.TestCase):
             'test_row_1\ttest_row_1test_column_0\ttest_row_1test_column_1\ttest_row_1test_column_2\n',
             'test_row_2\ttest_row_2test_column_0\ttest_row_2test_column_1\ttest_row_2test_column_2\n',
             ]
-
 
         for expected_str, result_str in zip(expected_list, writer.gen_rows()):
             self.assertEqual(expected_str, result_str)
