@@ -52,15 +52,7 @@ class TestTextTableWriter(unittest.TestCase):
     def get_row_column_item(self, row, column):
         return row + column
 
-    def test_gen_rows(self):
-        writer = progress.TextTableWriter(
-            self.d,
-            self.section,
-            self.row_title_list,
-            filename_prefix=self.file_prefix,
-            path=self.path,
-        )
-
+    def get_expected_list(self, writer):
         title_row = writer.col_sep.join([''] + self.column_title_list) + writer.row_sep
         
         expected_list = [title_row]
@@ -70,6 +62,19 @@ class TestTextTableWriter(unittest.TestCase):
                 row_item_list.append(self.get_row_column_item(row_title, column_title))
             row_str = writer.col_sep.join(row_item_list) + writer.row_sep
             expected_list.append(row_str)
+
+        return expected_list
+
+    def test_gen_rows(self):
+        writer = progress.TextTableWriter(
+            self.d,
+            self.section,
+            self.row_title_list,
+            filename_prefix=self.file_prefix,
+            path=self.path,
+        )
+
+        expected_list = self.get_expected_list(writer)
 
         for expected_str, result_str in zip(expected_list, writer.gen_rows()):
             self.assertEqual(expected_str, result_str, msg='\n'
