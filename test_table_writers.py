@@ -34,7 +34,7 @@ class TestMarkdownTableWriterRepoLinks(unittest.TestCase):
         self.assertEqual(expected, result)
 
 
-class TestTextTableWriter(unittest.TestCase):
+class BaseTestTableWriterTable(unittest.TestCase):
     def setUp(self):
         self.row_title_list = [f'test_row_{i:}' for i in range(3)]
         self.column_title_list = [f'test_column_{i:}' for i in range(3)]
@@ -52,6 +52,8 @@ class TestTextTableWriter(unittest.TestCase):
     def get_row_column_item(self, row, column):
         return row + column
 
+
+class TestTextTableWriter(BaseTestTableWriterTable):
     def get_expected_list(self, writer):
         title_row = writer.col_sep.join([''] + self.column_title_list) + writer.row_sep
         
