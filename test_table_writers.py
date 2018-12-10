@@ -82,6 +82,48 @@ class TestTextTableWriter(BaseTestTableWriterTable):
 
         for expected_str, result_str in zip(expected_list, writer.gen_rows()):
             self.assertEqual(expected_str, result_str, msg='\n'
-            f'expected = {repr(expected_str)}'
+            f'expected = {repr(expected_str)}\n'
             f'result = {repr(result_str)}'
+            )
+
+
+class TestMarkdownTableWriter(BaseTestTableWriterTable):
+    def get_expected_list(self, writer):
+
+        space_sep_space = f"  {writer.col_sep}  "
+
+        title_row = space_sep_space.join([writer.col_sep+'  '] + self.column_title_list) + writer.row_sep
+        
+        expected_list = [title_row]
+        for row_title in self.row_title_list:
+            row_item_list = ['', row_title]
+            for column_title in self.column_title_list:
+                row_item_list.append(self.get_row_column_item(row_title, column_title))
+            row_str = space_sep_space.join(row_item_list) + writer.row_sep
+            expected_list.append(row_str)
+
+        return expected_list
+
+    def test_gen_rows_body(self):
+
+        writer = progress.MarkdownTableWriter (
+            self.d,
+            self.section,
+            self.row_title_list,
+            filename_prefix=self.file_prefix,
+            path=self.path,
+        )
+
+        expected_list = self.get_expected_list(writer)
+        result_list = list(writer.gen_rows())
+
+        for expected_str, result_str in zip(expected_list[1:], result_list[1:]):
+            expected_split_list = expected_str.split()
+            result_split_list = result_str.split()
+            self.assertSequenceEqual(expected_split_list, result_split_list,
+                '\n'
+                f'expected_str = {repr(expected_str)}\n'
+                f'result_str = {repr(result_str)}\n'
+                f'expected_str.split() = {repr(expected_split_list)}\n'
+                f'result_str.split() = {repr(result_split_list)}'
             )
