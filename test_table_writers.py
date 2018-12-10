@@ -93,7 +93,10 @@ class TestMarkdownTableWriter(BaseTestTableWriterTable):
 
         space_sep_space = f"  {writer.col_sep}  "
 
-        title_row = space_sep_space.join([writer.col_sep+'  '] + self.column_title_list) + writer.row_sep
+        first_row = space_sep_space.join([writer.col_sep+'  '] + self.column_title_list)
+        second_row = writer.col_sep.join([''] + [':-----:'] * (len(self.column_title_list)+1) + [''])
+
+        title_row = writer.row_sep.join([first_row, second_row])
         
         expected_list = [title_row]
         for row_title in self.row_title_list:
@@ -128,3 +131,44 @@ class TestMarkdownTableWriter(BaseTestTableWriterTable):
                 f'expected_str.split() = {repr(expected_split_list)}\n'
                 f'result_str.split() = {repr(result_split_list)}'
             )
+
+    def test_gen_rows_header(self):
+
+        writer = progress.MarkdownTableWriter (
+            self.d,
+            self.section,
+            self.row_title_list,
+            filename_prefix=self.file_prefix,
+            path=self.path,
+        )
+
+        expected_list = self.get_expected_list(writer)
+
+        expected_header_row, expected_second_row = expected_list[0].splitlines()
+
+        expected_header_row_split = [string.strip() for string in expected_header_row.split(writer.col_sep)]
+        expected_second_row_split = expected_second_row.split(writer.col_sep)
+
+        result_header = next(writer.gen_rows())
+        result_header_row, result_second_row = result_header.splitlines()
+
+        result_header_row_split = [string.strip() for string in result_header_row.split(writer.col_sep)]
+        result_second_row_split = result_second_row.split(writer.col_sep)
+
+        self.assertSequenceEqual(expected_header_row_split, result_header_row_split)
+
+        # second row
+        self.assertEqual(len(expected_second_row_split), len(result_second_row_split), msg='\n'
+                f'expected_str = {repr(expected_second_row)}\n'
+                f'result_str = {repr(result_second_row)}\n'
+                f'expected_str.split() = {repr(expected_second_row_split)}\n'
+                f'result_str.split() = {repr(result_second_row_split)}'
+        )
+
+        for item in result_second_row_split:
+            if item:
+                self.assertEquals(':', item[0])
+                self.assertEquals(':', item[-1])
+                self.assertEquals('-', item[1])
+                self.assertEquals('-', item[-2])
+                self.assertLessEqual(4, len(item))
