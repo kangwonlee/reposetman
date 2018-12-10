@@ -71,6 +71,11 @@ def get_github_url_list(filename):
 
 
 def get_github_urls(txt):
+    # TODO : more flexible input strings
+    #        https://github.com/CPF18A/18pfa_lpthw-abc'
+    #        https://github.com/CPF18A/18pfa_lpthw-abc.git'
+    #        https://abc@github.com/CPF18A/18pfa_lpthw-abc'
+    #        https://abc@github.com/CPF18A/18pfa_lpthw-abc.git'
     return re.findall(r"(https://github.com/.+?/.+?)[\"\s]", txt)
 
 
