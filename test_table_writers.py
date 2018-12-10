@@ -58,13 +58,14 @@ class TestTextTableWriter(unittest.TestCase):
         )
 
         title_row = writer.col_sep.join([''] + self.column_title_list) + writer.row_sep
-
-        expected_list = [
-            title_row,
-            'test_row_0\ttest_row_0test_column_0\ttest_row_0test_column_1\ttest_row_0test_column_2\n',
-            'test_row_1\ttest_row_1test_column_0\ttest_row_1test_column_1\ttest_row_1test_column_2\n',
-            'test_row_2\ttest_row_2test_column_0\ttest_row_2test_column_1\ttest_row_2test_column_2\n',
-            ]
+        
+        expected_list = [title_row]
+        for row_title in self.row_title_list:
+            row_item_list = [row_title]
+            for column_title in self.column_title_list:
+                row_item_list.append(row_title + column_title)
+            row_str = writer.col_sep.join(row_item_list) + writer.row_sep
+            expected_list.append(row_str)
 
         for expected_str, result_str in zip(expected_list, writer.gen_rows()):
             self.assertEqual(expected_str, result_str, msg='\n'
