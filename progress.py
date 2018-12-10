@@ -1594,7 +1594,7 @@ class TextTableWriter(object):
 
         :param RepoTable d:
         :param str section: 'a' by default
-        :param list(dict) repo_list: list of repository information dictionaries
+        :param list(str) sorted_row: list of repository names as row header
         :param str filename_prefix: 'progress' by default
         :param str path: output path os.curdir by default
         :param str column_separator: between each column
