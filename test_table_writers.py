@@ -174,3 +174,67 @@ class TestMarkdownTableWriter(BaseTestTableWriterTable):
                 self.assertEquals('-', item[1])
                 self.assertEquals('-', item[-2])
                 self.assertLessEqual(4, len(item))
+
+
+class TestHtmlTableWriter(BaseTestTableWriterTable):
+    def setUp(self):
+        super().setUp()
+
+        self.writer = progress.HtmlTableWriter(
+            self.d,
+            self.section,
+            self.row_title_list,
+            filename_prefix=self.file_prefix,
+            path=self.path,
+        )
+
+    def test_gen_rows_bs4(self):
+
+        result_txt = ''.join(list(self.writer.gen_rows()))
+
+        soup = bs4.BeautifulSoup(result_txt, "lxml")
+
+        table_list = soup.find_all('table')
+
+        self.assertEqual(1, len(table_list))
+
+        table = table_list[0]
+
+        rows_list = table.find_all('tr')
+
+        header_row = rows_list[0]
+        body_rows_list = rows_list[1:]
+
+        self.assertEqual(len(self.row_title_list), len(body_rows_list), 
+            msg="number of body rows different\n"
+        )
+
+        self.check_table_header(header_row)
+
+        self.check_table_body_rows(body_rows_list)
+
+    def check_table_header(self, header_row):
+
+        header_column_list = header_row.find_all('th')
+        header_body_list = header_column_list[1:]
+
+        self.assertEqual(len(self.column_title_list), len(header_body_list))
+
+        for expected_header, header_body in zip(self.column_title_list, header_body_list):
+            self.assertEqual(expected_header, header_body.get_text().strip())
+
+    def check_table_body_rows(self, body_rows_list):
+        for expected_row_header, row in zip(self.row_title_list, body_rows_list):
+            columns_list = row.find_all('td')
+
+            row_header = columns_list[0]
+            self.assertEqual(expected_row_header, row_header.get_text().strip())
+
+            row_items_list = columns_list[1:]
+            self.assertEqual(len(self.column_title_list), len(row_items_list))
+
+            for column_title, table_item in zip(self.column_title_list, row_items_list):
+                self.assertEqual(
+                    self.d[expected_row_header][column_title],
+                    table_item.get_text().strip()
+                )
