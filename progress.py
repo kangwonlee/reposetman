@@ -314,7 +314,7 @@ def count_commits(config, section, repo_list):
 
     # sort with total
     # TODO : more adaptive argument?    
-    sorted_row = commit_count.get_sorted_row(' total')
+    sorted_row_title_list = commit_count.get_sorted_row(' total')
 
     # write tables
     commit_count_txt, commit_count_md, commit_count_html = write_tables(
@@ -322,27 +322,27 @@ def count_commits(config, section, repo_list):
         repo_list,
         commit_count, 
         filename_prefix='commit_count',
-        sorted_row=sorted_row
+        row_title_list=sorted_row_title_list
     )
 
     return commit_count_txt, commit_count_md, commit_count_html
 
 
 @timeit.timeit
-def write_tables(section, repo_list, table, filename_prefix, sorted_row=None):
+def write_tables(section, repo_list, table, filename_prefix, row_title_list=None):
 
-    #if sorted_row not given, make one from repo_list
-    if sorted_row is None:
+    #if row_title_list not given, make one from repo_list
+    if row_title_list is None:
         # TODO : Possibly repeating too frequently
-        sorted_row = tuple([repo_dict['name'] for repo_dict in repo_list])
+        row_title_list = tuple([repo_dict['name'] for repo_dict in repo_list])
 
-    txt_table_writer = TextTableWriter(table, section, sorted_row, filename_prefix=filename_prefix)
+    txt_table_writer = TextTableWriter(table, section, row_title_list, filename_prefix=filename_prefix)
     finished_txt_table = txt_table_writer.write()
 
-    md_table_writer = MarkdownTableWriter(table, section, sorted_row, filename_prefix=filename_prefix)
+    md_table_writer = MarkdownTableWriter(table, section, row_title_list, filename_prefix=filename_prefix)
     finished_md_table = md_table_writer.write()
 
-    html_table_writter = HtmlTableWriter(table, section, sorted_row, filename_prefix=filename_prefix)
+    html_table_writter = HtmlTableWriter(table, section, row_title_list, filename_prefix=filename_prefix)
     finished_html_table = html_table_writter.write()
 
     return finished_txt_table, finished_md_table, finished_html_table
@@ -359,7 +359,7 @@ def run_all(config, section, repo_list):
     print('run_all() : finished eval_repo_list()')
 
     # repository names in order
-    sorted_row = all_outputs.get_sorted_row(' total')
+    row_title_list = all_outputs.get_sorted_row(' total')
 
     # write tables
     run_all_txt, run_all_md, run_all_html = write_tables(
@@ -367,7 +367,7 @@ def run_all(config, section, repo_list):
         repo_list, 
         all_outputs,
         filename_prefix='run_all',
-        sorted_row=sorted_row,
+        row_title_list=row_title_list,
     )
 
     return run_all_txt, run_all_md, run_all_html
@@ -385,7 +385,7 @@ def pound_count(config, section, repo_list):
 
     # sort with total
     # TODO : more adaptive argument?    
-    sorted_row = pound_numbers.get_sorted_row(' total')
+    row_title_list = pound_numbers.get_sorted_row(' total')
 
     # write tables
     pound_count_txt, pound_count_md, pound_count_html = write_tables(
@@ -393,7 +393,7 @@ def pound_count(config, section, repo_list):
         repo_list, 
         pound_numbers, 
         filename_prefix='pound_count',
-        sorted_row=sorted_row
+        row_title_list=row_title_list
     )
 
     return pound_count_txt, pound_count_md, pound_count_html
@@ -1587,14 +1587,14 @@ class TextTableWriter(object):
     # to reuse get_cell_text() code
     cell_formatter='{sep}{value}'    
 
-    def __init__(self, d, section, sorted_row=None, 
+    def __init__(self, d, section, row_title_list=None, 
         filename_prefix='progress', path=os.curdir
         ):
         """
 
         :param RepoTable d:
         :param str section: 'a' by default
-        :param list(str) sorted_row: list of repository names as row header
+        :param list(str) row_title_list: list of repository names as row header
         :param str filename_prefix: 'progress' by default
         :param str path: output path os.curdir by default
         :param str column_separator: between each column
@@ -1605,7 +1605,7 @@ class TextTableWriter(object):
         self.section = section
         self.filename_prefix = filename_prefix
         self.path = path
-        self.sorted_row = sorted_row
+        self.row_title_list = row_title_list
 
         # for header
         self.field_list = self.get_field_list()
@@ -1626,7 +1626,7 @@ class TextTableWriter(object):
         yield self.get_header_row()
 
         # row loop
-        for repo_name in self.sorted_row:
+        for repo_name in self.row_title_list:
             yield self.get_each_row(repo_name)
 
     def get_filename(self):
