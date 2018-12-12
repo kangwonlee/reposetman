@@ -1796,6 +1796,21 @@ class MarkdownTableWriterRepoLinks(MarkdownTableWriter):
         # first part of each row below header
         return self.cell_formatter.format(sep=self.col_sep, value=repo_name, url=self.url_lookup[repo_name])
 
+    def get_cell_text(self, row_key, column_key):
+        result = ''
+        if not column_key.strip().endswith('total'):
+            result = self.cell_formatter.format(
+                sep=self.col_sep, 
+                value=str(self.d[row_key].get(column_key, '')),
+                url = f'{self.url_lookup[row_key]}/blob/master/{column_key}',
+            )
+        else:
+            result = super().cell_formatter.format(
+                sep=self.col_sep,
+                value=str(self.d[row_key].get(column_key, ''))
+            )
+        return result
+
 
 class HtmlTableWriter(MarkdownTableWriter):
     # class variables
