@@ -1790,9 +1790,11 @@ class MarkdownTableWriterRepoLinks(MarkdownTableWriter):
 
         self.repo_list = repo_list
 
+        self.url_lookup = self.get_url_lookup(self.repo_list)
+
     def start_row(self, repo_name):
         # first part of each row below header
-        return self.cell_formatter.format(sep=self.col_sep, value=repo_name, url=f'https://github.com/{self.section}/{repo_name}')
+        return self.cell_formatter.format(sep=self.col_sep, value=repo_name, url=self.url_lookup[repo_name])
 
 
 class HtmlTableWriter(MarkdownTableWriter):
