@@ -9,10 +9,20 @@ import progress
 class TestMarkdownTableWriterRepoLinks(unittest.TestCase):
     def setUp(self):
         d = progress.RepoTable()
+
         self.reponame1 = 'abc'
         self.reponame2 = 'def'
 
-        repo_list = [self.reponame1, self.reponame2]
+        self.section = 'section_name'
+
+        repo_name_list = [self.reponame1, self.reponame2]
+
+        repo_dict_list = []
+        for repo_name in repo_name_list:
+            repo_dict_list.append({
+                'name': repo_name,
+                'url': f'https://github.com/{self.section}/{repo_name}'
+            })
 
         self.filename1 = 'iii123.py'
         self.filename2 = 'jjj456.ipynb'
@@ -22,12 +32,10 @@ class TestMarkdownTableWriterRepoLinks(unittest.TestCase):
             self.reponame2 : {self.filename1:21, self.filename2:22},
         }
 
-        for repo_name in repo_list:
+        for repo_name in repo_name_list:
             d.add_row(row=repo_name, column=self.filename1, value=table[repo_name][self.filename1])
 
-        self.section = 'section_name'
-
-        self.m = progress.MarkdownTableWriterRepoLinks(d=d, section=self.section, repo_list=repo_list)
+        self.m = progress.MarkdownTableWriterRepoLinks(d=d, section=self.section, repo_list=repo_dict_list)
 
     def test_start_row(self):
         # check header column string
