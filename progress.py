@@ -1767,6 +1767,25 @@ class MarkdownTableWriter(TextTableWriter):
 class MarkdownTableWriterRepoLinks(MarkdownTableWriter):
     cell_formatter = '{sep} [{value}]({url}) '
 
+    def __init__(self, d, section, sorted_row_title_list, repo_list=None, 
+        filename_prefix='progress', path=os.curdir
+        ):
+        """
+
+        :param RepoTable d:
+        :param str section: 'a' by default
+        :param list(dict) repo_list: list of repository information
+        :param str filename_prefix: 'progress' by default
+        :param str path: output path os.curdir by default
+        :param str column_separator: between each column
+        :param str row_separator: at the end of each row
+        :return:
+        """
+
+        super().__init__(d, section, sorted_row_title_list, filename_prefix, path)
+
+        self.repo_list = repo_list
+
     def start_row(self, repo_name):
         # first part of each row below header
         return self.cell_formatter.format(sep=self.col_sep, value=repo_name, url=f'https://github.com/{self.section}/{repo_name}')
