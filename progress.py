@@ -1687,6 +1687,10 @@ class TextTableWriter(object):
                 value=str(self.d[row_key].get(column_key, ''))
             )
 
+    @staticmethod
+    def get_url_lookup(repo_list):
+        return {repo_info['name']:os.path.splitext(repo_info['url'])[0] for repo_info in repo_list}
+
 
 class MarkdownTableWriter(TextTableWriter):
     # class variables
