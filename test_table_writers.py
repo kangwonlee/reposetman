@@ -46,6 +46,12 @@ class TestMarkdownTableWriterRepoLinks(unittest.TestCase):
         result = self.m.start_row(self.reponame1)
         self.assertEqual(expected, result)
 
+    def test_gen_rows_links(self):
+        # TODO : common base class for various table writers possible?
+
+        for result_str in self.m.gen_rows():
+            print(f"{result_str}")
+
 
 class BaseTestTableWriterTable(unittest.TestCase):
     def setUp(self):
