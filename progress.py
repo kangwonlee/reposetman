@@ -1913,5 +1913,48 @@ class HtmlTableWriter(MarkdownTableWriter):
         )
 
 
+class HtmlTableWriterRepoLinks(HtmlTableWriter):
+    cell_formatter = '{sep} <a href="{url}">{value}</a> '
+    row_title_formatter = '{row_header}{item_header} <a href="{url}">{repo_name}</a> '
+
+    # TODO : is multiple inheritance a more desirable approach?
+    def __init__(self, d, section, sorted_row_title_list, repo_list=None, 
+        filename_prefix='progress', path=os.curdir
+        ):
+        """
+
+        :param RepoTable d:
+        :param str section: 'a' by default
+        :param list(dict) repo_list: list of repository information
+        :param str filename_prefix: 'progress' by default
+        :param str path: output path os.curdir by default
+        :param str column_separator: between each column
+        :param str row_separator: at the end of each row
+        :return:
+        """
+
+        self.repo_list = repo_list
+
+        super().__init__(d, section, sorted_row_title_list, filename_prefix, path)
+
+        self.url_lookup = self.get_url_lookup(self.repo_list)
+
+    def start_row(self, repo_name):
+        # first part of each row below header
+        return self.row_title_formatter.format(
+            row_header=self.row_header, 
+            item_header=self.item_header, 
+            repo_name=repo_name, 
+            url=self.url_lookup[repo_name]
+        )
+
+    def get_cell_text(self, row_key, column_key):
+            return self.cell_formatter.format(
+                sep=self.col_sep, 
+                value=str(self.d[row_key].get(column_key, '')),
+                url = f'{self.url_lookup[row_key]}/blob/master/{column_key}',
+            )
+
+
 if "__main__" == __name__:
     main(sys.argv[1:])
