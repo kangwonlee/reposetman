@@ -27,13 +27,16 @@ class TestMarkdownTableWriterRepoLinks(unittest.TestCase):
         self.filename1 = 'iii123.py'
         self.filename2 = 'jjj456.ipynb'
 
+        file_name_list = [self.filename1, self.filename2]
+
         table = {
             self.reponame1 : {self.filename1:11, self.filename2:12},
             self.reponame2 : {self.filename1:21, self.filename2:22},
         }
 
         for repo_name in repo_name_list:
-            d.add_row(row=repo_name, column=self.filename1, value=table[repo_name][self.filename1])
+            for path_name in file_name_list:
+                d.set_row_column(repo_name, path_name, table[repo_name][path_name])
 
         self.m = progress.MarkdownTableWriterRepoLinks(d=d, section=self.section, repo_list=repo_dict_list)
 
