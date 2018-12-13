@@ -1903,7 +1903,6 @@ class HtmlTableWriter(MarkdownTableWriter):
             footer=self.header_row_sep,
             end_header=self.end_table_header,
         )
-        
 
     def start_row(self, repo_name):
         #### header column
