@@ -6,9 +6,9 @@ import bs4
 import progress
 
 
-class TestMarkdownTableWriterRepoLinks(unittest.TestCase):
+class BaseTestTableWriterRepoLinks(unittest.TestCase):
     def setUp(self):
-        d = progress.RepoTable()
+        self.d = progress.RepoTable()
 
         self.reponame1 = 'abc'
         self.reponame2 = 'def'
@@ -17,9 +17,9 @@ class TestMarkdownTableWriterRepoLinks(unittest.TestCase):
 
         repo_name_list = [self.reponame1, self.reponame2]
 
-        repo_dict_list = []
+        self.repo_dict_list = []
         for repo_name in repo_name_list:
-            repo_dict_list.append({
+            self.repo_dict_list.append({
                 'name': repo_name,
                 'url': f'https://github.com/{self.section}/{repo_name}'
             })
@@ -36,9 +36,14 @@ class TestMarkdownTableWriterRepoLinks(unittest.TestCase):
 
         for repo_name in repo_name_list:
             for path_name in file_name_list:
-                d.set_row_column(repo_name, path_name, table[repo_name][path_name])
+                self.d.set_row_column(repo_name, path_name, table[repo_name][path_name])
 
-        self.m = progress.MarkdownTableWriterRepoLinks(d=d, section=self.section, repo_list=repo_dict_list)
+
+class TestMarkdownTableWriterRepoLinks(BaseTestTableWriterRepoLinks):
+    def setUp(self):
+        super().setUp()
+
+        self.m = progress.MarkdownTableWriterRepoLinks(d=self.d, section=self.section, sorted_row_title_list=self.row_title_list, repo_list=self.repo_dict_list)
 
     def test_start_row(self):
         # check header column string
