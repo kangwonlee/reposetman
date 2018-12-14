@@ -339,10 +339,10 @@ def write_tables(section, repo_list, table, filename_prefix, row_title_list=None
     txt_table_writer = TextTableWriter(table, section, row_title_list, filename_prefix=filename_prefix)
     finished_txt_table = txt_table_writer.write()
 
-    md_table_writer = MarkdownTableWriter(table, section, row_title_list, filename_prefix=filename_prefix)
+    md_table_writer = MarkdownTableWriterRepoLinks(table, section, row_title_list, repo_list, filename_prefix=filename_prefix)
     finished_md_table = md_table_writer.write()
 
-    html_table_writter = HtmlTableWriter(table, section, row_title_list, filename_prefix=filename_prefix)
+    html_table_writter = HtmlTableWriterRepoLinks(table, section, row_title_list, repo_list, filename_prefix=filename_prefix)
     finished_html_table = html_table_writter.write()
 
     return finished_txt_table, finished_md_table, finished_html_table
