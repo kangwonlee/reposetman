@@ -69,7 +69,7 @@ class TestMarkdownTableWriterRepoLinks(BaseTestTableWriterRepoLinks):
         
         expected_list = [title_row]
         for row_title in self.row_title_list:
-            row_item_list = ['', row_title]
+            row_item_list = ['', self.get_row_header_column(row_title)]
             for column_title in self.column_title_list:
                 row_item_list.append(self.get_row_column_item(row_title, column_title))
             row_str = space_sep_space.join(row_item_list) + writer.row_sep
