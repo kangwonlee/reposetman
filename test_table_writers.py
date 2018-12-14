@@ -81,6 +81,9 @@ class TestMarkdownTableWriterRepoLinks(BaseTestTableWriterRepoLinks):
         expected_url = self.get_expected_url(self.repo_url_lookup[repo_name], file_name)
         return f"[{self.d[repo_name][file_name]}]({expected_url})"
 
+    def get_row_header_column(self, repo_name):
+        return rf'[{repo_name}]({self.scheme}{self.domain_name}/{self.section}/{repo_name})'
+
     def test_start_row(self):
         # check header column string
         expected = rf'| [abc](https://github.com/{self.section}/{self.reponame1}) '
