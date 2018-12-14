@@ -311,3 +311,33 @@ class TestHtmlTableWriter(BaseTestTableWriterTable):
                     self.d[expected_row_header][column_title],
                     table_item.get_text().strip()
                 )
+
+
+class TestHtmlTableWriterRepoLinksBS4(TestHtmlTableWriter):
+    def setUp(self):
+        super().setUp()
+
+        self.scheme = 'https://'
+        self.domain_name = 'github.com'
+        self.section_name = 'section_name'
+
+        self.repo_dict_list = [
+            {
+                'name': repo_name,
+                'url': f'{self.scheme}{self.domain_name}/{self.section}/{repo_name}',
+            } for repo_name in self.row_title_list
+        ]
+
+        self.repo_url_lookup = {
+            repo_info['name']:repo_info['url'] 
+            for repo_info in self.repo_dict_list
+        }
+
+        self.writer = progress.HtmlTableWriterRepoLinks(
+            self.d,
+            self.section,
+            self.row_title_list,
+            self.repo_dict_list,
+            filename_prefix=self.file_prefix,
+            path=self.path,
+        )
