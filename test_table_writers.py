@@ -86,7 +86,7 @@ class TestMarkdownTableWriterRepoLinks(BaseTestTableWriterRepoLinks):
 
     def test_start_row(self):
         # check header column string
-        expected = rf'| [abc](https://github.com/{self.section}/{self.reponame1}) '
+        expected = f"| {self.get_row_header_column(self.reponame1)} "
         result = self.m.start_row(self.reponame1)
         self.assertEqual(expected, result)
 
