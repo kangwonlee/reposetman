@@ -17,11 +17,14 @@ class BaseTestTableWriterRepoLinks(unittest.TestCase):
 
         self.row_title_list = [self.reponame1, self.reponame2]
 
+        self.domain_name = 'github.com'
+        self.scheme = 'https://'
+
         self.repo_dict_list = []
         for repo_name in self.row_title_list:
             self.repo_dict_list.append({
                 'name': repo_name,
-                'url': f'https://github.com/{self.section}/{repo_name}'
+                'url': f'{self.scheme}{self.domain_name}/{self.section}/{repo_name}'
             })
 
         self.filename1 = 'iii123.py'
