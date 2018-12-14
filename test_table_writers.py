@@ -15,10 +15,10 @@ class BaseTestTableWriterRepoLinks(unittest.TestCase):
 
         self.section = 'section_name'
 
-        repo_name_list = [self.reponame1, self.reponame2]
+        self.row_title_list = [self.reponame1, self.reponame2]
 
         self.repo_dict_list = []
-        for repo_name in repo_name_list:
+        for repo_name in self.row_title_list:
             self.repo_dict_list.append({
                 'name': repo_name,
                 'url': f'https://github.com/{self.section}/{repo_name}'
@@ -27,16 +27,25 @@ class BaseTestTableWriterRepoLinks(unittest.TestCase):
         self.filename1 = 'iii123.py'
         self.filename2 = 'jjj456.ipynb'
 
-        file_name_list = [self.filename1, self.filename2]
+        self.column_title_list = [self.filename1, self.filename2]
 
         table = {
             self.reponame1 : {self.filename1:11, self.filename2:12},
             self.reponame2 : {self.filename1:21, self.filename2:22},
         }
 
-        for repo_name in repo_name_list:
-            for path_name in file_name_list:
+        for repo_name in self.row_title_list:
+            for path_name in self.column_title_list:
                 self.d.set_row_column(repo_name, path_name, table[repo_name][path_name])
+
+        self.repo_url_lookup = {}
+
+        for repo_info in self.repo_dict_list:
+            self.repo_url_lookup[repo_info['name']] = repo_info['url']
+
+    @staticmethod
+    def get_expected_url(domain_name, file_name):
+        return f"{domain_name}/blob/master/{file_name}"
 
 
 class TestMarkdownTableWriterRepoLinks(BaseTestTableWriterRepoLinks):
@@ -44,6 +53,30 @@ class TestMarkdownTableWriterRepoLinks(BaseTestTableWriterRepoLinks):
         super().setUp()
 
         self.m = progress.MarkdownTableWriterRepoLinks(d=self.d, section=self.section, sorted_row_title_list=self.row_title_list, repo_list=self.repo_dict_list)
+
+    def get_expected_list(self, writer):
+        # TODO : repeated? multiple inheritance?
+
+        space_sep_space = f"  {writer.col_sep}  "
+
+        first_row = space_sep_space.join([writer.col_sep+'  '] + self.column_title_list)
+        second_row = writer.col_sep.join([''] + [':-----:'] * (len(self.column_title_list)+1) + [''])
+
+        title_row = writer.row_sep.join([first_row, second_row])
+        
+        expected_list = [title_row]
+        for row_title in self.row_title_list:
+            row_item_list = ['', row_title]
+            for column_title in self.column_title_list:
+                row_item_list.append(self.get_row_column_item(row_title, column_title))
+            row_str = space_sep_space.join(row_item_list) + writer.row_sep
+            expected_list.append(row_str)
+
+        return expected_list
+
+    def get_row_column_item(self, repo_name, file_name):
+        expected_url = self.get_expected_url(self.repo_url_lookup[repo_name], file_name)
+        return f"[{self.d[repo_name][file_name]}]({expected_url})"
 
     def test_start_row(self):
         # check header column string
@@ -54,8 +87,20 @@ class TestMarkdownTableWriterRepoLinks(BaseTestTableWriterRepoLinks):
     def test_gen_rows_links(self):
         # TODO : common base class for various table writers possible?
 
-        for result_str in self.m.gen_rows():
-            print(f"{result_str}")
+        expected_list = self.get_expected_list(self.m)
+        result_list = list(self.m.gen_rows())
+
+        self.maxDiff = None
+
+        for expected_line, result_str in zip(expected_list[1:], result_list[1:]):
+
+            expected_line_split = expected_line.strip().split()
+            result_line_split = result_str.strip().split()
+
+            self.assertSequenceEqual (expected_line_split, result_line_split, msg='\n'
+                f"expected = {repr(expected_line)}\n"
+                f"result = {repr(result_str)}\n"
+            )
 
 
 class BaseTestTableWriterTable(unittest.TestCase):
