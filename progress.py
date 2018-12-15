@@ -288,7 +288,7 @@ def call_commit_count(config, section, repo_list, results):
 @timeit.timeit
 def count_commits(config, section, repo_list):
     """
-    Count commits of each file fromt eh section
+    Count commits of each file from the section
     """
     # git log interval settings
     after = config[section].get('after', None)
