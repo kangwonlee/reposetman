@@ -1798,11 +1798,20 @@ class MarkdownTableWriterRepoLinks(MarkdownTableWriter):
 
     def get_cell_text(self, row_key, column_key):
         result = ''
+
         if not column_key.strip().endswith('total'):
+
+            if self.url_lookup[row_key].strip().startswith('https://github.com'):
+                url_path = '/blob/master'
+            elif self.url_lookup[row_key].strip().startswith('file://'):
+                url_path = ''
+            else:
+                raise NotImplementedError
+
             result = self.cell_formatter.format(
                 sep=self.col_sep, 
                 value=str(self.d[row_key].get(column_key, '')),
-                url = f'{self.url_lookup[row_key]}/blob/master/{column_key}',
+                url = f'{self.url_lookup[row_key]}{url_path}/{column_key}',
             )
         else:
             result = super().cell_formatter.format(
@@ -1949,11 +1958,28 @@ class HtmlTableWriterRepoLinks(HtmlTableWriter):
         )
 
     def get_cell_text(self, row_key, column_key):
-            return self.cell_formatter.format(
+        result = ''
+
+        if not column_key.strip().endswith('total'):
+
+            if self.url_lookup[row_key].strip().startswith('https://github.com'):
+                url_path = '/blob/master'
+            elif self.url_lookup[row_key].strip().startswith('file://'):
+                url_path = ''
+            else:
+                raise NotImplementedError
+
+            result = self.cell_formatter.format(
                 sep=self.col_sep, 
                 value=str(self.d[row_key].get(column_key, '')),
-                url = f'{self.url_lookup[row_key]}/blob/master/{column_key}',
+                url = f'{self.url_lookup[row_key]}{url_path}/{column_key}',
             )
+        else:
+            result = super().cell_formatter.format(
+                sep=self.col_sep,
+                value=str(self.d[row_key].get(column_key, ''))
+            )
+        return result
 
 
 if "__main__" == __name__:
