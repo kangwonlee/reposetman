@@ -62,6 +62,7 @@ def main(argv):
                     {
                         'name': os.path.split(path)[-1],
                         'path': path.strip(),
+                        'url': get_url_from_path(path.strip())
                     }
                 )
         # end of reading folder list file
@@ -288,7 +289,11 @@ def init_or_update_user_umbrella(umbrella_folder, user, section_url_dict):
 
     os.chdir(start_folder)
 
-    return {'name': user, 'path': user_folder, 'url': f'file://{os.path.relpath(user_folder, start=start_folder)   }'}
+    return {'name': user, 'path': user_folder, 'url': get_url_from_path(user_folder, start=start_folder)}
+
+
+def get_url_from_path(path, start=None):
+    return f'file://{os.path.relpath(path, start=start)}'
 
 
 def get_remote_list():
