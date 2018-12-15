@@ -1,6 +1,8 @@
 import os
 import unittest
 
+import bs4
+
 import progress
 
 
