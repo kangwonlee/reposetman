@@ -30,7 +30,8 @@ import timeit
 import unique_list
 
 
-# TODO : Add tests for table writers
+# TODO : exact folder information in columns of overall tables
+# TODO : exact url info for overall tables with links
 
 
 # https://stackoverflow.com/questions/1681836/how-to-debug-a-memoryerror-in-python-tools-for-tracking-memory-use
