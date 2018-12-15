@@ -220,8 +220,6 @@ def init_or_update_umbrella_repos(users_dict, umbrella_folder, b_parallel=True):
     ++ ...
     """
 
-
-
     start_folder = os.getcwd()
 
     def gen_folder_user_dict(user_dict_item):
@@ -288,8 +286,9 @@ def init_or_update_user_umbrella(umbrella_folder, user, section_url_dict):
             print('subtree pull')
             git.git(('subtree', 'pull', f'--prefix={section}', section, 'master'))
 
-    os.chdir(start_folder)    
-    return {'name': user, 'path': user_folder}
+    os.chdir(start_folder)
+
+    return {'name': user, 'path': user_folder, 'url': f'file://{os.path.relpath(user_folder, start=start_folder)   }'}
 
 
 def get_remote_list():
