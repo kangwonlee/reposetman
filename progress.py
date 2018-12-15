@@ -32,6 +32,7 @@ import unique_list
 
 # TODO : exact folder information in columns of overall tables
 # TODO : exact url info for overall tables with links
+# TODO : consider using bs4 to write the html table
 
 
 # https://stackoverflow.com/questions/1681836/how-to-debug-a-memoryerror-in-python-tools-for-tracking-memory-use
