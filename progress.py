@@ -825,13 +825,18 @@ class RepoEvalCountOneCommitLog(RepoEval):
         return self.table
 
     def convert_git_log_to_table(self, git_log):
+        # column titles == unique file names in the git log
         column_set = unique_list.unique_list()
 
         commits_list = []
         eval_dict = {}
 
+        # one big git log -> list of commits
         git_log_split_blocks = git_log.split(self.split_token)
 
+        # remove empty string
+        # TODO : consider git_log.strip(self.split_token).split(self.split_token) 
+        #        to avoid a special case
         if not git_log_split_blocks[0]:
             git_log_split_blocks.pop(0)
 
@@ -839,11 +844,10 @@ class RepoEvalCountOneCommitLog(RepoEval):
 
         last_commit_dict = {'subject':'no commit yet'}
 
-        # commit log line loop
+        # commit loop
         for git_log_block in git_log_split_blocks:
             git_log_lines = git_log_block.splitlines()
 
-            # process first line
             # using git log output as input to python
             last_commit_dict = self.get_commit_dict(git_log_lines[0])
 
@@ -852,7 +856,7 @@ class RepoEvalCountOneCommitLog(RepoEval):
                 last_commit_dict = self.get_commit_dict(git_log_lines[0].strip('"'))
 
             if isinstance(last_commit_dict, (str, bytes)):
-            # to use git log output as input to python
+                # if still a str or bytes, try again
                 last_commit_dict = self.get_commit_dict(last_commit_dict)
 
             assert isinstance(last_commit_dict, dict), f"git_log_lines[0] = {repr(git_log_lines[0])}\n" \
@@ -861,6 +865,7 @@ class RepoEvalCountOneCommitLog(RepoEval):
                 f"convert_git_log_to_table(): type(last_commit_dict) = {type(last_commit_dict)}"
 
             # filer using email address
+            # TODO : consider refactoring into a function
             if last_commit_dict['email'] in self.exclude_email_tuple:
                 last_commit_dict = {}
                 continue
