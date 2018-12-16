@@ -735,7 +735,16 @@ class RepoEvalCountOneCommitLog(RepoEval):
     """
     Obtain information on all files from one git log
     """
-    def __init__(self, after=None, before=None, exclude_email_tuple=[], split_token = '__reposetman_new_commit_start__'):    
+    def __init__(self, after=None, before=None, exclude_email_tuple=[], split_token = '__reposetman_new_commit_start__'):
+        """
+        One commit log from one repository
+
+        :param str after : commits after this date and time
+        :param str before : commits before this date and time
+        :param list exclude_email_tuple : ignore commits with these email addresses
+        :param str split_token : identifies start point of a new token
+
+        """
         super(RepoEvalCountOneCommitLog, self).__init__()
         self.after = after
         self.before = before
