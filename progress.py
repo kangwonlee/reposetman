@@ -271,6 +271,14 @@ def process_section(config, re_git_log, section):
     return results
 
 def call_commit_count(config, section, repo_list, results):
+    """
+    Call count commits() and update results dict
+
+    :param configparser.Configparser config : program configurations
+    :param str section : usually '{course id}{yr}{a/b/c}', '{course id}{yr}{a/b/c}', or '{course id}{yr}{a/b/c}'
+    :param list(dict) repo_list : list of repository_information_dictionary
+    :param dict results: contains dictionary of results
+    """
     commit_count_txt, commit_count_md, commit_count_html = count_commits(config, section, repo_list) 
     results.update({
         'count_commits':
