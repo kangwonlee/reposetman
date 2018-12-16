@@ -52,10 +52,13 @@ def which_git():
 
 
 def find_git_in_path():
+    """
+    search for `git` in PATH environment variable
+    """
     PATH = 'PATH'
     result = []
     if PATH in os.environ:
-        for path in os.environ[PATH].split(';'):
+        for path in os.environ[PATH].split(os.pathsep):
             if os.path.exists(path):
                 if 'git' in os.listdir(path):
                     print (f"{path} has git")
