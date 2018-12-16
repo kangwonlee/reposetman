@@ -220,8 +220,6 @@ def init_or_update_umbrella_repos(users_dict, umbrella_folder, b_parallel=True):
     ++ ...
     """
 
-
-
     start_folder = os.getcwd()
 
     def gen_folder_user_dict(user_dict_item):
