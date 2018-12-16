@@ -607,6 +607,7 @@ class RepoEval(object):
     @staticmethod
     def is_ignore_path(path):
         # check if ignore
+        # TODO : more flexible ignore list
         is_dot_git_path = ".git" in path
         is_xcode_path = "python.xcodeproj" in path
         is_pycharm_path = '.idea' in path
