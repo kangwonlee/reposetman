@@ -6,10 +6,10 @@ import urllib.parse as up
 
 
 def add_if_missing(add_this, path_list_str):
-    '''
+    """
     if a path is missing in a path list separated by ';',
     append it
-    '''
+    """
     path_list = path_list_str.split(';')
 
     if add_this in path_list:
