@@ -1,3 +1,4 @@
+import os
 import re
 import subprocess
 import unittest
@@ -190,6 +191,10 @@ class TestGit(unittest.TestCase):
         self.assertTrue(all(
             [' -> ' for branch in result]
         ))
+
+    def test_which_git(self):
+        result = git.which_git()
+        self.assertTrue(os.path.exists(result), msg=f"Cannot find {result}")
 
 
 class TestRet(unittest.TestCase):

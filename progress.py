@@ -271,6 +271,14 @@ def process_section(config, re_git_log, section):
     return results
 
 def call_commit_count(config, section, repo_list, results):
+    """
+    Call count commits() and update results dict
+
+    :param configparser.Configparser config : program configurations
+    :param str section : usually '{course id}{yr}{a/b/c}', '{course id}{yr}{a/b/c}', or '{course id}{yr}{a/b/c}'
+    :param list(dict) repo_list : list of repository_information_dictionary
+    :param dict results: contains dictionary of results
+    """
     commit_count_txt, commit_count_md, commit_count_html = count_commits(config, section, repo_list) 
     results.update({
         'count_commits':
@@ -607,6 +615,7 @@ class RepoEval(object):
     @staticmethod
     def is_ignore_path(path):
         # check if ignore
+        # TODO : more flexible ignore list
         is_dot_git_path = ".git" in path
         is_xcode_path = "python.xcodeproj" in path
         is_pycharm_path = '.idea' in path
@@ -734,7 +743,16 @@ class RepoEvalCountOneCommitLog(RepoEval):
     """
     Obtain information on all files from one git log
     """
-    def __init__(self, after=None, before=None, exclude_email_tuple=[], split_token = '__reposetman_new_commit_start__'):    
+    def __init__(self, after=None, before=None, exclude_email_tuple=[], split_token = '__reposetman_new_commit_start__'):
+        """
+        One commit log from one repository
+
+        :param str after : commits after this date and time
+        :param str before : commits before this date and time
+        :param list exclude_email_tuple : ignore commits with these email addresses
+        :param str split_token : identifies start point of a new token
+
+        """
         super(RepoEvalCountOneCommitLog, self).__init__()
         self.after = after
         self.before = before
@@ -807,13 +825,18 @@ class RepoEvalCountOneCommitLog(RepoEval):
         return self.table
 
     def convert_git_log_to_table(self, git_log):
+        # column titles == unique file names in the git log
         column_set = unique_list.unique_list()
 
         commits_list = []
         eval_dict = {}
 
+        # one big git log -> list of commits
         git_log_split_blocks = git_log.split(self.split_token)
 
+        # remove empty string
+        # TODO : consider git_log.strip(self.split_token).split(self.split_token) 
+        #        to avoid a special case
         if not git_log_split_blocks[0]:
             git_log_split_blocks.pop(0)
 
@@ -821,11 +844,20 @@ class RepoEvalCountOneCommitLog(RepoEval):
 
         last_commit_dict = {'subject':'no commit yet'}
 
-        # commit log line loop
+        # commit loop
         for git_log_block in git_log_split_blocks:
+            # TODO : refactor into a method?
+
+            # one commit example:
+            # < commit information >
+            # <int add>    <int del>    <filename 0>
+            # <int add>    <int del>    <filename 1>
+            # <int add>    <int del>    <filename 2>
+            # <int add>    <int del>    <filename 3>
+            # <blank line>
+
             git_log_lines = git_log_block.splitlines()
 
-            # process first line
             # using git log output as input to python
             last_commit_dict = self.get_commit_dict(git_log_lines[0])
 
@@ -834,7 +866,7 @@ class RepoEvalCountOneCommitLog(RepoEval):
                 last_commit_dict = self.get_commit_dict(git_log_lines[0].strip('"'))
 
             if isinstance(last_commit_dict, (str, bytes)):
-            # to use git log output as input to python
+                # if still a str or bytes, try again
                 last_commit_dict = self.get_commit_dict(last_commit_dict)
 
             assert isinstance(last_commit_dict, dict), f"git_log_lines[0] = {repr(git_log_lines[0])}\n" \
@@ -843,6 +875,7 @@ class RepoEvalCountOneCommitLog(RepoEval):
                 f"convert_git_log_to_table(): type(last_commit_dict) = {type(last_commit_dict)}"
 
             # filer using email address
+            # TODO : consider refactoring into a function
             if last_commit_dict['email'] in self.exclude_email_tuple:
                 last_commit_dict = {}
                 continue

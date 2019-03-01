@@ -6,10 +6,10 @@ import urllib.parse as up
 
 
 def add_if_missing(add_this, path_list_str):
-    '''
+    """
     if a path is missing in a path list separated by ';',
     append it
-    '''
+    """
     path_list = path_list_str.split(';')
 
     if add_this in path_list:
@@ -52,10 +52,13 @@ def which_git():
 
 
 def find_git_in_path():
+    """
+    search for `git` in PATH environment variable
+    """
     PATH = 'PATH'
     result = []
     if PATH in os.environ:
-        for path in os.environ[PATH].split(';'):
+        for path in os.environ[PATH].split(os.pathsep):
             if os.path.exists(path):
                 if 'git' in os.listdir(path):
                     print (f"{path} has git")
