@@ -13,6 +13,7 @@ Year : 2018
 
 import ast
 import configparser
+import fractions
 import itertools
 import multiprocessing
 import os
@@ -113,15 +114,7 @@ class ProgressReportBuilder(object):
 
         # evaluate repositories within the section
         if 'True' == self.config[section]['count_commits']:
-            commit_count_txt, commit_count_md, commit_count_html = count_commits(self.config, section, repo_list) 
-            results.update({
-                'count_commits':
-                    {
-                    'txt': commit_count_txt, 
-                    'md': commit_count_md, 
-                    'html': commit_count_html
-                    }
-            }) 
+            call_commit_count(self.config, section, repo_list, results) 
         if 'True' == self.config[section]['pound_count']:
             pound_reports = pound_count(self.config, section, repo_list)
             results.update({
@@ -253,15 +246,7 @@ def process_section(config, re_git_log, section):
 
     # evaluate repositories within the section
     if 'True' == config[section]['count_commits']:
-        commit_count_txt, commit_count_md, commit_count_html = count_commits(config, section, repo_list) 
-        results.update({
-            'count_commits':
-                {
-                'txt': commit_count_txt, 
-                'md': commit_count_md, 
-                'html': commit_count_html
-                }
-        }) 
+        call_commit_count(config, section, repo_list, results) 
     if 'True' == config[section]['pound_count']:
         pound_reports = pound_count(config, section, repo_list)
         results.update({
@@ -285,6 +270,25 @@ def process_section(config, re_git_log, section):
 
     return results
 
+def call_commit_count(config, section, repo_list, results):
+    """
+    Call count commits() and update results dict
+
+    :param configparser.Configparser config : program configurations
+    :param str section : usually '{course id}{yr}{a/b/c}', '{course id}{yr}{a/b/c}', or '{course id}{yr}{a/b/c}'
+    :param list(dict) repo_list : list of repository_information_dictionary
+    :param dict results: contains dictionary of results
+    """
+    commit_count_txt, commit_count_md, commit_count_html = count_commits(config, section, repo_list) 
+    results.update({
+        'count_commits':
+            {
+            'txt': commit_count_txt, 
+            'md': commit_count_md, 
+            'html': commit_count_html
+            }
+    }) 
+
 
 @timeit.timeit
 def count_commits(config, section, repo_list):
@@ -294,8 +298,9 @@ def count_commits(config, section, repo_list):
     # git log interval settings
     after = config[section].get('after', None)
     before = config[section].get('before', None)
+    exclude_email_tuple = tuple(ast.literal_eval(config['operation']['initial_email_addresses']))
 
-    commit_counter = RepoEvalCountOneCommitLog(after, before)
+    commit_counter = RepoEvalCountOneCommitLog(after, before, exclude_email_tuple)
     commit_count = commit_counter.eval_repo_list(repo_list)
 
     # if the header row seems to include '\' character in the header row
@@ -610,12 +615,14 @@ class RepoEval(object):
     @staticmethod
     def is_ignore_path(path):
         # check if ignore
+        # TODO : more flexible ignore list
         is_dot_git_path = ".git" in path
         is_xcode_path = "python.xcodeproj" in path
         is_pycharm_path = '.idea' in path
         is_vscode_path = '.vscode' in path
         is_pycache_path = '__pycache__' in path
-        b_ignore = any((is_dot_git_path, is_xcode_path, is_pycharm_path, is_vscode_path, is_pycache_path))
+        is_ipynb_checkpoints_path = '.ipynb_checkpoints' in path
+        b_ignore = any((is_dot_git_path, is_xcode_path, is_pycharm_path, is_vscode_path, is_pycache_path, is_ipynb_checkpoints_path))
         return b_ignore
 
     def is_ignore_filename(self, filename):
@@ -630,7 +637,7 @@ class RepoEval(object):
     
     @staticmethod
     def is_dot_git(filename):
-        return '.git' in filename
+        return '.git' == filename
 
     def eval_file_base(self, filename):
         """
@@ -736,10 +743,21 @@ class RepoEvalCountOneCommitLog(RepoEval):
     """
     Obtain information on all files from one git log
     """
-    def __init__(self, after=None, before=None):    
+    def __init__(self, after=None, before=None, exclude_email_tuple=[], split_token = '__reposetman_new_commit_start__'):
+        """
+        One commit log from one repository
+
+        :param str after : commits after this date and time
+        :param str before : commits before this date and time
+        :param list exclude_email_tuple : ignore commits with these email addresses
+        :param str split_token : identifies start point of a new token
+
+        """
         super(RepoEvalCountOneCommitLog, self).__init__()
         self.after = after
         self.before = before
+        self.exclude_email_tuple = exclude_email_tuple
+        self.split_token = split_token
 
     def get_git_cmd(self, after=None, before=None):
         # To let git generate string compatible with python ast as much as possible
@@ -752,7 +770,8 @@ class RepoEvalCountOneCommitLog(RepoEval):
             'log', # must be the first
             '--encoding=utf-8',
             '--numstat',
-            """--pretty=format:"{'sha':'%H', 'author':u'''%an''', 'email':u'%ae', 'date':'%ad', 'subject': u'''%s'''}\"""",
+            '--all',
+            f"""--pretty=format:{self.split_token}"{{'sha':'%H', 'author':u'''%an''', 'email':u'%ae', 'date':'%ad', 'subject': u'''%f'''}}\"""",
         ]
 
         if after:
@@ -806,34 +825,69 @@ class RepoEvalCountOneCommitLog(RepoEval):
         return self.table
 
     def convert_git_log_to_table(self, git_log):
+        # column titles == unique file names in the git log
         column_set = unique_list.unique_list()
 
         commits_list = []
         eval_dict = {}
 
-        git_log_split_lines = git_log.splitlines()
-        # add one more line at the end
-        # to add files of the last commit to the eval_dict
-        git_log_split_lines.append('')
+        # one big git log -> list of commits
+        git_log_split_blocks = git_log.split(self.split_token)
+
+        # remove empty string
+        # TODO : consider git_log.strip(self.split_token).split(self.split_token) 
+        #        to avoid a special case
+        if not git_log_split_blocks[0]:
+            git_log_split_blocks.pop(0)
 
         temporary_file_list = unique_list.unique_list(['no commit yet'])
 
         last_commit_dict = {'subject':'no commit yet'}
 
-        # commit log line loop
-        for line in git_log_split_lines:
-            if line and '{' == line[0]:
-                # new commit
+        # commit loop
+        for git_log_block in git_log_split_blocks:
+            # TODO : refactor into a method?
 
-                # to use git log output as input to python
-                last_commit_dict = self.get_commit_dict(line)
+            # one commit example:
+            # < commit information >
+            # <int add>    <int del>    <filename 0>
+            # <int add>    <int del>    <filename 1>
+            # <int add>    <int del>    <filename 2>
+            # <int add>    <int del>    <filename 3>
+            # <blank line>
 
-                # keep note of commits
-                commits_list.append(last_commit_dict)
+            git_log_lines = git_log_block.splitlines()
 
-                # reset storage for 'files in commit'
-                temporary_file_list = unique_list.unique_list()
-            else:
+            # using git log output as input to python
+            last_commit_dict = self.get_commit_dict(git_log_lines[0])
+
+            if isinstance(last_commit_dict, (str, bytes)):
+                # if double quote is wrapping the output from the git log
+                last_commit_dict = self.get_commit_dict(git_log_lines[0].strip('"'))
+
+            if isinstance(last_commit_dict, (str, bytes)):
+                # if still a str or bytes, try again
+                last_commit_dict = self.get_commit_dict(last_commit_dict)
+
+            assert isinstance(last_commit_dict, dict), f"git_log_lines[0] = {repr(git_log_lines[0])}\n" \
+                f"convert_git_log_to_table(): last_commit_dict = {last_commit_dict}" \
+                f"convert_git_log_to_table(): isinstance(last_commit_dict, dict) = {isinstance(last_commit_dict, dict)}" \
+                f"convert_git_log_to_table(): type(last_commit_dict) = {type(last_commit_dict)}"
+
+            # filer using email address
+            # TODO : consider refactoring into a function
+            if last_commit_dict['email'] in self.exclude_email_tuple:
+                last_commit_dict = {}
+                continue
+
+            # keep note of commits
+            commits_list.append(last_commit_dict)
+
+            # reset storage for 'files in commit'
+            temporary_file_list = unique_list.unique_list()
+
+            # process file list
+            for line in git_log_lines[1:]:
                 # lines below the new commit
                 line_strip = line.strip()
 
@@ -855,22 +909,28 @@ class RepoEvalCountOneCommitLog(RepoEval):
 
                         # to count the number of
                         temporary_file_list.add(column_key)
-                else:
-                    # end of files list
-                    if temporary_file_list:
-                        point = 1.0 / len(temporary_file_list)
 
-                        # loop over files in commit
-                        for files_in_commit in temporary_file_list:
-                            eval_dict[files_in_commit] = eval_dict.get(files_in_commit, 0) + point
+            # end of files list
+            if temporary_file_list:
+                point = fractions.Fraction(1, len(temporary_file_list))
 
-                        last_commit_dict['files'] = temporary_file_list
-                    else:
-                        print('\n{class_name}.convert_git_log_to_table() : end of file list but temporary_file_list empty'.format(
-                            class_name=self.get_class_name(),
-                        ))
-                        print('line = %r' % line)
-                        print('last_commit_dict = %r' % last_commit_dict)
+                # build commit count table
+                # loop over files in commit
+                for files_in_commit in temporary_file_list:
+                    eval_dict[files_in_commit] = eval_dict.get(files_in_commit, 0) + point
+
+                # if it is still not a dict
+                if isinstance(last_commit_dict, str):
+                    # try to convert it again
+                    print(f'last_commit_dict = {repr(last_commit_dict)}')
+                    last_commit_dict = ast.literal_eval(last_commit_dict)
+                    if not isinstance(last_commit_dict, dict):
+                        raise ValueError(f'last_commit_dict = {repr(last_commit_dict)}')
+                last_commit_dict['files'] = temporary_file_list
+            else:
+                print(f'\n{self.get_class_name()}.convert_git_log_to_table() : end of file list but temporary_file_list empty')
+                print(f'line = {line}')
+                print('last_commit_dict =', repr(last_commit_dict))
 
         # total number of commits
         # to make it the first element
@@ -881,16 +941,31 @@ class RepoEvalCountOneCommitLog(RepoEval):
 
         return column_set, eval_dict
 
+    def filter_commit_list(self, commits_list):
+        # remove if email is in exclude list
+        for k in range((len(commits_list) - 1), -1, -1):
+            if commits_list[k]['email'] in self.exclude_email_tuple:
+                del commits_list[k]
+
+        for c_dict in commits_list:
+            assert c_dict['email'] not in self.exclude_email_tuple, f"{c_dict['email']} in {self.exclude_email_tuple}"
+            assert '.travis.yml' not in c_dict['files'], f".travis.yml in {c_dict}\n" \
+                f"len(c_dict['files']) = {len(c_dict['files'])}\n" \
+                f"c_dict['files'] = {c_dict['files']}\n" \
+                f"'a' in c_dict['files'] = {'a' in c_dict['files']}\n" \
+                f"'.travis.yml' in c_dict['files'] = {'.travis.yml' in c_dict['files']}"
+
     def get_commit_dict(self, line):
         # to use git log output as input to python
         if line.endswith("''''}"):
             line = line.replace("''''}", r"\''''}")
 
         try:
-            last_commit_dict = ast.literal_eval(line)
+            last_commit_dict = ast.literal_eval(ast.literal_eval(line))
         except SyntaxError:
             # https://stackoverflow.com/questions/1347791/unicode-error-unicodeescape-codec-cant-decode-bytes-cannot-open-text-file
             # if `line` includes a string such as '\uabc' or '\Uabc', `ast.literal_eval()` assumes it is a escape sequence for the unicode
+            line = line.replace(r'\USER', r'_USER')
             line = line.replace(r'\U', r'\\U')
             line = line.replace(r'\u', r'\\u')
             try:
@@ -1013,13 +1088,14 @@ class RepoEvalPoundByteCounter(RepoEvalPoundLineCounter):
 
 
 class RepoEvalPoundByteCounterExcludingRef(RepoEvalPoundByteCounter):
+    reference_cfg_filename = 'reference.cfg'
     def __init__(self):
         super(RepoEvalPoundByteCounterExcludingRef, self).__init__()
 
-        if os.path.exists('reference.cfg'):
+        if os.path.exists(self.reference_cfg_filename):
             self.comments_ref = unique_list.unique_list()
             self.config_ref = configparser.ConfigParser()
-            self.config_ref.read('reference.cfg')
+            self.config_ref.read(self.reference_cfg_filename)
 
             reference_comment_filename = self.config_ref['operation']['comment_output_file']
 
@@ -1028,7 +1104,50 @@ class RepoEvalPoundByteCounterExcludingRef(RepoEvalPoundByteCounter):
                     self.comments_ref.add(line.strip())
 
         else:
-            raise IOError("'Can't find reference.cfg file")
+            self.init_reference_cfg_file()
+
+    def init_reference_cfg_file(self):
+        """
+        Initialize reference config file and raise error
+        """
+        config_ref = configparser.ConfigParser()
+        #sample cfg file
+        r'''
+        [operation]
+        folder=data\ref
+        comment_output_file=reference_comment.txt
+        [urls]
+        a=https://github.com/<github id>/<repository a name>
+        b=https://github.com/<github id>/<repository b name>
+        c=https://github.com/<github id>/<repository c name>
+        [commits]
+        a=<hash value of reference commit in repo a>
+        b=<hash value of reference commit in repo b>
+        c=<hash value of reference commit in repo c>
+        '''
+        config_ref['operation'] = {
+            # will clone reference repositories to this folder
+            'folder': os.path.join('data', 'ref'),
+            # will write sample comment set to this file
+            'comment_output_file' : 'reference_comment.txt',
+        }
+        config_ref['urls'] = {
+            # urls of the reference repositories
+            'a':'reference repository a url here',
+            'b':'reference repository b url here',
+            'c':'reference repository c url here',
+        }
+        config_ref['commits'] = {
+            # hashes of reference commits here
+            'a':'reference repository a base hash here',
+            'b':'reference repository b base hash here',
+            'c':'reference repository c base hash here',
+        }
+
+        with open(self.reference_cfg_filename, 'w') as ref_cfg_file:
+            config_ref.write(ref_cfg_file)
+
+        raise FileNotFoundError(f'please configure {self.reference_cfg_filename}, run reference.py, and restart')
 
     def get_line_point(self, comment, b_verbose=False):
         if comment.strip() not in self.comments_ref:

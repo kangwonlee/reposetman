@@ -1,3 +1,4 @@
+import os
 import re
 import subprocess
 import unittest
@@ -9,53 +10,44 @@ class TestGit(unittest.TestCase):
     def test_git(self):
         msg = git.git("", bVerbose=False)
         expected = "git help"
+
         # https://stackoverflow.com/questions/606191/convert-bytes-to-a-string
         self.assertIn(expected, msg, msg='"%s" not in "%s"' % (expected, msg))
 
     def test_git_config(self):
-        msg = git.git("config", bVerbose=False)
+        msg = git.git(["config"], bVerbose=False)
         expected = "usage: git config"
         self.assertIn(expected, msg, msg='"%s" not in "%s"' % (expected, msg))
 
     def test_git_log(self):
         """
         test git log command
-        >>> git log --follow git.py
+        >>> git log test_git.py
         check "Author:", "Date:", "commit" strings are all included in the message
         """
-        msg = git.git("log --follow git.py", bVerbose=False)
-        # print "\ntest_git_log() msg ="
-        # print msg
+        msg = git.git(("log", __file__), bVerbose=False)
+
         try:
-            self.assertIn("Author:", msg, msg='"%s" not in "%s"' % ("Author:", msg))
-            self.assertIn("Date:", msg, msg='"%s" not in "%s"' % ("Date:", msg))
-            self.assertIn("commit", msg, msg='"%s" not in "%s"' % ("commit", msg))
+            for token in ("Author:", "Date:", "commit"):
+                self.assertIn(token, msg, msg=f'"{token}" not in "{msg}"')
         except UnicodeDecodeError:
-            self.assertIn("Author:", msg, msg='"%s" not in "%s"' % ("Author:", msg))
-            self.assertIn("Date:", msg, msg='"%s" not in "%s"' % ("Date:", msg))
-            self.assertIn("commit", msg, msg='"%s" not in "%s"' % ("commit", msg))
+            for token in ("Author:", "Date:", "commit"):
+                self.assertIn(token, msg, msg=f'"{token}" not in "{msg}"')
 
     def test_git_log_oneline(self):
         """
         test git log command
-        >>> git log --follow --oneline git.py
+        >>> git log --oneline git.py
         check first two commits included in the message
         """
-        msg = git.git("log --follow --oneline git.py", bVerbose=False)
-        # print "\ntest_git_log_oneline() msg ="
-        # print msg
+        msg = git.git(("log", "--oneline", __file__), bVerbose=False)
+
+        assert_message = f"git message = {msg}"
+
         try:
-            self.assertIn("27bb090 refactored git() to git.py", msg,
-                          msg='"%s" not in "%s"' % ("27bb090 refactored git() to git.py", msg))
-            self.assertIn("85aa1a4 ** doesn't work yet ** tried to use mingw32 to run git in UNIX style environment;",
-                          msg, msg='"%s" not in "%s"' % (
-                "85aa1a4 ** doesn't work yet ** tried to use mingw32 to run git in UNIX style environment;", msg))
+            self.assertTrue(msg, msg=assert_message)
         except UnicodeDecodeError:
-            self.assertIn("27bb090 refactored git() to git.py", msg,
-                          msg='"%s" not in "%s"' % ("27bb090 refactored git() to git.py", msg))
-            self.assertIn("85aa1a4 ** doesn't work yet ** tried to use mingw32 to run git in UNIX style environment;",
-                          msg, msg='"%s" not in "%s"' % (
-                "85aa1a4 ** doesn't work yet ** tried to use mingw32 to run git in UNIX style environment;", msg))
+            self.assertTrue(msg, msg=assert_message)
 
     def test_get_last_sha(self):
 
@@ -199,6 +191,10 @@ class TestGit(unittest.TestCase):
         self.assertTrue(all(
             [' -> ' for branch in result]
         ))
+
+    def test_which_git(self):
+        result = git.which_git()
+        self.assertTrue(os.path.exists(result), msg=f"Cannot find {result}")
 
 
 class TestRet(unittest.TestCase):
