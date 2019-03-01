@@ -846,6 +846,16 @@ class RepoEvalCountOneCommitLog(RepoEval):
 
         # commit loop
         for git_log_block in git_log_split_blocks:
+            # TODO : refactor into a method?
+
+            # one commit example:
+            # < commit information >
+            # <int add>    <int del>    <filename 0>
+            # <int add>    <int del>    <filename 1>
+            # <int add>    <int del>    <filename 2>
+            # <int add>    <int del>    <filename 3>
+            # <blank line>
+
             git_log_lines = git_log_block.splitlines()
 
             # using git log output as input to python
