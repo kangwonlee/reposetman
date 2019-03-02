@@ -473,21 +473,28 @@ class TestRepoEvalCountOneCommitLog(unittest.TestCase):
             self.assertAlmostEqual(expected_eval_dict[filename], expected_eval_dict[filename])
 
     def test_get_commit_dict_00(self):
+
+        sha = '3a3e9a2f73e7edca47edae11fccfd9e508b63478'
+        author = u'LAPTOP-XXXXX\\USER'
+        email = u'email@domain.name'
+        date = 'Thu Oct 4 22:06:46 2018 +0900'
+        subject = u'22222'
+
         txt = (
-                '3a3e9a2f73e7edca47edae11fccfd9e508b63478'
-                f'{self.e.field_split_token}LAPTOP-XXXXX\\USER'
-                f'{self.e.field_split_token}email@domain.name'
-                f'{self.e.field_split_token}Thu Oct 4 22:06:46 2018 +0900'
-                f'{self.e.field_split_token}22222'
+                sha +
+                f'{self.e.field_split_token}{author}'
+                f'{self.e.field_split_token}{email}'
+                f'{self.e.field_split_token}{date}'
+                f'{self.e.field_split_token}{subject}'
         )
         result = self.e.get_commit_dict(txt)
 
         expected = {
-            'sha': '3a3e9a2f73e7edca47edae11fccfd9e508b63478',
-            'author': u'LAPTOP-XXXXX\\USER',
-            'email':u'email@domain.name',
-            'date':'Thu Oct 4 22:06:46 2018 +0900',
-            'subject': u'22222',
+            'sha': sha,
+            'author': author,
+            'email':email,
+            'date':date,
+            'subject': subject,
         }
 
         self.assertDictEqual(expected, result, msg=f"type(result) = {type(result)}")
