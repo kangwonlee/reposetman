@@ -534,18 +534,27 @@ class TestRepoEvalCountOneCommitLog(unittest.TestCase):
         """
         This test tries to figure out if git log with formatting is suitable to extract information
         """
-        txt = '"""{\'sha\':\'shashashashasha\', '\
-        '\'author\':u\'\'\'authorauthorauthorauthor\'\'\', '\
-        '\'email\':u\'emailemailemail\', '\
-        '\'date\':\'datedatedate\', '\
-        '\'subject\': u\'\'\'  Merge branch \'hotfix/branch_figure\'  \'\'\'}"""'
+        sha = 'shashashashasha'
+        author = u'authorauthorauthorauthor'
+        email = u'emailemailemail'
+        date = 'datedatedate'
+        subject = u'  Merge branch \'hotfix/branch_figure\'  '
+
+        txt = self.get_git_log_commit_line(
+            sha, 
+            author, 
+            email, date, subject,
+        )
 
         result = self.e.get_commit_dict(txt)
-        expected = {'sha': 'shashashashasha', 
-                    'author': 'authorauthorauthorauthor', 
-                    'email': 'emailemailemail', 
-                    'date': 'datedatedate', 
-                    'subject': 'Merge branch \'hotfix/branch_figure\''}
+        expected = {
+            'sha': sha, 
+            'author': author, 
+            'email': email, 
+            'date': date, 
+            'subject': subject, 
+        }
+
         self.assertEqual(expected['sha'], result['sha'])
         self.assertEqual(expected['date'], result['date'])
         self.assertEqual(expected['subject'], result['subject'])
