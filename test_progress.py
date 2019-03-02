@@ -440,21 +440,23 @@ class TestRepoEvalCountOneCommitLog(unittest.TestCase):
 
     def test_convert_git_log_to_table(self):
         # sample multiline input text
-        txt = '__reposetman_new_commit_start__"{\'sha\':\'0333282e3184bc17b16d42a313897a6c35ded482\', '\
-                '\'author\':u\'\'\'Kang Won LEE\'\'\', '\
-                '\'email\':u\'kangwon.lee@kpu.ac.kr\', '\
-                '\'date\':\'Fri Sep 14 01:44:09 2018 +0900\', '\
-                '\'subject\': u\'\'\'first-commit\'\'\'}"\n'\
-                '185\t0\t00.ipynb\n'\
-                '257\t0\t01.ipynb\n'\
-                '404\t0\t02.ipynb\n'\
-                '\n'\
-                '__reposetman_new_commit_start__"{\'sha\':\'83274fd5396a2e81e0ad067371cebed8f54e547f\', '\
-                '\'author\':u\'\'\'Kangwon Lee (Education)\'\'\', '\
-                '\'email\':u\'kangwonlee@users.noreply.github.com\', '\
-                '\'date\':\'Thu Sep 13 09:42:31 2018 -0700\', '\
-                '\'subject\': u\'\'\'Initial-commit\'\'\'}"\n'\
+        txt = (
+                f'{self.e.commit_split_token}0333282e3184bc17b16d42a313897a6c35ded482'
+                f'{self.e.field_split_token}Kang Won LEE'
+                f'{self.e.field_split_token}kangwon.lee@kpu.ac.kr'
+                f'{self.e.field_split_token}Fri Sep 14 01:44:09 2018 +0900'
+                f'{self.e.field_split_token}first-commit\n'
+                '185\t0\t00.ipynb\n'
+                '257\t0\t01.ipynb\n'
+                '404\t0\t02.ipynb\n'
+                '\n'
+                f'{self.e.commit_split_token}83274fd5396a2e81e0ad067371cebed8f54e547f'
+                f'{self.e.field_split_token}\'Kangwon Lee (Education)\''
+                f'{self.e.field_split_token}\'kangwonlee@users.noreply.github.com\''
+                f'{self.e.field_split_token}\'Thu Sep 13 09:42:31 2018 -0700\''
+                f'{self.e.field_split_token}\'Initial-commit\'\n'
                 '104\t0\t.gitignore\n'
+        )
 
         result_columns, result_index = self.e.convert_git_log_to_table(txt)
 
