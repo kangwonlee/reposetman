@@ -841,7 +841,7 @@ class RepoEvalCountOneCommitLog(RepoEval):
         # TODO : consider git_log.strip(self.commit_split_token).split(self.commit_split_token) 
         #        to avoid a special case
         if not git_log_split_blocks[0]:
-            git_log_split_blocks.pop(0)
+            del git_log_split_blocks[0]
 
         temporary_file_list = unique_list.unique_list(['no commit yet'])
 
