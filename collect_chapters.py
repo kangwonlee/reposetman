@@ -49,7 +49,7 @@ def main(argv):
     # make the umbrella_folder if missing
     if not os.path.exists(umbrella_folder):
         os.makedirs(umbrella_folder)
-        # if the umbrella_folder was missing, alway try to update
+        # if the umbrella_folder was missing, try to update
         config['operation']['update_repo'] = 'False'
 
     # to save time, if list file is available and 
