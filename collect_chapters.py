@@ -2,6 +2,11 @@
 Collect repositories of the chapters into a subtree
 
 Generate Report
+
+Author : KangWon LEE
+
+Year : 2018
+
 """
 import ast
 import configparser
