@@ -774,7 +774,7 @@ class RepoEvalCountOneCommitLog(RepoEval):
             '--encoding=utf-8',
             '--numstat',
             '--all',
-            f"""--pretty=format:{self.commit_split_token}"{{'sha':'%H', 'author':u'''%an''', 'email':u'%ae', 'date':'%ad', 'subject': u'''%s'''}}\"""",
+            f"""--pretty=format:{self.commit_split_token}%H{self.field_split_token}%an{self.field_split_token}%ae{self.field_split_token}%ad{self.field_split_token}%s""",
         ]
 
         if after:
