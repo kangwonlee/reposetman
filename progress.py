@@ -959,34 +959,23 @@ class RepoEvalCountOneCommitLog(RepoEval):
                 f"'.travis.yml' in c_dict['files'] = {'.travis.yml' in c_dict['files']}"
 
     def get_commit_dict(self, line):
-        # to use git log output as input to python
-        if line.endswith("''''}"):
-            line = line.replace("''''}", r"\''''}")
 
-        try:
-            last_commit_dict = ast.literal_eval(ast.literal_eval(line))
-        except SyntaxError:
-            # https://stackoverflow.com/questions/1347791/unicode-error-unicodeescape-codec-cant-decode-bytes-cannot-open-text-file
-            # if `line` includes a string such as '\uabc' or '\Uabc', `ast.literal_eval()` assumes it is a escape sequence for the unicode
-            line = line.replace(r'\USER', r'_USER')
-            line = line.replace(r'\U', r'\\U')
-            line = line.replace(r'\u', r'\\u')
-            try:
-                last_commit_dict = ast.literal_eval(line)
-            except SyntaxError:
-                # handle quote in subject
-                # use signature to locate start of subject                
-                line = self.replace_in_subject(line, "'''", r"\'\'\'")
+        fields = line.split(self.field_split_token)
 
-                try:
-
-                    last_commit_dict = ast.literal_eval(line)
-                
-                except SyntaxError:
-                    # handle backslashes in subject
-                    line = self.replace_in_subject(line, '\\', r'\\')
-                    line = self.replace_in_subject(line, r'\\"', r'\"')
-                    last_commit_dict = ast.literal_eval(line)
+        if 5 == len(fields):
+            last_commit_dict = {
+                'sha': fields[0],
+                'author': fields[1],
+                'email': fields[2],
+                'date': fields[3],
+                'subject': fields[4],
+            }
+        else:
+            raise ValueError(
+                    f'len(fields) == {len(fields)}\n'
+                    f'line = {line}\n'
+                    f'fields = {fields}\n'
+            )
 
         return last_commit_dict
 
