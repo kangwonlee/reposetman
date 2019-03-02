@@ -440,6 +440,9 @@ class TestRepoEvalCountOneCommitLog(unittest.TestCase):
 
     def test_convert_git_log_to_table(self):
         # sample multiline input text
+
+        # TODO : check if a test is desirable to depend on the internal architecture
+
         txt = (
                 f'{self.e.commit_split_token}0333282e3184bc17b16d42a313897a6c35ded482'
                 f'{self.e.field_split_token}Kang Won LEE'
