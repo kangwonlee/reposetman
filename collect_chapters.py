@@ -8,6 +8,19 @@ Author : KangWon LEE
 Year : 2018
 
 """
+
+"""
+
+Each chapter would need one url list file and a section in the .cfg file
+In addition, "umbrella" section with folder and execution info would be necessary
+Each this script would clone all chapters of each user under the "umbrella" folder
+Would ignore the folders of each chapter section of cfg file
+The script would also generate a file with list of folders for each participant
+If that file is available, it would use it.
+
+"""
+
+
 import ast
 import configparser
 import itertools
