@@ -507,22 +507,25 @@ class TestRepoEvalCountOneCommitLog(unittest.TestCase):
         """
         This test tries to figure out if git log with formatting is suitable to extract information
         """
-        txt = '"{\'sha\':\'9bfd20b43355df5fceb8098356f5a3267020872e\', '\
-                '\'author\':u\'\'\'Name\'\'\', '\
-                '\'email\':u\'email@domain.name\', '\
-                '\'date\':\'Fri Apr 13 21:58:07 2018 +0900\', '\
-                '\'subject\': u\'\'\'ex08-n\'\'\'}"'
 
-        # see if input text is valid
-        ast_tree = ast.parse(txt)
-        print(ast_tree)
+        sha = '9bfd20b43355df5fceb8098356f5a3267020872e'
+        author = u'Name'
+        email = u'email@domain.name'
+        date = 'Fri Apr 13 21:58:07 2018 +0900'
+        subject = u'ex08-n'
+
+        txt = self.get_git_log_commit_line(
+            sha, 
+            author, 
+            email, date, subject,
+        )
 
         result = self.e.get_commit_dict(txt)
-        expected = {'sha': '9bfd20b43355df5fceb8098356f5a3267020872e', 
-                    'author': 'Name', 
-                    'email': 'email@domain.name', 
-                    'date': 'Fri Apr 13 21:58:07 2018 +0900', 
-                    'subject': 'ex08-n'}
+        expected = {'sha': sha, 
+                    'author': author, 
+                    'email': email, 
+                    'date': date, 
+                    'subject': subject}
         self.assertEqual(expected['sha'], result['sha'])
         self.assertEqual(expected['date'], result['date'])
         self.assertEqual(expected['subject'], result['subject'])
