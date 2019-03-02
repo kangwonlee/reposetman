@@ -433,7 +433,7 @@ class TestRepoEvalCountOneCommitLog(unittest.TestCase):
         test_line = str(stdout.splitlines()[0], encoding='utf-8')
 
         # check if the line contains all the information correctly
-        expected_list = ['7dbdb9', 'KangWon LEE', 'kangwon.lee@kpu.ac.kr', 'Wed Jul 4 18:48:00 2018 +0900', 'Initial-commit']
+        expected_list = ['7dbdb9', 'KangWon LEE', 'kangwon.lee@kpu.ac.kr', 'Wed Jul 4 18:48:00 2018 +0900', 'Initial commit']
 
         for item in expected_list:
             self.assertIn(item, test_line)
