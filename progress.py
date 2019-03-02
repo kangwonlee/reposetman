@@ -743,7 +743,7 @@ class RepoEvalCountOneCommitLog(RepoEval):
     """
     Obtain information on all files from one git log
     """
-    def __init__(self, after=None, before=None, exclude_email_tuple=[], split_token = '__reposetman_new_commit_start__'):
+    def __init__(self, after=None, before=None, exclude_email_tuple=[], split_token='__reposetman_new_commit_start__'):
         """
         One commit log from one repository
 
