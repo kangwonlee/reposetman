@@ -433,28 +433,33 @@ class TestRepoEvalCountOneCommitLog(unittest.TestCase):
         test_line = str(stdout.splitlines()[0], encoding='utf-8')
 
         # check if the line contains all the information correctly
-        expected_list = ['7dbdb9', 'KangWon LEE', 'kangwon.lee@kpu.ac.kr', 'Wed Jul 4 18:48:00 2018 +0900', 'Initial-commit']
+        expected_list = ['7dbdb9', 'KangWon LEE', 'kangwon.lee@kpu.ac.kr', 'Wed Jul 4 18:48:00 2018 +0900', 'Initial commit']
 
         for item in expected_list:
             self.assertIn(item, test_line)
 
     def test_convert_git_log_to_table(self):
         # sample multiline input text
-        txt = '__reposetman_new_commit_start__"{\'sha\':\'0333282e3184bc17b16d42a313897a6c35ded482\', '\
-                '\'author\':u\'\'\'Kang Won LEE\'\'\', '\
-                '\'email\':u\'kangwon.lee@kpu.ac.kr\', '\
-                '\'date\':\'Fri Sep 14 01:44:09 2018 +0900\', '\
-                '\'subject\': u\'\'\'first-commit\'\'\'}"\n'\
-                '185\t0\t00.ipynb\n'\
-                '257\t0\t01.ipynb\n'\
-                '404\t0\t02.ipynb\n'\
-                '\n'\
-                '__reposetman_new_commit_start__"{\'sha\':\'83274fd5396a2e81e0ad067371cebed8f54e547f\', '\
-                '\'author\':u\'\'\'Kangwon Lee (Education)\'\'\', '\
-                '\'email\':u\'kangwonlee@users.noreply.github.com\', '\
-                '\'date\':\'Thu Sep 13 09:42:31 2018 -0700\', '\
-                '\'subject\': u\'\'\'Initial-commit\'\'\'}"\n'\
+
+        # TODO : check if a test is desirable to depend on the internal architecture
+
+        txt = (
+                f'{self.e.commit_split_token}0333282e3184bc17b16d42a313897a6c35ded482'
+                f'{self.e.field_split_token}Kang Won LEE'
+                f'{self.e.field_split_token}kangwon.lee@kpu.ac.kr'
+                f'{self.e.field_split_token}Fri Sep 14 01:44:09 2018 +0900'
+                f'{self.e.field_split_token}first-commit\n'
+                '185\t0\t00.ipynb\n'
+                '257\t0\t01.ipynb\n'
+                '404\t0\t02.ipynb\n'
+                '\n'
+                f'{self.e.commit_split_token}83274fd5396a2e81e0ad067371cebed8f54e547f'
+                f'{self.e.field_split_token}\'Kangwon Lee (Education)\''
+                f'{self.e.field_split_token}\'kangwonlee@users.noreply.github.com\''
+                f'{self.e.field_split_token}\'Thu Sep 13 09:42:31 2018 -0700\''
+                f'{self.e.field_split_token}\'Initial-commit\'\n'
                 '104\t0\t.gitignore\n'
+        )
 
         result_columns, result_index = self.e.convert_git_log_to_table(txt)
 
@@ -467,16 +472,33 @@ class TestRepoEvalCountOneCommitLog(unittest.TestCase):
         for filename in expected_files_set:
             self.assertAlmostEqual(expected_eval_dict[filename], expected_eval_dict[filename])
 
+    def get_git_log_commit_line(self, sha, author, email, date, subject,):
+        return (
+                sha +
+                f'{self.e.field_split_token}{author}'
+                f'{self.e.field_split_token}{email}'
+                f'{self.e.field_split_token}{date}'
+                f'{self.e.field_split_token}{subject}'
+        )
+
     def test_get_commit_dict_00(self):
-        txt = '{\'sha\':\'3a3e9a2f73e7edca47edae11fccfd9e508b63478\', \'author\':u\'\'\'LAPTOP-XXXXX\\USER\'\'\', \'email\':u\'email@domain.name\', \'date\':\'Thu Oct 4 22:06:46 2018 +0900\', \'subject\': u\'\'\'22222\'\'\'}'
+
+        sha = '3a3e9a2f73e7edca47edae11fccfd9e508b63478'
+        author = u'LAPTOP-XXXXX\\USER'
+        email = u'email@domain.name'
+        date = 'Thu Oct 4 22:06:46 2018 +0900'
+        subject = u'22222'
+
+        txt = self.get_git_log_commit_line(sha, author, email, date, subject,)
+
         result = self.e.get_commit_dict(txt)
 
         expected = {
-            'sha': '3a3e9a2f73e7edca47edae11fccfd9e508b63478',
-            'author': u'LAPTOP-XXXXX_USER',
-            'email':u'email@domain.name',
-            'date':'Thu Oct 4 22:06:46 2018 +0900',
-            'subject': u'22222',
+            'sha': sha,
+            'author': author,
+            'email':email,
+            'date':date,
+            'subject': subject,
         }
 
         self.assertDictEqual(expected, result, msg=f"type(result) = {type(result)}")
@@ -485,22 +507,25 @@ class TestRepoEvalCountOneCommitLog(unittest.TestCase):
         """
         This test tries to figure out if git log with formatting is suitable to extract information
         """
-        txt = '"{\'sha\':\'9bfd20b43355df5fceb8098356f5a3267020872e\', '\
-                '\'author\':u\'\'\'Name\'\'\', '\
-                '\'email\':u\'email@domain.name\', '\
-                '\'date\':\'Fri Apr 13 21:58:07 2018 +0900\', '\
-                '\'subject\': u\'\'\'ex08-n\'\'\'}"'
 
-        # see if input text is valid
-        ast_tree = ast.parse(txt)
-        print(ast_tree)
+        sha = '9bfd20b43355df5fceb8098356f5a3267020872e'
+        author = u'Name'
+        email = u'email@domain.name'
+        date = 'Fri Apr 13 21:58:07 2018 +0900'
+        subject = u'ex08-n'
+
+        txt = self.get_git_log_commit_line(
+            sha, 
+            author, 
+            email, date, subject,
+        )
 
         result = self.e.get_commit_dict(txt)
-        expected = {'sha': '9bfd20b43355df5fceb8098356f5a3267020872e', 
-                    'author': 'Name', 
-                    'email': 'email@domain.name', 
-                    'date': 'Fri Apr 13 21:58:07 2018 +0900', 
-                    'subject': 'ex08-n'}
+        expected = {'sha': sha, 
+                    'author': author, 
+                    'email': email, 
+                    'date': date, 
+                    'subject': subject}
         self.assertEqual(expected['sha'], result['sha'])
         self.assertEqual(expected['date'], result['date'])
         self.assertEqual(expected['subject'], result['subject'])
@@ -509,18 +534,27 @@ class TestRepoEvalCountOneCommitLog(unittest.TestCase):
         """
         This test tries to figure out if git log with formatting is suitable to extract information
         """
-        txt = '"""{\'sha\':\'shashashashasha\', '\
-        '\'author\':u\'\'\'authorauthorauthorauthor\'\'\', '\
-        '\'email\':u\'emailemailemail\', '\
-        '\'date\':\'datedatedate\', '\
-        '\'subject\': u\'\'\'  Merge branch \'hotfix/branch_figure\'  \'\'\'}"""'
+        sha = 'shashashashasha'
+        author = u'authorauthorauthorauthor'
+        email = u'emailemailemail'
+        date = 'datedatedate'
+        subject = u'  Merge branch \'hotfix/branch_figure\'  '
+
+        txt = self.get_git_log_commit_line(
+            sha, 
+            author, 
+            email, date, subject,
+        )
 
         result = self.e.get_commit_dict(txt)
-        expected = {'sha': 'shashashashasha', 
-                    'author': 'authorauthorauthorauthor', 
-                    'email': 'emailemailemail', 
-                    'date': 'datedatedate', 
-                    'subject': 'Merge branch \'hotfix/branch_figure\''}
+        expected = {
+            'sha': sha, 
+            'author': author, 
+            'email': email, 
+            'date': date, 
+            'subject': subject, 
+        }
+
         self.assertEqual(expected['sha'], result['sha'])
         self.assertEqual(expected['date'], result['date'])
         self.assertEqual(expected['subject'], result['subject'])
@@ -562,15 +596,32 @@ class TestRepoEvalCountOneCommitLog(unittest.TestCase):
 
         return txt
 
-    def test_get_commit_dict_02(self):
+    def test_get_commit_dict_03(self):
 
         txt = '{\'sha\':\'94e4ecc8bd8d02121b0824b14c5e7fed4459e2f8\', \'author\':u\'\'\'name\'\'\', \'email\':u\'email@email.com\', \'date\':\'Fri Mar 30 12:02:40 2018 +0900\', \'subject\': u\'\'\'"""가 print 명령어를 반복하지 않아도 되게 한다. 백슬래쉬를 사용하는 방법. (줄을 변경하게 함. 엔터효과)\\\\\\\'\'\'}'
+
+        sha = '94e4ecc8bd8d02121b0824b14c5e7fed4459e2f8'
+        author = u'name'
+        email = u'email@email.com'
+        date = 'Fri Mar 30 12:02:40 2018 +0900'
+        subject = u'''"""가 print 명령어를 반복하지 않아도 되게 한다. 백슬래쉬를 사용하는 방법. (줄을 변경하게 함. 엔터효과)\\\\\\'''
+
+        txt = self.get_git_log_commit_line(
+            sha, 
+            author, 
+            email, date, subject,
+        )
+
         result = self.e.get_commit_dict(txt)
-        expected = {'sha': '94e4ecc8bd8d02121b0824b14c5e7fed4459e2f8', 
-                    'author': 'Name', 
-                    'email': 'email@domain.name', 
-                    'date': 'Fri Mar 30 12:02:40 2018 +0900', 
-                    'subject': '''"""가 print 명령어를 반복하지 않아도 되게 한다. 백슬래쉬를 사용하는 방법. (줄을 변경하게 함. 엔터효과)\\\\\\'''}
+
+        expected = {
+            'sha': sha, 
+            'author': author, 
+            'email': email, 
+            'date': date, 
+            'subject': subject, 
+        }
+
         # """가 print 명령어를 반복하지 않아도 되게 한다.
         # 백슬래쉬를 사용하는 방법. (줄을 변경하게 함. 엔터효과)\\\
         self.maxDiff=None

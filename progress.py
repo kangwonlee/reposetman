@@ -743,21 +743,24 @@ class RepoEvalCountOneCommitLog(RepoEval):
     """
     Obtain information on all files from one git log
     """
-    def __init__(self, after=None, before=None, exclude_email_tuple=[], split_token = '__reposetman_new_commit_start__'):
+    def __init__(self, after=None, before=None, exclude_email_tuple=[], 
+            commit_split_token='__reposetman_new_commit_start__',
+            field_split_token='__reposetman_field_split__',):
         """
         One commit log from one repository
 
         :param str after : commits after this date and time
         :param str before : commits before this date and time
         :param list exclude_email_tuple : ignore commits with these email addresses
-        :param str split_token : identifies start point of a new token
+        :param str commit_split_token : identifies start point of a new token
 
         """
         super(RepoEvalCountOneCommitLog, self).__init__()
         self.after = after
         self.before = before
         self.exclude_email_tuple = exclude_email_tuple
-        self.split_token = split_token
+        self.commit_split_token = commit_split_token
+        self.field_split_token = field_split_token
 
     def get_git_cmd(self, after=None, before=None):
         # To let git generate string compatible with python ast as much as possible
@@ -771,7 +774,7 @@ class RepoEvalCountOneCommitLog(RepoEval):
             '--encoding=utf-8',
             '--numstat',
             '--all',
-            f"""--pretty=format:{self.split_token}"{{'sha':'%H', 'author':u'''%an''', 'email':u'%ae', 'date':'%ad', 'subject': u'''%f'''}}\"""",
+            f"""--pretty=format:{self.commit_split_token}%H{self.field_split_token}%an{self.field_split_token}%ae{self.field_split_token}%ad{self.field_split_token}%s""",
         ]
 
         if after:
@@ -832,13 +835,13 @@ class RepoEvalCountOneCommitLog(RepoEval):
         eval_dict = {}
 
         # one big git log -> list of commits
-        git_log_split_blocks = git_log.split(self.split_token)
+        git_log_split_blocks = git_log.split(self.commit_split_token)
 
         # remove empty string
-        # TODO : consider git_log.strip(self.split_token).split(self.split_token) 
+        # TODO : consider git_log.strip(self.commit_split_token).split(self.commit_split_token) 
         #        to avoid a special case
         if not git_log_split_blocks[0]:
-            git_log_split_blocks.pop(0)
+            del git_log_split_blocks[0]
 
         temporary_file_list = unique_list.unique_list(['no commit yet'])
 
@@ -956,34 +959,23 @@ class RepoEvalCountOneCommitLog(RepoEval):
                 f"'.travis.yml' in c_dict['files'] = {'.travis.yml' in c_dict['files']}"
 
     def get_commit_dict(self, line):
-        # to use git log output as input to python
-        if line.endswith("''''}"):
-            line = line.replace("''''}", r"\''''}")
 
-        try:
-            last_commit_dict = ast.literal_eval(ast.literal_eval(line))
-        except SyntaxError:
-            # https://stackoverflow.com/questions/1347791/unicode-error-unicodeescape-codec-cant-decode-bytes-cannot-open-text-file
-            # if `line` includes a string such as '\uabc' or '\Uabc', `ast.literal_eval()` assumes it is a escape sequence for the unicode
-            line = line.replace(r'\USER', r'_USER')
-            line = line.replace(r'\U', r'\\U')
-            line = line.replace(r'\u', r'\\u')
-            try:
-                last_commit_dict = ast.literal_eval(line)
-            except SyntaxError:
-                # handle quote in subject
-                # use signature to locate start of subject                
-                line = self.replace_in_subject(line, "'''", r"\'\'\'")
+        fields = line.split(self.field_split_token)
 
-                try:
-
-                    last_commit_dict = ast.literal_eval(line)
-                
-                except SyntaxError:
-                    # handle backslashes in subject
-                    line = self.replace_in_subject(line, '\\', r'\\')
-                    line = self.replace_in_subject(line, r'\\"', r'\"')
-                    last_commit_dict = ast.literal_eval(line)
+        if 5 == len(fields):
+            last_commit_dict = {
+                'sha': fields[0],
+                'author': fields[1],
+                'email': fields[2],
+                'date': fields[3],
+                'subject': fields[4],
+            }
+        else:
+            raise ValueError(
+                    f'len(fields) == {len(fields)}\n'
+                    f'line = {line}\n'
+                    f'fields = {fields}\n'
+            )
 
         return last_commit_dict
 
