@@ -743,7 +743,9 @@ class RepoEvalCountOneCommitLog(RepoEval):
     """
     Obtain information on all files from one git log
     """
-    def __init__(self, after=None, before=None, exclude_email_tuple=[], commit_split_token='__reposetman_new_commit_start__'):
+    def __init__(self, after=None, before=None, exclude_email_tuple=[], 
+            commit_split_token='__reposetman_new_commit_start__',
+            field_split_token='__reposetman_field_split__',):
         """
         One commit log from one repository
 
@@ -758,6 +760,7 @@ class RepoEvalCountOneCommitLog(RepoEval):
         self.before = before
         self.exclude_email_tuple = exclude_email_tuple
         self.commit_split_token = commit_split_token
+        self.field_split_token = field_split_token
 
     def get_git_cmd(self, after=None, before=None):
         # To let git generate string compatible with python ast as much as possible
