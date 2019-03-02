@@ -587,7 +587,7 @@ class TestRepoEvalCountOneCommitLog(unittest.TestCase):
 
         return txt
 
-    def test_get_commit_dict_02(self):
+    def test_get_commit_dict_03(self):
 
         txt = '{\'sha\':\'94e4ecc8bd8d02121b0824b14c5e7fed4459e2f8\', \'author\':u\'\'\'name\'\'\', \'email\':u\'email@email.com\', \'date\':\'Fri Mar 30 12:02:40 2018 +0900\', \'subject\': u\'\'\'"""가 print 명령어를 반복하지 않아도 되게 한다. 백슬래쉬를 사용하는 방법. (줄을 변경하게 함. 엔터효과)\\\\\\\'\'\'}'
         result = self.e.get_commit_dict(txt)
