@@ -472,6 +472,15 @@ class TestRepoEvalCountOneCommitLog(unittest.TestCase):
         for filename in expected_files_set:
             self.assertAlmostEqual(expected_eval_dict[filename], expected_eval_dict[filename])
 
+    def get_git_log_commit_line(self, sha, author, email, date, subject,):
+        return (
+                sha +
+                f'{self.e.field_split_token}{author}'
+                f'{self.e.field_split_token}{email}'
+                f'{self.e.field_split_token}{date}'
+                f'{self.e.field_split_token}{subject}'
+        )
+
     def test_get_commit_dict_00(self):
 
         sha = '3a3e9a2f73e7edca47edae11fccfd9e508b63478'
@@ -480,13 +489,8 @@ class TestRepoEvalCountOneCommitLog(unittest.TestCase):
         date = 'Thu Oct 4 22:06:46 2018 +0900'
         subject = u'22222'
 
-        txt = (
-                sha +
-                f'{self.e.field_split_token}{author}'
-                f'{self.e.field_split_token}{email}'
-                f'{self.e.field_split_token}{date}'
-                f'{self.e.field_split_token}{subject}'
-        )
+        txt = self.get_git_log_commit_line(sha, author, email, date, subject,)
+
         result = self.e.get_commit_dict(txt)
 
         expected = {
