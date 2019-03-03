@@ -1725,24 +1725,26 @@ class MarkdownTableWriter(TextTableWriter):
 
         # '|   |  field1  |  field2  |  field3 |\n'
         #  ^^
-        self.header_first_row_header = '{col_sep}  '.format(col_sep=self.col_sep)
+        self.header_first_row_header = f'{self.col_sep}  '
         # '|:--:|:----:|:----:|:----:|\n'
         #  ^^^
-        self.header_second_row_header = '{col_sep}:-'.format(col_sep=self.col_sep)
+        self.header_second_row_header = f'{self.col_sep}:-'
 
         # '|   |  field1  |  field2  |  field3 |\n'
         #    ^^^^^      ^^^^^      ^^^^^ 
-        self.header_first_col_sep = '  {col_sep}  '.format(col_sep=self.col_sep)
+        self.header_first_col_sep = f'  {self.col_sep}  '
         # '|:--:|:----:|:----:|:----:|\n'
         #     ^^^^^^^^^^^^^^^^^^^^^ 
-        self.header_second_col_sep = '-:{col_sep}:---'.format(col_sep=self.col_sep)
+        self.header_second_col_sep = f'-:{self.col_sep}:---'
 
         # '|   |  field1  |  field2  |  field3 |\n'
         #                                     ^^^^
-        self.header_first_row_sep = '  {col_sep}\n'.format(row_sep=self.row_sep, col_sep=self.col_sep)
+        # TODO : consider revising row_sep (need it?)
+        self.header_first_row_sep = f'  {self.col_sep}\n'
         # '|:--:|:----:|:----:|:----:|\n'
         #                          ^^^^^
-        self.header_second_row_sep = '-:{col_sep}\n'.format(row_sep=self.row_sep, col_sep=self.col_sep)
+        # TODO : consider revising row_sep (need it?)
+        self.header_second_row_sep = f'-:{self.col_sep}\n'
 
     def get_header_row(self):
 
