@@ -1994,7 +1994,7 @@ class HtmlLinkTableWriter(HtmlTableWriter):
 
         value = self.d[row_key].get(column_key, '')
 
-        if value and ' ' != column_key[0]:
+        if str(value) and ' ' != column_key[0]:
             url_to_file = self.get_file_url(row_key, column_key, ref_name)
             value_with_link = f'<a href="{url_to_file}">{value}</a>'
             value = value_with_link
