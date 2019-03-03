@@ -1976,6 +1976,32 @@ class HtmlLinkTableWriter(HtmlTableWriter):
 
         return super().start_row(value)
 
+    def get_file_url(self, repo_name, file_path, ref='master'):
+
+        # TODO : how to avoid repeating the code?
+        #        (also in MDlinkTableWriter)
+
+        repo_url = self.get_repo_url(repo_name)
+
+        return f"{repo_url}/blob/{ref}/{file_path}"
+
+    def get_cell_text(self, row_key, column_key, ref_name='master'):
+        # This part may depend on the format : Plain text, MD, HTML, ...
+        # for example
+        # [tab]a[tab]b...
+
+        value = self.d[row_key].get(column_key, '')
+
+        if value:
+            url_to_file = self.get_file_url(row_key, column_key, ref_name)
+            value_with_link = f'<a href="{url_to_file}">{value}</a>'
+            value = value_with_link
+
+        return self.cell_formatter.format(
+            sep=self.col_sep,
+            value=value,
+            )
+
 
 if "__main__" == __name__:
     main(sys.argv[1:])
