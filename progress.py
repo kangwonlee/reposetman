@@ -1916,5 +1916,44 @@ class HtmlTableWriter(MarkdownTableWriter):
         )
 
 
+class HtmlLinkTableWriter(HtmlTableWriter):
+    """
+    Markdown Tables with links to repositories
+    """
+    def __init__(self, d, section, sorted_row, 
+            filename_prefix='progress', path=os.curdir,
+            repo_list=[]
+        ):
+
+        super().__init__(d, section, sorted_row, filename_prefix, path)
+
+        self.repo_list = repo_list
+
+    def get_repo_url(self, repo_name):
+
+        # TODO : consider adding a repo_url lookup table
+        # TODO : how to avoid repeating the code?
+        #        (also in MDlinkTableWriter)
+
+        repo_url = False
+
+        for repo_info_dict in self.repo_list:
+            if repo_name == repo_info_dict['name']:
+                repo_url =  repo_info_dict['url']
+
+        return repo_url
+
+    def start_row(self, repo_name):
+        # first part of each row below header
+
+        # TODO : how to avoid repeating the code?
+        #        (also in MDlinkTableWriter)
+
+        repo_url = self.get_repo_url(repo_name)
+        value = f'<a href="{repo_url}">{repo_name}</a>'
+
+        return super().start_row(value)
+
+
 if "__main__" == __name__:
     main(sys.argv[1:])
