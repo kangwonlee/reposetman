@@ -1793,6 +1793,15 @@ class MDlinkTableWriter(MarkdownTableWriter):
 
         self.repo_list = repo_list
 
+    def get_repo_url(self, repo_name):
+        repo_url = False
+
+        for repo_info_dict in self.repo_list:
+            if repo_name == repo_info_dict['name']:
+                repo_url =  repo_info_dict['url']
+
+        return repo_url
+
 
 class HtmlTableWriter(MarkdownTableWriter):
     # class variables
