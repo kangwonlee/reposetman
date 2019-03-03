@@ -255,5 +255,10 @@ class TestHtmlTableWriter(BaseTestTableWriterTable):
                 )
 
 
+class TestMDlinkTableWriter(BaseTestTableWriterRepoLinks):
+    def test_get_repo_url(self):
+        pass
+
+
 if "__main__" == __name__:
     unittest.main()
