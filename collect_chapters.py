@@ -140,6 +140,8 @@ def get_sections_dict(config):
 
     """
 
+    # TODO : consider replacing "section" with "chapter" to clarify
+
     # result
     sections_dict = {}
 
