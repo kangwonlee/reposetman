@@ -47,8 +47,8 @@ class BaseTestTableWriterRepoLinks(unittest.TestCase):
             self.repo_url_lookup[repo_info['name']] = repo_info['url']
 
     @staticmethod
-    def get_expected_url(domain_name, file_name):
-        return f"{domain_name}/blob/master/{file_name}"
+    def get_expected_url(domain_name, file_name, ref='master'):
+        return f"{domain_name}/blob/{ref}/{file_name}"
 
 
 class BaseTestTableWriterTable(unittest.TestCase):
