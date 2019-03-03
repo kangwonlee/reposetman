@@ -293,16 +293,16 @@ class TestMDlinkTableWriter(BaseTestTableWriterRepoLinks):
 
     def test_get_cell_text(self):
         ref_name = 'commit'
-        repo_name = self.row_title_list[0]
-        file_path = self.column_title_list[0]
+        for repo_name in self.row_title_list:
+            for file_path in self.column_title_list:
 
-        result = self.table_writer.get_cell_text(repo_name, file_path, ref_name=ref_name)
+                result = self.table_writer.get_cell_text(repo_name, file_path, ref_name=ref_name)
 
-        expected_repo_url = self.repo_url_lookup[repo_name]
-        expected_file_url = self.get_expected_url(expected_repo_url, file_path, ref_name)
-        expected = f'| [{self.d[repo_name][file_path]}]({expected_file_url}) '
+                expected_repo_url = self.repo_url_lookup[repo_name]
+                expected_file_url = self.get_expected_url(expected_repo_url, file_path, ref_name)
+                expected = f'| [{self.d[repo_name][file_path]}]({expected_file_url}) '
 
-        self.assertEqual(expected, result)
+                self.assertEqual(expected, result)
 
 
 class TestHtmlLinkTableWriter(BaseTestTableWriterRepoLinks):
