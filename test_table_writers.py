@@ -283,7 +283,7 @@ class TestMDlinkTableWriter(BaseTestTableWriterRepoLinks):
         ref_name = 'commit'
         for repo_name in self.row_title_list:
             for file_path in self.column_title_list:
-
+                # function under test
                 result = self.table_writer.get_file_url(repo_name, file_path, ref_name)
 
                 expected_url = self.repo_url_lookup[repo_name]
