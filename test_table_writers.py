@@ -260,9 +260,11 @@ class TestMDlinkTableWriter(BaseTestTableWriterRepoLinks):
         table_writer = progress.MDlinkTableWriter(self.d, self.row_title_list, 'test_MD_link_table', 
             repo_list=self.repo_dict_list,
         )
-        result = table_writer.get_repo_url(self.reponame1)
-        expected = self.repo_url_lookup[self.reponame1]
-        self.assertEqual(result, expected, f"\ninput = {self.reponame1}\nresult = {result}")
+
+        for repo_name in self.row_title_list:
+            result = table_writer.get_repo_url(repo_name)
+            expected = self.repo_url_lookup[repo_name]
+            self.assertEqual(result, expected, f"\ninput = {repo_name}\nresult = {result}")
 
 
 if "__main__" == __name__:
