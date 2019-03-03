@@ -1802,6 +1802,14 @@ class MDlinkTableWriter(MarkdownTableWriter):
 
         return repo_url
 
+    def start_row(self, repo_name):
+        # first part of each row below header
+
+        repo_url = self.get_repo_url(repo_name)
+        value = f"[{repo_name}]({repo_url})"
+
+        return self.cell_formatter.format(sep=self.col_sep, value=value)
+
 
 class HtmlTableWriter(MarkdownTableWriter):
     # class variables
