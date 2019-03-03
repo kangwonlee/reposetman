@@ -1778,6 +1778,20 @@ class MarkdownTableWriter(TextTableWriter):
         return self.cell_formatter.format(sep=self.col_sep, value=repo_name)
 
 
+class MDlinkTableWriter(MarkdownTableWriter):
+    """
+    Markdown Tables with links to repositories
+    """
+    def __init__(self, d, section, sorted_row, 
+            filename_prefix='progress', path=os.curdir,
+            repo_list=[]
+        ):
+
+        super().__init__(d, section, sorted_row, filename_prefix, path)
+
+        self.repo_list = repo_list
+
+
 class HtmlTableWriter(MarkdownTableWriter):
     # class variables
     # TODO : more maintanable version
