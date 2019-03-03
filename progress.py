@@ -1826,6 +1826,8 @@ class MDlinkTableWriter(MarkdownTableWriter):
         # for example
         # [tab]a[tab]b...
 
+        # TODO : how to reuse the code more?
+
         value = self.d[row_key].get(column_key, '')
 
         if value and ' ' != column_key[0]:
@@ -1956,7 +1958,7 @@ class HtmlLinkTableWriter(HtmlTableWriter):
     def get_repo_url(self, repo_name):
 
         # TODO : consider adding a repo_url lookup table
-        # TODO : how to avoid repeating the code?
+        # TODO : how to reuse the code more?
         #        (also in MDlinkTableWriter)
 
         repo_url = False
@@ -1970,7 +1972,7 @@ class HtmlLinkTableWriter(HtmlTableWriter):
     def start_row(self, repo_name):
         # first part of each row below header
 
-        # TODO : how to avoid repeating the code?
+        # TODO : how to reuse the code more?
         #        (also in MDlinkTableWriter)
 
         repo_url = self.get_repo_url(repo_name)
@@ -1980,7 +1982,7 @@ class HtmlLinkTableWriter(HtmlTableWriter):
 
     def get_file_url(self, repo_name, file_path, ref='master'):
 
-        # TODO : how to avoid repeating the code?
+        # TODO : how to reuse the code more?
         #        (also in MDlinkTableWriter)
 
         repo_url = self.get_repo_url(repo_name)
@@ -1991,6 +1993,8 @@ class HtmlLinkTableWriter(HtmlTableWriter):
         # This part may depend on the format : Plain text, MD, HTML, ...
         # for example
         # [tab]a[tab]b...
+
+        # TODO : how to reuse the code more?
 
         value = self.d[row_key].get(column_key, '')
 
