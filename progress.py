@@ -336,10 +336,10 @@ def write_tables(section, repo_list, table, filename_prefix, sorted_row=None):
     txt_table_writer = TextTableWriter(table, section, sorted_row, filename_prefix=filename_prefix)
     finished_txt_table = txt_table_writer.write()
 
-    md_table_writer = MarkdownTableWriter(table, section, sorted_row, filename_prefix=filename_prefix)
+    md_table_writer = MDlinkTableWriter(table, section, sorted_row, filename_prefix=filename_prefix, repo_list=repo_list)
     finished_md_table = md_table_writer.write()
 
-    html_table_writter = HtmlTableWriter(table, section, sorted_row, filename_prefix=filename_prefix)
+    html_table_writter = HtmlLinkTableWriter(table, section, sorted_row, filename_prefix=filename_prefix, repo_list=repo_list)
     finished_html_table = html_table_writter.write()
 
     return finished_txt_table, finished_md_table, finished_html_table
@@ -1712,11 +1712,11 @@ class MarkdownTableWriter(TextTableWriter):
 
     cell_formatter = '{sep} {value} '
 
-    def __init__(self, d, section, repo_list, 
+    def __init__(self, d, section, sorted_row, 
             filename_prefix='progress', path=os.curdir,
         ):
 
-        super(MarkdownTableWriter, self).__init__(d, section, repo_list, 
+        super(MarkdownTableWriter, self).__init__(d, section, sorted_row, 
                 filename_prefix=filename_prefix, path=path, 
             )
 
@@ -1725,24 +1725,26 @@ class MarkdownTableWriter(TextTableWriter):
 
         # '|   |  field1  |  field2  |  field3 |\n'
         #  ^^
-        self.header_first_row_header = '{col_sep}  '.format(col_sep=self.col_sep)
+        self.header_first_row_header = f'{self.col_sep}  '
         # '|:--:|:----:|:----:|:----:|\n'
         #  ^^^
-        self.header_second_row_header = '{col_sep}:-'.format(col_sep=self.col_sep)
+        self.header_second_row_header = f'{self.col_sep}:-'
 
         # '|   |  field1  |  field2  |  field3 |\n'
         #    ^^^^^      ^^^^^      ^^^^^ 
-        self.header_first_col_sep = '  {col_sep}  '.format(col_sep=self.col_sep)
+        self.header_first_col_sep = f'  {self.col_sep}  '
         # '|:--:|:----:|:----:|:----:|\n'
         #     ^^^^^^^^^^^^^^^^^^^^^ 
-        self.header_second_col_sep = '-:{col_sep}:---'.format(col_sep=self.col_sep)
+        self.header_second_col_sep = f'-:{self.col_sep}:---'
 
         # '|   |  field1  |  field2  |  field3 |\n'
         #                                     ^^^^
-        self.header_first_row_sep = '  {col_sep}\n'.format(row_sep=self.row_sep, col_sep=self.col_sep)
+        # TODO : consider revising row_sep (need it?)
+        self.header_first_row_sep = f'  {self.col_sep}\n'
         # '|:--:|:----:|:----:|:----:|\n'
         #                          ^^^^^
-        self.header_second_row_sep = '-:{col_sep}\n'.format(row_sep=self.row_sep, col_sep=self.col_sep)
+        # TODO : consider revising row_sep (need it?)
+        self.header_second_row_sep = f'-:{self.col_sep}\n'
 
     def get_header_row(self):
 
@@ -1776,6 +1778,40 @@ class MarkdownTableWriter(TextTableWriter):
     def start_row(self, repo_name):
         # first part of each row below header
         return self.cell_formatter.format(sep=self.col_sep, value=repo_name)
+
+
+class MDlinkTableWriter(MarkdownTableWriter):
+    """
+    Markdown Tables with links to repositories
+    """
+    def __init__(self, d, section, sorted_row, 
+            filename_prefix='progress', path=os.curdir,
+            repo_list=[]
+        ):
+
+        super().__init__(d, section, sorted_row, filename_prefix, path)
+
+        self.repo_list = repo_list
+
+    def get_repo_url(self, repo_name):
+
+        # TODO : consider adding a repo_url lookup table
+
+        repo_url = False
+
+        for repo_info_dict in self.repo_list:
+            if repo_name == repo_info_dict['name']:
+                repo_url =  repo_info_dict['url']
+
+        return repo_url
+
+    def start_row(self, repo_name):
+        # first part of each row below header
+
+        repo_url = self.get_repo_url(repo_name)
+        value = f"[{repo_name}]({repo_url})"
+
+        return self.cell_formatter.format(sep=self.col_sep, value=value)
 
 
 class HtmlTableWriter(MarkdownTableWriter):
@@ -1878,6 +1914,45 @@ class HtmlTableWriter(MarkdownTableWriter):
             row_header=self.row_header, item_header=self.item_header,
             repo_name=repo_name
         )
+
+
+class HtmlLinkTableWriter(HtmlTableWriter):
+    """
+    Markdown Tables with links to repositories
+    """
+    def __init__(self, d, section, sorted_row, 
+            filename_prefix='progress', path=os.curdir,
+            repo_list=[]
+        ):
+
+        super().__init__(d, section, sorted_row, filename_prefix, path)
+
+        self.repo_list = repo_list
+
+    def get_repo_url(self, repo_name):
+
+        # TODO : consider adding a repo_url lookup table
+        # TODO : how to avoid repeating the code?
+        #        (also in MDlinkTableWriter)
+
+        repo_url = False
+
+        for repo_info_dict in self.repo_list:
+            if repo_name == repo_info_dict['name']:
+                repo_url =  repo_info_dict['url']
+
+        return repo_url
+
+    def start_row(self, repo_name):
+        # first part of each row below header
+
+        # TODO : how to avoid repeating the code?
+        #        (also in MDlinkTableWriter)
+
+        repo_url = self.get_repo_url(repo_name)
+        value = f'<a href="{repo_url}">{repo_name}</a>'
+
+        return super().start_row(value)
 
 
 if "__main__" == __name__:
