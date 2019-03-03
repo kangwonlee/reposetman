@@ -1794,6 +1794,9 @@ class MDlinkTableWriter(MarkdownTableWriter):
         self.repo_list = repo_list
 
     def get_repo_url(self, repo_name):
+
+        # TODO : consider adding a repo_url lookup table
+
         repo_url = False
 
         for repo_info_dict in self.repo_list:
