@@ -1712,11 +1712,11 @@ class MarkdownTableWriter(TextTableWriter):
 
     cell_formatter = '{sep} {value} '
 
-    def __init__(self, d, section, repo_list, 
+    def __init__(self, d, section, sorted_row, 
             filename_prefix='progress', path=os.curdir,
         ):
 
-        super(MarkdownTableWriter, self).__init__(d, section, repo_list, 
+        super(MarkdownTableWriter, self).__init__(d, section, sorted_row, 
                 filename_prefix=filename_prefix, path=path, 
             )
 
