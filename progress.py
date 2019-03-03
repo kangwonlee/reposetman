@@ -336,7 +336,7 @@ def write_tables(section, repo_list, table, filename_prefix, sorted_row=None):
     txt_table_writer = TextTableWriter(table, section, sorted_row, filename_prefix=filename_prefix)
     finished_txt_table = txt_table_writer.write()
 
-    md_table_writer = MarkdownTableWriter(table, section, sorted_row, filename_prefix=filename_prefix)
+    md_table_writer = MDlinkTableWriter(table, section, sorted_row, filename_prefix=filename_prefix, repo_list=repo_list)
     finished_md_table = md_table_writer.write()
 
     html_table_writter = HtmlTableWriter(table, section, sorted_row, filename_prefix=filename_prefix)
