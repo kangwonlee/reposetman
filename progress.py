@@ -1826,9 +1826,11 @@ class MDlinkTableWriter(MarkdownTableWriter):
         # for example
         # [tab]a[tab]b...
 
-        url_to_file = self.get_file_url(row_key, column_key, ref_name)
+        value = self.d[row_key].get(column_key, '')
 
-        value = f"[{self.d[row_key].get(column_key, '')}]({url_to_file})"
+        if value:
+            url_to_file = self.get_file_url(row_key, column_key, ref_name)
+            value = f"[{value}]({url_to_file})"
 
         return self.cell_formatter.format(
             sep=self.col_sep,
