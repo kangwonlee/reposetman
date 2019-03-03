@@ -1821,12 +1821,12 @@ class MDlinkTableWriter(MarkdownTableWriter):
 
         return f"{repo_url}/blob/{ref}/{file_path}"
 
-    def get_cell_text(self, row_key, column_key):
+    def get_cell_text(self, row_key, column_key, ref_name='master'):
         # This part may depend on the format : Plain text, MD, HTML, ...
         # for example
         # [tab]a[tab]b...
 
-        url_to_file = self.get_file_url(row_key, column_key)
+        url_to_file = self.get_file_url(row_key, column_key, ref_name)
 
         value = f"[{self.d[row_key].get(column_key, '')}]({url_to_file})"
 
