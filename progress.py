@@ -339,7 +339,7 @@ def write_tables(section, repo_list, table, filename_prefix, sorted_row=None):
     md_table_writer = MDlinkTableWriter(table, section, sorted_row, filename_prefix=filename_prefix, repo_list=repo_list)
     finished_md_table = md_table_writer.write()
 
-    html_table_writter = HtmlTableWriter(table, section, sorted_row, filename_prefix=filename_prefix)
+    html_table_writter = HtmlLinkTableWriter(table, section, sorted_row, filename_prefix=filename_prefix, repo_list=repo_list)
     finished_html_table = html_table_writter.write()
 
     return finished_txt_table, finished_md_table, finished_html_table
