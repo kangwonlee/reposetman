@@ -1816,6 +1816,11 @@ class MDlinkTableWriter(MarkdownTableWriter):
 
         return self.cell_formatter.format(sep=self.col_sep, value=value)
 
+    def get_file_url(self, repo_name, file_path, ref='master'):
+        repo_url = self.get_repo_url(repo_name)
+
+        return f"{repo_url}/blob/{ref}/{file_path}"
+
 
 class HtmlTableWriter(MarkdownTableWriter):
     # class variables
