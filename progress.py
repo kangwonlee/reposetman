@@ -1811,6 +1811,9 @@ class MDlinkTableWriter(MarkdownTableWriter):
         repo_url = self.get_repo_url(repo_name)
         value = f"[{repo_name}]({repo_url})"
 
+        # TODO : how to reuse code?
+        #        (also in MarkdownTableWriter)
+
         return self.cell_formatter.format(sep=self.col_sep, value=value)
 
 
