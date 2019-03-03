@@ -47,8 +47,8 @@ class BaseTestTableWriterRepoLinks(unittest.TestCase):
             self.repo_url_lookup[repo_info['name']] = repo_info['url']
 
     @staticmethod
-    def get_expected_url(domain_name, file_name):
-        return f"{domain_name}/blob/master/{file_name}"
+    def get_expected_url(domain_name, file_name, ref='master'):
+        return f"{domain_name}/blob/{ref}/{file_name}"
 
 
 class BaseTestTableWriterTable(unittest.TestCase):
@@ -279,6 +279,31 @@ class TestMDlinkTableWriter(BaseTestTableWriterRepoLinks):
 
             self.assertEqual(result, expected, f"\ninput = {repo_name}\nresult = {result}")
 
+    def test_get_file_url(self):
+        ref_name = 'commit'
+        for repo_name in self.row_title_list:
+            for file_path in self.column_title_list:
+                # function under test
+                result = self.table_writer.get_file_url(repo_name, file_path, ref_name)
+
+                expected_url = self.repo_url_lookup[repo_name]
+                expected = self.get_expected_url(expected_url, file_path, ref_name)
+
+                self.assertEqual(expected, result)
+
+    def test_get_cell_text(self):
+        ref_name = 'commit'
+        for repo_name in self.row_title_list:
+            for file_path in self.column_title_list:
+
+                result = self.table_writer.get_cell_text(repo_name, file_path, ref_name=ref_name)
+
+                expected_repo_url = self.repo_url_lookup[repo_name]
+                expected_file_url = self.get_expected_url(expected_repo_url, file_path, ref_name)
+                expected = f'| [{self.d[repo_name][file_path]}]({expected_file_url}) '
+
+                self.assertEqual(expected, result)
+
 
 class TestHtmlLinkTableWriter(BaseTestTableWriterRepoLinks):
     def setUp(self):
@@ -303,6 +328,31 @@ class TestHtmlLinkTableWriter(BaseTestTableWriterRepoLinks):
             expected = f'<tr><td> <a href="{expected_url}">{expected_name}</a> '
 
             self.assertEqual(result, expected, f"\ninput = {repo_name}\nresult = {result}")
+
+    def test_get_file_url(self):
+        ref_name = 'commit'
+        for repo_name in self.row_title_list:
+            for file_path in self.column_title_list:
+                # function under test
+                result = self.table_writer.get_file_url(repo_name, file_path, ref_name)
+
+                expected_url = self.repo_url_lookup[repo_name]
+                expected = self.get_expected_url(expected_url, file_path, ref_name)
+
+                self.assertEqual(expected, result)
+
+    def test_get_cell_text(self):
+        ref_name = 'commit'
+        for repo_name in self.row_title_list:
+            for file_path in self.column_title_list:
+
+                result = self.table_writer.get_cell_text(repo_name, file_path, ref_name=ref_name)
+
+                expected_repo_url = self.repo_url_lookup[repo_name]
+                expected_file_url = self.get_expected_url(expected_repo_url, file_path, ref_name)
+                expected = f'</td><td> <a href="{expected_file_url}">{self.d[repo_name][file_path]}</a> '
+
+                self.assertEqual(expected, result)
 
 
 if "__main__" == __name__:
