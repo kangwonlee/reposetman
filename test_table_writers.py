@@ -279,6 +279,18 @@ class TestMDlinkTableWriter(BaseTestTableWriterRepoLinks):
 
             self.assertEqual(result, expected, f"\ninput = {repo_name}\nresult = {result}")
 
+    def test_get_file_url(self):
+        ref_name = 'commit'
+        repo_name = self.row_title_list[0]
+        file_path = self.column_title_list[0]
+
+        result = self.table_writer.get_file_url(repo_name, file_path, ref_name)
+
+        expected_url = self.repo_url_lookup[repo_name]
+        expected = self.get_expected_url(expected_url, file_path, ref_name)
+
+        self.assertEqual(expected, result)
+
 
 class TestHtmlLinkTableWriter(BaseTestTableWriterRepoLinks):
     def setUp(self):
