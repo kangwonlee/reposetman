@@ -58,7 +58,7 @@ def get_proj_id_list(filename=config['repository']['listFile']):
 
 @timeit.timeit
 def get_github_url_list(filename):
-    txt = read_txt(filename)
+    txt = read_utf_or_cp(filename)
     # using regular expression, find all repository addresses
     return get_github_urls(txt)
 
@@ -315,8 +315,12 @@ def read_txt(fname, encoding='utf-8'):
     """
     Read a file with encoding
     """
-    with open(fname, 'r', encoding='utf-8') as f:
-        txt = f.read()
+    try:
+        with open(fname, 'r', encoding='utf-8') as f:
+            txt = f.read()
+    except UnicodeDecodeError as e:
+        print(f'read_txt({fname}, {encoding})')
+        raise e        
 
     return txt
 

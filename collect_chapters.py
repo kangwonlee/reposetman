@@ -2,7 +2,25 @@
 Collect repositories of the chapters into a subtree
 
 Generate Report
+
+Author : KangWon LEE
+
+Year : 2018
+
 """
+
+"""
+
+Each chapter would need one url list file and a section in the .cfg file
+In addition, "umbrella" section with folder and execution info would be necessary
+Each this script would clone all chapters of each user under the "umbrella" folder
+Would ignore the folders of each chapter section of cfg file
+The script would also generate a file with list of folders for each participant
+If that file is available, it would use it.
+
+"""
+
+
 import ast
 import configparser
 import itertools
@@ -31,7 +49,7 @@ def main(argv):
     # make the umbrella_folder if missing
     if not os.path.exists(umbrella_folder):
         os.makedirs(umbrella_folder)
-        # if the umbrella_folder was missing, alway try to update
+        # if the umbrella_folder was missing, try to update
         config['operation']['update_repo'] = 'False'
 
     # to save time, if list file is available and 
@@ -121,6 +139,8 @@ def get_sections_dict(config):
     sections may have different participant (== user) sets
 
     """
+
+    # TODO : consider replacing "section" with "chapter" to clarify
 
     # result
     sections_dict = {}
@@ -313,6 +333,8 @@ def init_user_umbrella_repo(user_dict):
 @timeit.timeit
 def generate_reports(repo_list, config, results = {}):
     progress.call_commit_count(config, 'umbrella', repo_list, results)
+    progress.call_pound_count(config, 'umbrella', repo_list, results)
+    progress.call_run_all(config, 'umbrella', repo_list, results)
 
 
 if "__main__" == __name__:
