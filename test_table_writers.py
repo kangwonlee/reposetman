@@ -280,5 +280,30 @@ class TestMDlinkTableWriter(BaseTestTableWriterRepoLinks):
             self.assertEqual(result, expected, f"\ninput = {repo_name}\nresult = {result}")
 
 
+class TestHtmlLinkTableWriter(BaseTestTableWriterRepoLinks):
+    def setUp(self):
+        super().setUp()
+        self.table_writer = progress.HtmlLinkTableWriter(self.d, self.row_title_list, 'test_HTML_link_table', 
+            repo_list=self.repo_dict_list,
+        )
+
+    def test_get_repo_url(self):
+        for repo_name in self.row_title_list:
+            result = self.table_writer.get_repo_url(repo_name)
+            expected = self.repo_url_lookup[repo_name]
+            self.assertEqual(result, expected, f"\ninput = {repo_name}\nresult = {result}")
+
+    def test_start_row(self):
+        for repo_name in self.row_title_list:
+            # function under test
+            result = self.table_writer.start_row(repo_name)
+
+            expected_name = repo_name
+            expected_url = self.repo_url_lookup[repo_name]
+            expected = f'<tr><td> <a href="{expected_url}">{expected_name}</a> '
+
+            self.assertEqual(result, expected, f"\ninput = {repo_name}\nresult = {result}")
+
+
 if "__main__" == __name__:
     unittest.main()
