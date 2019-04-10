@@ -1218,7 +1218,10 @@ class RepoEvalRunEach(RepoEval):
             # present info only if exception happens
             print('{type:s}.run_script() : cwd = {cwd}'.format(type=self.get_class_name(), cwd=os.getcwd()))
             print('{type:s}.run_script() : python_cmd = {cmd!s}'.format(type=self.get_class_name(), cmd=python_cmd_list))
-            print('{type:s}.run_script() : error message = {msge}'.format(type=self.get_class_name(), msge=msge))
+            try:
+                print('{type:s}.run_script() : error message = {msge}'.format(type=self.get_class_name(), msge=msge))
+            except UnicodeEncodeError:
+                print('{type:s}.run_script() : error message = {msge}'.format(type=self.get_class_name(), msge=repr(msge)))
 
             # If the .py script cannot find a file, present list of available files
             # to help improvement
