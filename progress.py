@@ -507,7 +507,7 @@ class RepoEval(object):
         self.repo_name = None
         self.repo_path = None
 
-    def eval_repo_list(self, repo_list,  b_multiprocessing = False):
+    def eval_repo_list(self, repo_list,  b_multiprocessing=True):
         """
 
         :param list(dict) repo_list:
