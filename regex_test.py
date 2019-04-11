@@ -418,7 +418,7 @@ def clean_repo_before_update(b_verbose=False, caller_name='',):
 def fetch_and_reset(repository_path, b_verbose=False, revision='origin/master'):
     """
     cd to repository_path
-    git fetch --all
+    git fetch
     git reset origin/master
     return to original path
     """
