@@ -418,6 +418,51 @@ def clean_repo_before_update(b_verbose=False):
     git.clean_xdf(b_verbose=False)
 
 
+def fetch_and_reset(repository_path, b_verbose=False, revision='origin/master'):
+    """
+    cd to repository_path
+    git fetch --all
+    git reset origin/master
+    return to original path
+    """
+    
+    org_path = repo_path.cd(repository_path)
+
+    clean_repo_before_update()
+
+    git.checkout('master', b_verbose=b_verbose)
+
+    stdout, stderr = git.fetch()
+
+    function_name = 'fetch_and_reset'
+
+    # if there was an error during fetch
+    if any((
+        ('fatal' in stdout),
+        ('error' in stdout),
+        ('fatal' in stderr),
+        ('error' in stderr),
+    )):
+        # present error message
+        print(f'{function_name}() : Possible error while updating')
+        print(os.getcwd())
+        print(f'{function_name}() : stdout :')
+        print(stdout)
+        print(f'{function_name}() : stderr :')
+        print(stderr)
+        
+        # cleanup
+        print(f'{function_name}() : clean -x -d -f')
+        git.clean_xdf(b_verbose=True)
+        # revert
+        print(f"{function_name}() : reset --hard HEAD")
+        git.reset_hard_head()
+    if b_verbose:
+        print(f'{function_name}() :', stdout)
+        
+    os.chdir(org_path)
+
+
 if "__main__" == __name__:
     # read file
     found = get_proj_id_list(config['repository']['listFile'])
