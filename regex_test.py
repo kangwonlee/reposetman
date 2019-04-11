@@ -425,7 +425,7 @@ def fetch_and_reset(repository_path, b_verbose=False, revision='origin/master'):
     
     org_path = repo_path.cd(repository_path)
 
-    clean_repo_before_update()
+    clean_repo_before_update(b_verbose=b_verbose, caller_name='fetch_and_reset')
 
     git.checkout('master', b_verbose=b_verbose)
 
