@@ -228,7 +228,7 @@ def clone_or_pull_repo(k, repo_url, b_updte_repo, b_tag_after_update=True):
     return repo
 
 
-def tag_stamp(b_tag_after_update, repo_path_in_section, repo, branch=''):
+def tag_stamp(b_tag_after_update, repo_path_in_section, repo, branch='', commit=''):
     """
     Tag with time stamp after clone or pull
     """
