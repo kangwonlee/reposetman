@@ -378,10 +378,7 @@ def pull_path(repository_path, b_verbose=False):
     
     org_path = repo_path.cd(repository_path)
 
-    if b_verbose: print("pull_path() : reset --hard HEAD")
-    git.reset_hard_head()
-    if b_verbose: print('pull_path() : clean -x -d -f')
-    git.clean_xdf(b_verbose=False)
+    clean_repo_before_update(b_verbose=b_verbose, caller_name='pull_path')
 
     git.checkout('master', b_verbose=False)
     stdout, stderr = git.pull(b_verbose=False)
