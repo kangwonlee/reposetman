@@ -8,3 +8,4 @@ data/
 *.txt
 *.log
 repository/
+temp_test_fetch_and_reset/
