@@ -435,8 +435,7 @@ def fetch_and_reset(repository_path, b_verbose=False, revision='origin/master'):
 
     # if there was an error during fetch
     if any((
-        ('fatal' in stdout),
-        ('error' in stdout),
+        (stdout.startswith('CONFLICT')),
         ('fatal' in stderr),
         ('error' in stderr),
     )):
