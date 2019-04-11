@@ -415,6 +415,32 @@ def clean_repo_before_update(b_verbose=False, caller_name='',):
     git.clean_xdf(b_verbose=False)
 
 
+def clean_repo_after_error(stdout, stderr, caller_name, b_verbose=False,):
+
+    # if there was an error during fetch
+    if any((
+        (stdout.startswith('CONFLICT')),
+        ('fatal' in stderr),
+        ('error' in stderr),
+    )):
+        # present error message
+        print(f'{caller_name}() : Possible error while updating')
+        print(os.getcwd())
+        print(f'{caller_name}() : stdout :')
+        print(stdout)
+        print(f'{caller_name}() : stderr :')
+        print(stderr)
+        
+        # cleanup
+        print(f'{caller_name}() : clean -x -d -f')
+        git.clean_xdf(b_verbose=True)
+        # revert
+        print(f"{caller_name}() : reset --hard HEAD")
+        git.reset_hard_head()
+    if b_verbose:
+        print(f'{caller_name}() :', stdout)
+
+
 def fetch_and_reset(repository_path, b_verbose=False, revision='origin/master'):
     """
     cd to repository_path
@@ -433,28 +459,6 @@ def fetch_and_reset(repository_path, b_verbose=False, revision='origin/master'):
 
     function_name = 'fetch_and_reset'
 
-    # if there was an error during fetch
-    if any((
-        (stdout.startswith('CONFLICT')),
-        ('fatal' in stderr),
-        ('error' in stderr),
-    )):
-        # present error message
-        print(f'{function_name}() : Possible error while updating')
-        print(os.getcwd())
-        print(f'{function_name}() : stdout :')
-        print(stdout)
-        print(f'{function_name}() : stderr :')
-        print(stderr)
-        
-        # cleanup
-        print(f'{function_name}() : clean -x -d -f')
-        git.clean_xdf(b_verbose=True)
-        # revert
-        print(f"{function_name}() : reset --hard HEAD")
-        git.reset_hard_head()
-    if b_verbose:
-        print(f'{function_name}() :', stdout)
 
     stdout, stderr = git.reset_hard_revision(revision)
 
