@@ -40,7 +40,7 @@ class TestFetchAndReset(unittest.TestCase):
         self.clone_destination_folder = os.path.abspath('temp_test_fetch_and_reset')
 
         if os.path.exists(self.clone_destination_folder):
-            self.reset_to_first()
+            self.reset_existing_repo()
         else:
             # clone the first test repository
             os.system(f'git clone {self.first_repository} {self.clone_destination_folder}')
@@ -55,7 +55,7 @@ class TestFetchAndReset(unittest.TestCase):
 
             os.chdir(self.cwd)
 
-    def reset_to_first(self):
+    def reset_existing_repo(self):
         os.chdir(self.clone_destination_folder)
         os.system(f'git remote set-url origin {self.first_repository}')
         os.system(f'git fetch origin')
