@@ -439,7 +439,7 @@ def fetch_and_reset(repository_path, b_verbose=False, revision='origin/master'):
 
     git.checkout('master', b_verbose=b_verbose)
 
-    stdout, stderr = git.fetch()
+    stdout, stderr = git.fetch('origin')
 
     clean_repo_after_error(stdout, stderr, 'fetch_and_reset', b_verbose=b_verbose,)
 
