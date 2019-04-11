@@ -72,8 +72,15 @@ class TestFetchAndReset(unittest.TestCase):
         self.reset_to_first()
 
     def test_fetch_and_reset(self):
-        ret.fetch_and_reset(self.clone_destination_folder)
+        ret.fetch_and_reset(self.clone_destination_folder, b_verbose=True)
 
+        # check the SHA of the last commit
         os.chdir(self.clone_destination_folder)
+        r = subprocess.check_output(['git', 'log', '-1'])
+        os.chdir(self.cwd)
 
-        os.system('git log --all --graph --oneline')
+        result_sha = r.decode().splitlines()[0].split()[-1]
+
+        expected_sha = '2a3ac03f077d739b6cc115788703431bb5beefc8'
+
+        self.assertEqual(expected_sha, result_sha)
