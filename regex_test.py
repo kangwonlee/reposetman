@@ -408,13 +408,13 @@ def pull_path(repository_path, b_verbose=False):
     os.chdir(org_path)
 
 
-def clean_repo_before_update(b_verbose=False):
+def clean_repo_before_update(b_verbose=False, caller_name='',):
     if b_verbose: 
-        print("pull_path() : reset --hard HEAD")
+        print(f"{caller_name}() : reset --hard HEAD")
     git.reset_hard_head()
 
     if b_verbose: 
-        print('pull_path() : clean -x -d -f')
+        print(f'{caller_name}() : clean -x -d -f')
     git.clean_xdf(b_verbose=False)
 
 
