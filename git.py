@@ -509,6 +509,10 @@ def fetch(repo=''):
     return git_common_list(['fetch', repo])
 
 
+def reset_hard_revision(revision):
+    return git_common_list(['reset', '--hard', revision])
+
+
 if "__main__" == __name__:
     # check if git works fine
     git("status")
