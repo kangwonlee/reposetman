@@ -384,24 +384,8 @@ def pull_path(repository_path, b_verbose=False):
     stdout, stderr = git.pull(b_verbose=False)
 
     # if there was an error during pull
-    if ('fatal' in stderr) or ('error' in stderr):
-        # present error message
-        print('pull_path() : Possible error while updating')
-        print(os.getcwd())
-        print('pull_path() : stdout :')
-        print(stdout)
-        print('pull_path() : stderr :')
-        print(stderr)
-        
-        # cleanup
-        print('pull_path() : clean -x -d -f')
-        git.clean_xdf(b_verbose=True)
-        # revert
-        print("pull_path() : reset --hard HEAD")
-        git.reset_hard_head()
-    if b_verbose:
-        print('pull_path() :', stdout)
-        
+    clean_repo_after_error(stdout, stderr, 'pull_path', b_verbose=False,)    
+
     os.chdir(org_path)
 
 
