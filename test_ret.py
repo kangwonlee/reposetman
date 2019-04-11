@@ -1,5 +1,6 @@
 import os
 import shutil
+import subprocess
 import unittest
 
 import regex_test as ret
