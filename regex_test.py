@@ -259,7 +259,7 @@ def tag_stamp(b_tag_after_update, repo_path_in_section, repo, branch='', commit=
 
         # Tag if the latest commit does not already have a tag
         if not git.has_a_tag():
-            if not git.tag(tag_string):
+            if not git.tag(tag_string, revision=commit):
                 raise IOError('Unable to tag {name} {tag}'.format(tag=tag_string, name=repo['name']))
 
         # return to the stored path
