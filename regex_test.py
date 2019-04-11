@@ -217,7 +217,7 @@ def clone_or_pull_repo(k, repo_url, b_updte_repo, b_tag_after_update=True):
     else:
         if b_updte_repo:
             print('clone_or_pull_repo(%2d) : pull %s' % (k, repo['url']))
-            pull_path(repo_path_in_section)
+            fetch_and_reset(repo_path_in_section)
 
     # tag with time stamp after clone or pull
     tag_all_remote_branches(b_tag_after_update, os.path.abspath(repo_path_in_section), repo)
@@ -378,35 +378,77 @@ def pull_path(repository_path, b_verbose=False):
     
     org_path = repo_path.cd(repository_path)
 
-    if b_verbose: print("pull_path() : reset --hard HEAD")
-    git.reset_hard_head()
-    if b_verbose: print('pull_path() : clean -x -d -f')
-    git.clean_xdf(b_verbose=False)
+    clean_repo_before_update(b_verbose=b_verbose, caller_name='pull_path')
 
     git.checkout('master', b_verbose=False)
     stdout, stderr = git.pull(b_verbose=False)
 
     # if there was an error during pull
-    if ('fatal' in stderr) or ('error' in stderr):
+    clean_repo_after_error(stdout, stderr, 'pull_path', b_verbose=False,)    
+
+    os.chdir(org_path)
+
+
+def clean_repo_before_update(b_verbose=False, caller_name='',):
+    if b_verbose: 
+        print(f"{caller_name}() : reset --hard HEAD")
+    git.reset_hard_head()
+
+    if b_verbose: 
+        print(f'{caller_name}() : clean -x -d -f')
+    git.clean_xdf(b_verbose=False)
+
+
+def clean_repo_after_error(stdout, stderr, caller_name, b_verbose=False,):
+
+    # if there was an error during fetch
+    if any((
+        (stdout.startswith('CONFLICT')),
+        ('fatal' in stderr),
+        ('error' in stderr),
+    )):
         # present error message
-        print('pull_path() : Possible error while updating')
+        print(f'{caller_name}() : Possible error while updating')
         print(os.getcwd())
-        print('pull_path() : stdout :')
+        print(f'{caller_name}() : stdout :')
         print(stdout)
-        print('pull_path() : stderr :')
+        print(f'{caller_name}() : stderr :')
         print(stderr)
         
         # cleanup
-        print('pull_path() : clean -x -d -f')
+        print(f'{caller_name}() : clean -x -d -f')
         git.clean_xdf(b_verbose=True)
         # revert
-        print("pull_path() : reset --hard HEAD")
+        print(f"{caller_name}() : reset --hard HEAD")
         git.reset_hard_head()
     if b_verbose:
-        print('pull_path() :', stdout)
-        
-    os.chdir(org_path)
+        print(f'{caller_name}() :', stdout)
+
+
+def fetch_and_reset(repository_path, b_verbose=False, revision='origin/master', remote='origin'):
+    """
+    cd to repository_path
+    git fetch
+    git reset origin/master
+    return to original path
+    """
     
+    org_path = repo_path.cd(repository_path)
+
+    clean_repo_before_update(b_verbose=b_verbose, caller_name='fetch_and_reset')
+
+    git.checkout('master', b_verbose=b_verbose)
+
+    stdout, stderr = git.fetch(remote)
+
+    clean_repo_after_error(stdout, stderr, 'fetch_and_reset__fetch', b_verbose=b_verbose,)
+
+    stdout, stderr = git.reset_hard_revision(revision)
+
+    clean_repo_after_error(stdout, stderr, 'fetch_and_reset__reset', b_verbose=b_verbose,)
+
+    os.chdir(org_path)
+
 
 if "__main__" == __name__:
     # read file

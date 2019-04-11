@@ -507,7 +507,7 @@ class RepoEval(object):
         self.repo_name = None
         self.repo_path = None
 
-    def eval_repo_list(self, repo_list,  b_multiprocessing = True):
+    def eval_repo_list(self, repo_list,  b_multiprocessing=True):
         """
 
         :param list(dict) repo_list:
@@ -1295,7 +1295,7 @@ class RepoEvalRunEach(RepoEval):
 
         # adaptive input string based on list of available files
         # to prevent excessive file not found error
-        input_list = ['aa', 'bb', 'cc', 'dd', 'ee']
+        input_list = ['1', '2', '3', '4', '5']
 
         # frequent filename        
         if 'test.txt' in os.listdir():
