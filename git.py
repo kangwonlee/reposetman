@@ -494,6 +494,21 @@ def git_common_list(git_cmd_list, b_verbose=False):
     return run_command(cmd_list, b_verbose)
 
 
+def fetch(repo=''):
+    """
+    >>> fetch()
+    or 
+    >>> fetch('origin')
+    """
+
+    cmd_list = ['fetch']
+
+    if repo:
+        cmd_list.append(repo)
+
+    return git_common_list(['fetch', repo])
+
+
 if "__main__" == __name__:
     # check if git works fine
     git("status")
