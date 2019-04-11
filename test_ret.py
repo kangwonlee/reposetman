@@ -47,6 +47,8 @@ class TestFetchAndReset(unittest.TestCase):
             # change default remote repository to another
             os.chdir(self.clone_destination_folder)
             os.system(f'git remote set-url origin {self.second_repository}')
+            os.system(f'git remote add test00 {self.first_repository}')
+            os.system(f'git remote add conflict {self.second_repository}')
 
             # now `git pull` would cause a ** merge conflict **
 
