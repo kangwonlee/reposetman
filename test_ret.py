@@ -62,6 +62,8 @@ class TestFetchAndReset(unittest.TestCase):
         os.system(f'git remote set-url origin {self.first_repository}')
         os.system(f'git fetch origin')
         os.system(f"git reset --hard origin/master")
+        os.system(f'git remote set-url origin {self.second_repository}')
+        os.chdir(self.cwd)
         self.show_remotes('reset_existing_repo')
 
     def show_remotes(self, caller='show_remotes'):
