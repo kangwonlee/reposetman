@@ -68,9 +68,6 @@ class TestFetchAndReset(unittest.TestCase):
         print(f'TestFetchAndReset.{caller}() '.ljust(60, '='))
         os.chdir(self.cwd)
 
-    def tearDown(self):
-        self.reset_to_first()
-
     def test_fetch_and_reset(self):
         ret.fetch_and_reset(self.clone_destination_folder, b_verbose=True)
 
