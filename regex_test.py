@@ -456,7 +456,9 @@ def fetch_and_reset(repository_path, b_verbose=False, revision='origin/master'):
         git.reset_hard_head()
     if b_verbose:
         print(f'{function_name}() :', stdout)
-        
+
+    stdout, stderr = git.reset_hard_revision(revision)
+
     os.chdir(org_path)
 
 
