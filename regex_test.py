@@ -406,7 +406,17 @@ def pull_path(repository_path, b_verbose=False):
         print('pull_path() :', stdout)
         
     os.chdir(org_path)
-    
+
+
+def clean_repo_before_update(b_verbose=False):
+    if b_verbose: 
+        print("pull_path() : reset --hard HEAD")
+    git.reset_hard_head()
+
+    if b_verbose: 
+        print('pull_path() : clean -x -d -f')
+    git.clean_xdf(b_verbose=False)
+
 
 if "__main__" == __name__:
     # read file
