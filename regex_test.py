@@ -217,7 +217,7 @@ def clone_or_pull_repo(k, repo_url, b_updte_repo, b_tag_after_update=True):
     else:
         if b_updte_repo:
             print('clone_or_pull_repo(%2d) : pull %s' % (k, repo['url']))
-            pull_path(repo_path_in_section)
+            fetch_and_reset(repo_path_in_section)
 
     # tag with time stamp after clone or pull
     tag_all_remote_branches(b_tag_after_update, os.path.abspath(repo_path_in_section), repo)
