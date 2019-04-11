@@ -60,6 +60,13 @@ class TestFetchAndReset(unittest.TestCase):
         os.system(f'git fetch origin')
         os.system(f"git reset --hard origin/master")
 
+    def show_remotes(self, caller='show_remotes'):
+        os.chdir(self.clone_destination_folder)
+        print(f'TestFetchAndReset.{caller}() '.ljust(60, '='))
+        os.system(f'git remote -v')
+        print(f'TestFetchAndReset.{caller}() '.ljust(60, '='))
+        os.chdir(self.cwd)
+
     def tearDown(self):
         self.reset_to_first()
 
