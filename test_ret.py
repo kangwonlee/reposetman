@@ -40,17 +40,17 @@ class TestFetchAndReset(unittest.TestCase):
         if os.path.exists(self.clone_destination_folder):
             self.reset_to_first()
         else:
-        # clone the first test repository
+            # clone the first test repository
             os.system(f'git clone {self.first_repository} {self.clone_destination_folder}')
 
-        # change default remote repository to another
-        self.cwd = os.getcwd()
-        os.chdir(self.clone_destination_folder)
+            # change default remote repository to another
+            self.cwd = os.getcwd()
+            os.chdir(self.clone_destination_folder)
             os.system(f'git remote set-url origin {self.second_repository}')
 
-        # now `git pull` would cause a ** merge conflict **
+            # now `git pull` would cause a ** merge conflict **
 
-        os.chdir(self.cwd)
+            os.chdir(self.cwd)
 
     def reset_to_first(self):
         os.chdir(self.clone_destination_folder)
@@ -62,4 +62,8 @@ class TestFetchAndReset(unittest.TestCase):
         self.reset_to_first()
 
     def test_fetch_and_reset(self):
-        pass
+        ret.fetch_and_reset(self.clone_destination_folder)
+
+        os.chdir(self.clone_destination_folder)
+
+        os.system('git log --all --graph --oneline')
