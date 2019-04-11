@@ -441,11 +441,11 @@ def fetch_and_reset(repository_path, b_verbose=False, revision='origin/master', 
 
     stdout, stderr = git.fetch(remote)
 
-    clean_repo_after_error(stdout, stderr, 'fetch_and_reset', b_verbose=b_verbose,)
+    clean_repo_after_error(stdout, stderr, 'fetch_and_reset__fetch', b_verbose=b_verbose,)
 
     stdout, stderr = git.reset_hard_revision(revision)
 
-    clean_repo_after_error(stdout, stderr, 'fetch_and_reset', b_verbose=b_verbose,)
+    clean_repo_after_error(stdout, stderr, 'fetch_and_reset__reset', b_verbose=b_verbose,)
 
     os.chdir(org_path)
 
