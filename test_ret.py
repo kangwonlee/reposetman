@@ -31,26 +31,35 @@ def onerror(func, path, exc_info):
 
 class TestFetchAndReset(unittest.TestCase):
     def setUp(self):
-
         # test repositories
-        first_repository = 'https://github.com/kangwonlee/test-reposetman-fetch-and-reset-00'
-        second_repository = 'https://github.com/kangwonlee/test-reposetman-fetch-and-reset-conflict'
+        self.first_repository = 'https://github.com/kangwonlee/test-reposetman-fetch-and-reset-00'
+        self.second_repository = 'https://github.com/kangwonlee/test-reposetman-fetch-and-reset-conflict'
 
+        self.clone_destination_folder = os.path.abspath('temp_test_fetch_and_reset')
+
+        if os.path.exists(self.clone_destination_folder):
+            self.reset_to_first()
+        else:
         # clone the first test repository
-        self.clone_destination_folder = 'temp_test_fetch_and_reset'
-        os.system(f'git clone {first_repository} {self.clone_destination_folder}')
+            os.system(f'git clone {self.first_repository} {self.clone_destination_folder}')
 
         # change default remote repository to another
         self.cwd = os.getcwd()
         os.chdir(self.clone_destination_folder)
-        os.system(f'git remote set-url origin {second_repository}')
+            os.system(f'git remote set-url origin {self.second_repository}')
 
         # now `git pull` would cause a ** merge conflict **
 
         os.chdir(self.cwd)
 
+    def reset_to_first(self):
+        os.chdir(self.clone_destination_folder)
+        os.system(f'git remote set-url origin {self.first_repository}')
+        os.system(f'git fetch origin')
+        os.system(f"git reset --hard origin/master")
+
     def tearDown(self):
-        shutil.rmtree(self.clone_destination_folder)
+        self.reset_to_first()
 
     def test_fetch_and_reset(self):
         pass
