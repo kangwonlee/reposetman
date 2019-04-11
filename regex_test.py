@@ -425,7 +425,7 @@ def clean_repo_after_error(stdout, stderr, caller_name, b_verbose=False,):
         print(f'{caller_name}() :', stdout)
 
 
-def fetch_and_reset(repository_path, b_verbose=False, revision='origin/master'):
+def fetch_and_reset(repository_path, b_verbose=False, revision='origin/master', remote='origin'):
     """
     cd to repository_path
     git fetch
@@ -439,7 +439,7 @@ def fetch_and_reset(repository_path, b_verbose=False, revision='origin/master'):
 
     git.checkout('master', b_verbose=b_verbose)
 
-    stdout, stderr = git.fetch('origin')
+    stdout, stderr = git.fetch(remote)
 
     clean_repo_after_error(stdout, stderr, 'fetch_and_reset', b_verbose=b_verbose,)
 
