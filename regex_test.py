@@ -228,7 +228,7 @@ def clone_or_pull_repo(k, repo_url, b_updte_repo, b_tag_after_update=True):
     return repo
 
 
-def tag_after_update(b_tag_after_update, repo_path_in_section, repo, branch=''):
+def tag_stamp(b_tag_after_update, repo_path_in_section, repo, branch=''):
     """
     Tag with time stamp after clone or pull
     """
@@ -288,7 +288,7 @@ def tag_all_remote_branches(b_tag_after_update, repo_abs_path, repo):
 
             # A remote branch would be like : remote_name/branch_name/##
             # Just pass branch_name_##
-            tag_after_update(b_tag_after_update, repo_abs_path, repo, branch='_'.join(repo_branch.split('/')[1:]))
+            tag_stamp(b_tag_after_update, repo_abs_path, repo, branch='_'.join(repo_branch.split('/')[1:]))
 
         # restore repository branch
         git.checkout(current_repo_branch)
