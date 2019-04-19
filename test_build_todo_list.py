@@ -1,3 +1,4 @@
+import ast
 import configparser
 import os
 import shutil
@@ -19,19 +20,24 @@ def get_temp_filename(mode='w+t'):
 class TestBuildTodoListGrammar(unittest.TestCase):
     config_filename = 'test_build_todo_list.cfg'
     def init_test_cfg_build_todo_list(self):
-        if not os.path.exists(self.config_filename):
-            config = configparser.ConfigParser()
+        config = configparser.ConfigParser()
 
-            config['operation'] = {
-                'python_path': shutil.which('python'),
-                'todo_list_file' : 'cpf19-lpthw-todo.json',
-                'last_sent_file' : 'cpf19-lpthw-todo-lastsent.txt',
-                'comment_period_days' : '7',
-                'organization' : 'kpumecpf',
-            }
+        self.section_name = 'test_section'
 
-            with open(self.config_filename, 'w') as cfg_file:
-                config.write(cfg_file)
+        config['operation'] = {
+            'python_path': shutil.which('python'),
+            'sections' : [self.section_name],
+        }
+
+        config[self.section_name] = {
+            'todo_list_file' : 'test-todo.json',
+            'last_sent_file' : 'test-todo-lastsent.txt',
+            'comment_period_days' : '7',
+            'organization' : 'test-group',
+        }
+
+        with open(self.config_filename, 'w') as cfg_file:
+            config.write(cfg_file)
 
     def init_all_outputs(self):
 
@@ -73,6 +79,7 @@ class TestBuildTodoListGrammar(unittest.TestCase):
             self.init_test_cfg_build_todo_list()
 
         self.config.read(self.config_filename)
+        self.section_list = ast.literal_eval(self.config['operation']['sections'])
 
         self.all_outputs, self.send_sha = self.init_all_outputs()
 
@@ -82,13 +89,16 @@ class TestBuildTodoListGrammar(unittest.TestCase):
         del self.send_sha
 
     def test_build_todo_list_grammar(self):
+
+        section_name = self.section_list[0]
+
         # force always run
-        self.config['operation']['last_sent_file'] = get_temp_filename()
-        if os.path.exists(self.config['operation']['last_sent_file']):
-            os.remove(self.config['operation']['last_sent_file'])
+        self.config[section_name]['last_sent_file'] = get_temp_filename()
+        if os.path.exists(self.config[section_name]['last_sent_file']):
+            os.remove(self.config[section_name]['last_sent_file'])
 
         # function under test
-        result_list = progress.build_todo_list_grammar(self.config, self.all_outputs,)
+        result_list = progress.build_todo_list_grammar(self.config, section_name, self.all_outputs, b_verbose=True)
 
         send_sha = list(self.send_sha)
 
@@ -106,13 +116,14 @@ class TestBuildTodoListGrammar(unittest.TestCase):
         self.assertFalse(send_sha)
 
         # remove temp file
-        if os.path.exists(self.config['operation']['last_sent_file']):
-            os.remove(self.config['operation']['last_sent_file'])
+        if os.path.exists(self.config[section_name]['last_sent_file']):
+            os.remove(self.config[section_name]['last_sent_file'])
 
     def test_write_last_sent(self):
         gmtime_sec = time.time()
 
         with tempfile.NamedTemporaryFile(mode='w+t', delete=False) as f:
+            # function under test
             progress.write_last_sent(f, gmtime_sec=gmtime_sec)
             name = f.name
 
@@ -132,7 +143,7 @@ class TestBuildTodoListGrammar(unittest.TestCase):
         gmtime_sec = time.time()
 
         close_last_send_gmtime_sec = gmtime_sec - 10
-
+        # function under test
         result = progress.is_too_frequent(close_last_send_gmtime_sec, comment_period_days=1, b_verbose=False)
 
         self.assertTrue(result, msg=(
@@ -144,7 +155,7 @@ class TestBuildTodoListGrammar(unittest.TestCase):
         gmtime_sec = time.time()
 
         far_last_send_gmtime_sec = gmtime_sec - 10 * 24 * 3600
-
+        # function under test
         result = progress.is_too_frequent(far_last_send_gmtime_sec, comment_period_days=1, b_verbose=False)
 
         self.assertFalse(result, msg=(
@@ -159,7 +170,7 @@ class TestBuildTodoListGrammar(unittest.TestCase):
 
         with open(last_sent_filename, 'wt') as f:
             f.write(str(gmtime_sec))
-
+        # function under test
         last_sent_gmtime_sec = progress.get_last_sent_gmtime_sec(last_sent_filename)
 
         self.assertAlmostEqual(last_sent_gmtime_sec, gmtime_sec)
@@ -168,7 +179,7 @@ class TestBuildTodoListGrammar(unittest.TestCase):
         last_sent_filename = get_temp_filename()
 
         gmtime_sec = time.time()
-
+        # function under test
         last_sent_gmtime_sec = progress.get_last_sent_gmtime_sec(last_sent_filename)
 
         self.assertLess(last_sent_gmtime_sec, gmtime_sec)
