@@ -1458,6 +1458,22 @@ class RepoEvalRunEachSkipSome(RepoEvalRunEach):
         return filename.startswith('recursion')
 
 
+class RepoEvalRunEachSkipSomeLastCommit(RepoEvalRunEachSkipSome):
+    def eval_file_base(self, filename, b_verbose=False):
+        """
+        Evaluate file and attach last commit info
+        """
+        result = super().eval_file_base(filename=filename, b_verbose=b_verbose)
+
+        # TODO : What if other subclasses of RepoEval need similar feature?
+        #        Rename RepoEval to RepoEvalBase and add this to RepoEval?
+
+        if isinstance(result, dict):
+            result['sha'] = git.get_last_sha(path=filename)
+
+        return result
+
+
 def is_argv(txt):
     """
     Is argv of sys in the text?
