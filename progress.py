@@ -384,10 +384,12 @@ def build_todo_list_grammar(config, section, all_outputs, b_verbose=False, todo_
     section : section name
     all_outputs : RepoTable on each file
     """
-    if b_verbose :print('build_comment_list_run_all() starts')
+    if b_verbose: print('build_comment_list_run_all() starts')
 
     if not todo_list:
         todo_list = []
+
+    if b_verbose: print(f'build_comment_list_run_all() : len(todo_list) = {len(todo_list)}')
 
     # output filename
     todo_list_filename = config[section]['todo_list_file']
@@ -429,7 +431,8 @@ def build_todo_list_grammar(config, section, all_outputs, b_verbose=False, todo_
                             )
                         }
                         todo_list.append(todo_dict)
-                        print(f"build_todo_list_grammar() : appending f{todo_dict}")
+                        if b_verbose: print(f"build_todo_list_grammar() : appending {todo_dict}")
+                        if b_verbose: print(f"build_todo_list_grammar() : len(todo_list) = {len(todo_list)}")
             # end of file loop
         # end of repo loop
 
@@ -442,7 +445,7 @@ def build_todo_list_grammar(config, section, all_outputs, b_verbose=False, todo_
             write_last_sent(last_sent_file)
     # end of if too frequent
 
-    if b_verbose :print('build_comment_list_run_all() ends')
+    if b_verbose: print('build_comment_list_run_all() ends')
     return todo_list
 
 
