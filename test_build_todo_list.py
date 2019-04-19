@@ -116,6 +116,8 @@ class TestBuildTodoListGrammar(unittest.TestCase):
             progress.write_last_sent(f, gmtime_sec=gmtime_sec)
             name = f.name
 
+        # may not be the best practice to test two functions in one method
+
         last_sent_gmtime_sec = progress.get_last_sent_gmtime_sec(name)
 
         try:
@@ -125,3 +127,27 @@ class TestBuildTodoListGrammar(unittest.TestCase):
             if os.path.exists(name):
                 os.remove(name)
             raise e
+
+    def test_is_too_frequent_do_not_send(self):
+        gmtime_sec = time.time()
+
+        close_last_send_gmtime_sec = gmtime_sec - 10
+
+        result = progress.is_too_frequent(close_last_send_gmtime_sec, comment_period_days=1, b_verbose=False)
+
+        self.assertTrue(result, msg=(
+            f"close_last_send_gmtime_sec = {close_last_send_gmtime_sec}\n"
+            )
+        )
+
+    def test_is_too_frequent_send(self):
+        gmtime_sec = time.time()
+
+        far_last_send_gmtime_sec = gmtime_sec - 10 * 24 * 3600
+
+        result = progress.is_too_frequent(far_last_send_gmtime_sec, comment_period_days=1, b_verbose=False)
+
+        self.assertFalse(result, msg=(
+            f"far_last_send_gmtime_sec = {far_last_send_gmtime_sec}\n"
+            )
+        )
