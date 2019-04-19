@@ -436,6 +436,21 @@ def build_todo_list_grammar(config, all_outputs, b_verbose=False, todo_list=[]):
     return todo_list
 
 
+def get_last_sent_gmtime_sec(last_sent_filename, default_days=10):
+    """
+    From the first line of file of last_sent_filename, get last sent time.time() in sec
+    """
+    try:
+        # try to read from file
+        with open(last_sent_filename, 'r') as sent:
+            last_sent_gmtime_sec = ast.literal_eval(sent.readline().strip())
+    except:
+        # if not successful, set default
+        last_sent_gmtime_sec = time.time() - (default_days * 24 * 3600)
+
+    return last_sent_gmtime_sec
+
+
 def write_last_sent(last_sent_file, gmtime_sec=time.time()):
 
     last_sent_file.write(
