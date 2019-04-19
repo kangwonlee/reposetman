@@ -15,6 +15,7 @@ import ast
 import configparser
 import fractions
 import itertools
+import json
 import multiprocessing
 import os
 import re
@@ -425,7 +426,6 @@ def build_todo_list_grammar(config, all_outputs, b_verbose=False, todo_list=[]):
                         todo_list.append(todo_dict)
 
         # write to json file
-        import json
         with open(todo_list_filename, 'wt', encoding='utf-8') as todo_list_file:
             json.dump(todo_list, todo_list_file)
 
