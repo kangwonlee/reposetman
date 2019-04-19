@@ -453,9 +453,12 @@ def is_too_frequent(last_sent_gmtime_sec, comment_period_days=7, b_verbose=True)
     since_time_struct = time.gmtime(since_last_sent_sec)
     # https://docs.python.org/3.7/library/time.html#time.struct_time
 
+    # unit == days
     since_last_sent_days = since_last_sent_sec/3600/24
+    # unit == days in integer (discard hr:min info)
     since_last_sent_days_int = int(since_last_sent_days)
 
+    # how many days since last message?
     if b_verbose: 
         print(f"{since_last_sent_days_int:d}d "
               f"{since_time_struct.tm_hour:02d}h "
@@ -463,6 +466,7 @@ def is_too_frequent(last_sent_gmtime_sec, comment_period_days=7, b_verbose=True)
               f"{since_time_struct.tm_sec:02d}s passed"
         )
     
+    # verdict
     b_too_frequent = since_last_sent_days < comment_period_days
 
     return b_too_frequent
