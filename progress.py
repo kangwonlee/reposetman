@@ -15,6 +15,7 @@ import ast
 import configparser
 import fractions
 import itertools
+import json
 import multiprocessing
 import os
 import re
@@ -351,7 +352,7 @@ def run_all(config, section, repo_list):
     Run (almost) all .py files from the section
     """
 
-    all_runner = RepoEvalRunEachSkipSome(config['operation']['python_path'])
+    all_runner = RepoEvalRunEachSkipSomeLastCommit(config['operation']['python_path'])
     all_outputs = all_runner.eval_repo_list(repo_list)
     print('run_all() : finished eval_repo_list()')
 
@@ -366,8 +367,132 @@ def run_all(config, section, repo_list):
         filename_prefix='run_all',
         sorted_row=sorted_row,
     )
+    print('run_all() : finished write_tables()')
+
+    build_todo_list_grammar(config, all_outputs)
 
     return run_all_txt, run_all_md, run_all_html
+
+
+@timeit.timeit
+def build_todo_list_grammar(config, all_outputs, b_verbose=False, todo_list=[]):
+    """
+    Build a json file for GitHub commit comments
+    For now, just for syntax checking
+
+    config : see sample progress.cfg file
+    all_outputs : RepoTable on each file
+    """
+    if b_verbose :print('build_comment_list_run_all() starts')
+
+    # output filename
+    todo_list_filename = config['operation']['todo_list_file']
+    # not to broadcast too frequently
+    last_sent_filename = config['operation']['last_sent_file']
+    comment_period_days = float(config['operation']['comment_period_days'])
+
+    last_sent_gmtime_sec = get_last_sent_gmtime_sec(last_sent_filename)
+
+    if is_too_frequent(last_sent_gmtime_sec, comment_period_days):
+        print("Message may be too frequent?")
+    else:
+        # usually organization for the class
+        org_name = ast.literal_eval(config['operation']['organization'])
+
+        # row loop == repository loop
+        for repo_name in all_outputs.index:
+            # column loop == folder/file loop
+            for local_path in all_outputs[repo_name]:
+                run_result_dict = all_outputs[repo_name][local_path]
+                # otherwise, usually not a .py file
+                if isinstance(run_result_dict, dict):
+                    # if the dict has 'grammar pass' and the value is False
+                    if not run_result_dict.get('grammar pass', True):
+                        # json example
+                        # {
+                        #   "owner": "<github user id or organization id>", 
+                        #   "repo": "<repository id>", 
+                        #   "sha": "<SHA of the commit of the repository>", 
+                        #   "comment_str": "<comment string>"
+                        # },
+                        todo_dict = {
+                            "owner": org_name,
+                            "repo": repo_name,
+                            "sha": run_result_dict['sha'],
+                            "comment_str": (
+                                f"파일 {local_path} 구문 확인 바랍니다. (자동 생성 메시지 시험중)\n"
+                                f"Please verify syntax of {local_path}. (Testing auto comments)"
+                            )
+                        }
+                        todo_list.append(todo_dict)
+            # end of file loop
+        # end of repo loop
+
+        # write to json file
+        with open(todo_list_filename, 'wt', encoding='utf-8') as todo_list_file:
+            json.dump(todo_list, todo_list_file)
+
+        # record last sent date
+        with open(last_sent_filename, 'wt') as last_sent_file:
+            write_last_sent(last_sent_file)
+    # end of if too frequent
+
+    if b_verbose :print('build_comment_list_run_all() ends')
+    return todo_list
+
+
+def is_too_frequent(last_sent_gmtime_sec, comment_period_days=7, b_verbose=True):
+    """
+    Considering last sent time, is it too frequent?
+    """
+    if b_verbose: print(f"last sent time : {time.asctime(time.localtime(last_sent_gmtime_sec))}")
+
+    since_last_sent_sec = time.time() - last_sent_gmtime_sec
+
+    # https://docs.python.org/3.7/library/time.html#time.localtime
+    since_time_struct = time.gmtime(since_last_sent_sec)
+    # https://docs.python.org/3.7/library/time.html#time.struct_time
+
+    # unit == days
+    since_last_sent_days = since_last_sent_sec/3600/24
+    # unit == days in integer (discard hr:min info)
+    since_last_sent_days_int = int(since_last_sent_days)
+
+    # how many days since last message?
+    if b_verbose: 
+        print(f"{since_last_sent_days_int:d}d "
+              f"{since_time_struct.tm_hour:02d}h "
+              f"{since_time_struct.tm_min:02d}m "
+              f"{since_time_struct.tm_sec:02d}s passed"
+        )
+    
+    # verdict
+    b_too_frequent = since_last_sent_days < comment_period_days
+
+    return b_too_frequent
+
+
+def get_last_sent_gmtime_sec(last_sent_filename, default_days=10):
+    """
+    From the first line of file of last_sent_filename, get last sent time.time() in sec
+    """
+    try:
+        # try to read from file
+        with open(last_sent_filename, 'r') as sent:
+            last_sent_gmtime_sec = ast.literal_eval(sent.readline().strip())
+    except:
+        # if not successful, set default
+        last_sent_gmtime_sec = time.time() - (default_days * 24 * 3600)
+
+    return last_sent_gmtime_sec
+
+
+def write_last_sent(last_sent_file, gmtime_sec=time.time()):
+
+    last_sent_file.write(
+        f"{gmtime_sec}\n"
+        f"{time.asctime(time.localtime(gmtime_sec))}\n"
+    )
 
 
 @timeit.timeit
@@ -507,7 +632,7 @@ class RepoEval(object):
         self.repo_name = None
         self.repo_path = None
 
-    def eval_repo_list(self, repo_list,  b_multiprocessing = True):
+    def eval_repo_list(self, repo_list,  b_multiprocessing=True):
         """
 
         :param list(dict) repo_list:
@@ -1218,7 +1343,10 @@ class RepoEvalRunEach(RepoEval):
             # present info only if exception happens
             print('{type:s}.run_script() : cwd = {cwd}'.format(type=self.get_class_name(), cwd=os.getcwd()))
             print('{type:s}.run_script() : python_cmd = {cmd!s}'.format(type=self.get_class_name(), cmd=python_cmd_list))
-            print('{type:s}.run_script() : error message = {msge}'.format(type=self.get_class_name(), msge=msge))
+            try:
+                print('{type:s}.run_script() : error message = {msge}'.format(type=self.get_class_name(), msge=msge))
+            except UnicodeEncodeError:
+                print('{type:s}.run_script() : error message(r) = {msge}'.format(type=self.get_class_name(), msge=repr(msge)))
 
             # If the .py script cannot find a file, present list of available files
             # to help improvement
@@ -1292,7 +1420,7 @@ class RepoEvalRunEach(RepoEval):
 
         # adaptive input string based on list of available files
         # to prevent excessive file not found error
-        input_list = ['aa', 'bb', 'cc', 'dd', 'ee']
+        input_list = ['1', '2', '3', '4', '5']
 
         # frequent filename        
         if 'test.txt' in os.listdir():
@@ -1453,6 +1581,22 @@ class RepoEvalRunEachSkipSome(RepoEvalRunEach):
         """
         # TODO : detect recursion
         return filename.startswith('recursion')
+
+
+class RepoEvalRunEachSkipSomeLastCommit(RepoEvalRunEachSkipSome):
+    def eval_file_base(self, filename, b_verbose=False):
+        """
+        Evaluate file and attach last commit info
+        """
+        result = super().eval_file_base(filename=filename, b_verbose=b_verbose)
+
+        # TODO : What if other subclasses of RepoEval need similar feature?
+        #        Rename RepoEval to RepoEvalBase and add this to RepoEval?
+
+        if isinstance(result, dict):
+            result['sha'] = git.get_last_sha(path=filename)
+
+        return result
 
 
 def is_argv(txt):

@@ -235,16 +235,21 @@ def log_last_commit():
     return result
 
 
-def get_last_sha(b_full=False):
+def get_last_sha(b_full=False, path=''):
     # sometimes full SHA is necessary
     if b_full:
         format_string = '%H'
     else:
         format_string = '%h'
+
+    command_list = [git_exe_path, 'log', '--pretty=format:{h}'.format(h=format_string), '-1']
+
+    if path: 
+        command_list.append(path)
         
     # get the last sha from git log of the latest commit
     msgo, msge = run_command(
-        (git_exe_path, 'log', '--pretty=format:{h}'.format(h=format_string), '-1'),
+        tuple(command_list),
         b_verbose=False
     )
 
@@ -492,6 +497,25 @@ def git_common_list(git_cmd_list, b_verbose=False):
 
     # Run command
     return run_command(cmd_list, b_verbose)
+
+
+def fetch(repo=''):
+    """
+    >>> fetch()
+    or 
+    >>> fetch('origin')
+    """
+
+    cmd_list = ['fetch']
+
+    if repo:
+        cmd_list.append(repo)
+
+    return git_common_list(['fetch', repo])
+
+
+def reset_hard_revision(revision):
+    return git_common_list(['reset', '--hard', revision])
 
 
 if "__main__" == __name__:

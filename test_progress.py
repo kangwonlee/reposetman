@@ -382,7 +382,7 @@ class TestRepoEvalRunEachSkipSome(TestRepoEvalRunEachBase):
 
         self.assertFalse(result, msg='\ntoktype, tok, start, end, line = %r' % str(result))
 
-    def call_is_input_txt(self, txt):
+    def prepare_input_file(self, txt):
         # create a temporary file in a secure manner
         fd, filename = tempfile.mkstemp(text=True)
         # close the temporary file for now https://www.logilab.org/blogentry/17873
@@ -393,14 +393,44 @@ class TestRepoEvalRunEachSkipSome(TestRepoEvalRunEachBase):
             f.write(txt)
         # finished preparing for the temporary file
 
+        return filename
+
+    def call_is_input_txt(self, txt):
+        filename = self.prepare_input_file(txt)
+
         # function under test
-        result = self.e.is_input(f.name)
+        result = self.e.is_input(filename)
 
         # delete temporary file after test
-        if os.path.exists(filename):
-            os.remove(filename)
+        os.remove(filename)
 
         return result
+
+
+class TestRepoEvalRunEachSkipSomeLastCommit(TestRepoEvalRunEachBase):
+
+    def setUp(self):
+        super().setUp()
+        self.e = progress.RepoEvalRunEachSkipSomeLastCommit(self.config['operation']['python_path'])
+    
+    def test_eval_file_base(self):
+        file_path = __file__
+        result_dict = self.e.eval_file_base(filename=file_path)
+        self.assertIn('sha', result_dict)
+
+        final_sha = result_dict['sha']
+
+        # get git log of the last commit
+        p = subprocess.Popen(('git', 'log', '-1', file_path), stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        msgo, msge = str(p.stdout.read(),encoding='utf-8'), str(p.stderr.read(),encoding='utf-8')
+
+        p.stdout.close()
+        p.stderr.close()
+
+        if msgo:
+            self.assertIn(final_sha, msgo, msg=f'\nresult = {final_sha}\nlog = {msgo}')
+        else:
+            raise IOError('Unable to obtain git log\nmsgo = {log!r}\nmsge = {err!r}'.format(log=msgo, err=msge))
 
 
 class TestRepoEvalCountOneCommitLog(unittest.TestCase):
