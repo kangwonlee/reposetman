@@ -382,7 +382,7 @@ class TestRepoEvalRunEachSkipSome(TestRepoEvalRunEachBase):
 
         self.assertFalse(result, msg='\ntoktype, tok, start, end, line = %r' % str(result))
 
-    def call_is_input_txt(self, txt):
+    def prepare_input_file(self, txt):
         # create a temporary file in a secure manner
         fd, filename = tempfile.mkstemp(text=True)
         # close the temporary file for now https://www.logilab.org/blogentry/17873
@@ -393,12 +393,16 @@ class TestRepoEvalRunEachSkipSome(TestRepoEvalRunEachBase):
             f.write(txt)
         # finished preparing for the temporary file
 
+        return filename
+
+    def call_is_input_txt(self, txt):
+        filename = self.prepare_input_file(txt)
+
         # function under test
-        result = self.e.is_input(f.name)
+        result = self.e.is_input(filename)
 
         # delete temporary file after test
-        if os.path.exists(filename):
-            os.remove(filename)
+        os.remove(filename)
 
         return result
 
