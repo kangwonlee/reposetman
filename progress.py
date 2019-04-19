@@ -381,23 +381,7 @@ def build_todo_list_grammar(config, all_outputs, b_verbose=False, todo_list=[]):
 
     last_sent_gmtime_sec = get_last_sent_gmtime_sec(last_sent_filename)
 
-    print(f"last sent time : {time.localtime(last_sent_gmtime_sec)}")
-
-    since_last_sent_sec = time.time() - last_sent_gmtime_sec
-
-    # https://docs.python.org/3.7/library/time.html#time.localtime
-    since_time_struct = time.gmtime(since_last_sent_sec)
-    # https://docs.python.org/3.7/library/time.html#time.struct_time
-
-    since_last_sent_days = since_last_sent_sec/3600/24
-    since_last_sent_days_int = int(since_last_sent_days)
-
-    print(f"{since_last_sent_days_int:d}d "
-        f"{since_time_struct.tm_hour:02d}h "
-        f"{since_time_struct.tm_min:02d}m "
-        f"{since_time_struct.tm_sec:02d}s passed")
-
-    if since_last_sent_days < comment_period_days:
+    if is_too_frequent(last_sent_gmtime_sec, comment_period_days):
         print("Message may be too frequent?")
     else:
         org_name = ast.literal_eval(config['operation']['organization'])
