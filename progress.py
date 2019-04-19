@@ -430,6 +430,33 @@ def build_todo_list_grammar(config, all_outputs, b_verbose=False, todo_list=[]):
     return todo_list
 
 
+def is_too_frequent(last_sent_gmtime_sec, comment_period_days=7, b_verbose=True):
+    """
+    Considering last sent time, is it too frequent?
+    """
+    if b_verbose: print(f"last sent time : {time.localtime(last_sent_gmtime_sec)}")
+
+    since_last_sent_sec = time.time() - last_sent_gmtime_sec
+
+    # https://docs.python.org/3.7/library/time.html#time.localtime
+    since_time_struct = time.gmtime(since_last_sent_sec)
+    # https://docs.python.org/3.7/library/time.html#time.struct_time
+
+    since_last_sent_days = since_last_sent_sec/3600/24
+    since_last_sent_days_int = int(since_last_sent_days)
+
+    if b_verbose: 
+        print(f"{since_last_sent_days_int:d}d "
+              f"{since_time_struct.tm_hour:02d}h "
+              f"{since_time_struct.tm_min:02d}m "
+              f"{since_time_struct.tm_sec:02d}s passed"
+        )
+    
+    b_too_frequent = since_last_sent_days < comment_period_days
+
+    return b_too_frequent
+
+
 def get_last_sent_gmtime_sec(last_sent_filename, default_days=10):
     """
     From the first line of file of last_sent_filename, get last sent time.time() in sec
