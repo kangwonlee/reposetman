@@ -376,9 +376,18 @@ def run_all(config, section, repo_list):
 
 @timeit.timeit
 def build_todo_list_grammar(config, all_outputs, b_verbose=False, todo_list=[]):
+    """
+    Build a json file for GitHub commit comments
+    For now, just for syntax checking
+
+    config : see sample progress.cfg file
+    all_outputs : RepoTable on each file
+    """
     if b_verbose :print('build_comment_list_run_all() starts')
 
+    # output filename
     todo_list_filename = config['operation']['todo_list_file']
+    # not to broadcast too frequently
     last_sent_filename = config['operation']['last_sent_file']
     comment_period_days = float(config['operation']['comment_period_days'])
 
@@ -387,14 +396,25 @@ def build_todo_list_grammar(config, all_outputs, b_verbose=False, todo_list=[]):
     if is_too_frequent(last_sent_gmtime_sec, comment_period_days):
         print("Message may be too frequent?")
     else:
+        # usually organization for the class
         org_name = ast.literal_eval(config['operation']['organization'])
 
+        # row loop == repository loop
         for repo_name in all_outputs.index:
+            # column loop == folder/file loop
             for local_path in all_outputs[repo_name]:
                 run_result_dict = all_outputs[repo_name][local_path]
+                # otherwise, usually not a .py file
                 if isinstance(run_result_dict, dict):
+                    # if the dict has 'grammar pass' and the value is False
                     if not run_result_dict.get('grammar pass', True):
-                        # {"owner": "<github id or org>", "repo": "<repo_name>", "sha": "052a67a8d9bc253cc0cdef225f4d58cf85f9bbf2", "comment_str": "testing commit comment 052a67a"},
+                        # json example
+                        # {
+                        #   "owner": "<github user id or organization id>", 
+                        #   "repo": "<repository id>", 
+                        #   "sha": "<SHA of the commit of the repository>", 
+                        #   "comment_str": "<comment string>"
+                        # },
                         todo_dict = {
                             "owner": org_name,
                             "repo": repo_name,
@@ -405,13 +425,17 @@ def build_todo_list_grammar(config, all_outputs, b_verbose=False, todo_list=[]):
                             )
                         }
                         todo_list.append(todo_dict)
+            # end of file loop
+        # end of repo loop
 
         # write to json file
         with open(todo_list_filename, 'wt', encoding='utf-8') as todo_list_file:
             json.dump(todo_list, todo_list_file)
 
+        # record last sent date
         with open(last_sent_filename, 'wt') as last_sent_file:
             write_last_sent(last_sent_file)
+    # end of if too frequent
 
     if b_verbose :print('build_comment_list_run_all() ends')
     return todo_list
