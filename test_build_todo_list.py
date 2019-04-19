@@ -25,6 +25,7 @@ class TestBuildTodoListGrammar(unittest.TestCase):
 
         config['operation'] = {
             'python_path': shutil.which('python'),
+            'sections' : [self.section_name],
         }
 
         config[self.section_name] = {
