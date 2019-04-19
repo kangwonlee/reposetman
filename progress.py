@@ -426,6 +426,7 @@ def build_todo_list_grammar(config, section, all_outputs, b_verbose=False, todo_
                             )
                         }
                         todo_list.append(todo_dict)
+                        print(f"build_todo_list_grammar() : appending f{todo_dict}")
             # end of file loop
         # end of repo loop
 
