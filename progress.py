@@ -429,13 +429,8 @@ def build_todo_list_grammar(config, all_outputs, b_verbose=False, todo_list=[]):
         with open(todo_list_filename, 'wt', encoding='utf-8') as todo_list_file:
             json.dump(todo_list, todo_list_file)
 
-        gmtime = time.time()
-
         with open(last_sent_filename, 'wt') as last_sent_file:
-            last_sent_file.write(
-                f"{gmtime}\n"
-                f"{time.asctime(gmtime)}\n"
-            )
+            write_last_sent(last_sent_file)
 
     if b_verbose :print('build_comment_list_run_all() ends')
     return todo_list
