@@ -2,6 +2,7 @@ import configparser
 import os
 import shutil
 import tempfile
+import time
 import unittest
 
 import progress
@@ -107,3 +108,20 @@ class TestBuildTodoListGrammar(unittest.TestCase):
         # remove temp file
         if os.path.exists(self.config['operation']['last_sent_file']):
             os.remove(self.config['operation']['last_sent_file'])
+
+    def test_write_last_sent(self):
+        gmtime_sec = time.time()
+
+        with tempfile.NamedTemporaryFile(mode='w+t', delete=False) as f:
+            progress.write_last_sent(f, gmtime_sec=gmtime_sec)
+            name = f.name
+
+        last_sent_gmtime_sec = progress.get_last_sent_gmtime_sec(name)
+
+        try:
+            self.assertAlmostEqual(last_sent_gmtime_sec, gmtime_sec)
+            os.remove(name)
+        except BaseException as e:
+            if os.path.exists(name):
+                os.remove(name)
+            raise e
