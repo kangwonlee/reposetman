@@ -19,25 +19,24 @@ def get_temp_filename(mode='w+t'):
 class TestBuildTodoListGrammar(unittest.TestCase):
     config_filename = 'test_build_todo_list.cfg'
     def init_test_cfg_build_todo_list(self):
-        if not os.path.exists(self.config_filename):
-            config = configparser.ConfigParser()
+        config = configparser.ConfigParser()
 
-            self.section_name = 'test_section'
+        self.section_name = 'test_section'
 
-            config['operation'] = {
-                'python_path': shutil.which('python'),
-            }
+        config['operation'] = {
+            'python_path': shutil.which('python'),
+        }
 
-            config[self.section_name] = {
-                'todo_list_file' : 'test-todo.json',
-                'last_sent_file' : 'test-todo-lastsent.txt',
-                'comment_period_days' : '7',
-                'organization' : 'test-group',
-                'sections' : [self.section_name]
-            }
+        config[self.section_name] = {
+            'todo_list_file' : 'test-todo.json',
+            'last_sent_file' : 'test-todo-lastsent.txt',
+            'comment_period_days' : '7',
+            'organization' : 'test-group',
+            'sections' : [self.section_name]
+        }
 
-            with open(self.config_filename, 'w') as cfg_file:
-                config.write(cfg_file)
+        with open(self.config_filename, 'w') as cfg_file:
+            config.write(cfg_file)
 
     def init_all_outputs(self):
 
