@@ -95,7 +95,7 @@ class TestBuildTodoListGrammar(unittest.TestCase):
             os.remove(self.config['operation']['last_sent_file'])
 
         # function under test
-        result_list = progress.build_todo_list_grammar(self.config, self.all_outputs,)
+        result_list = progress.build_todo_list_grammar(self.config, self.section_list[0], self.all_outputs,)
 
         send_sha = list(self.send_sha)
 
