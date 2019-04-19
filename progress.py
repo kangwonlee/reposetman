@@ -354,7 +354,7 @@ def run_all(config, section, repo_list):
 
     all_runner = RepoEvalRunEachSkipSomeLastCommit(config['operation']['python_path'])
     all_outputs = all_runner.eval_repo_list(repo_list)
-    print('run_all() : finished eval_repo_list()')
+    print(f'run_all() : finished eval_repo_list() {len(all_outputs)}')
 
     # repository names in order
     sorted_row = all_outputs.get_sorted_row(' total')
