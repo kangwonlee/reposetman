@@ -123,6 +123,7 @@ class TestBuildTodoListGrammar(unittest.TestCase):
         gmtime_sec = time.time()
 
         with tempfile.NamedTemporaryFile(mode='w+t', delete=False) as f:
+            # function under test
             progress.write_last_sent(f, gmtime_sec=gmtime_sec)
             name = f.name
 
@@ -142,7 +143,7 @@ class TestBuildTodoListGrammar(unittest.TestCase):
         gmtime_sec = time.time()
 
         close_last_send_gmtime_sec = gmtime_sec - 10
-
+        # function under test
         result = progress.is_too_frequent(close_last_send_gmtime_sec, comment_period_days=1, b_verbose=False)
 
         self.assertTrue(result, msg=(
@@ -154,7 +155,7 @@ class TestBuildTodoListGrammar(unittest.TestCase):
         gmtime_sec = time.time()
 
         far_last_send_gmtime_sec = gmtime_sec - 10 * 24 * 3600
-
+        # function under test
         result = progress.is_too_frequent(far_last_send_gmtime_sec, comment_period_days=1, b_verbose=False)
 
         self.assertFalse(result, msg=(
@@ -169,7 +170,7 @@ class TestBuildTodoListGrammar(unittest.TestCase):
 
         with open(last_sent_filename, 'wt') as f:
             f.write(str(gmtime_sec))
-
+        # function under test
         last_sent_gmtime_sec = progress.get_last_sent_gmtime_sec(last_sent_filename)
 
         self.assertAlmostEqual(last_sent_gmtime_sec, gmtime_sec)
@@ -178,7 +179,7 @@ class TestBuildTodoListGrammar(unittest.TestCase):
         last_sent_filename = get_temp_filename()
 
         gmtime_sec = time.time()
-
+        # function under test
         last_sent_gmtime_sec = progress.get_last_sent_gmtime_sec(last_sent_filename)
 
         self.assertLess(last_sent_gmtime_sec, gmtime_sec)
