@@ -407,6 +407,32 @@ class TestRepoEvalRunEachSkipSome(TestRepoEvalRunEachBase):
         return result
 
 
+class TestRepoEvalRunEachSkipSomeLastCommit(TestRepoEvalRunEachBase):
+
+    def setUp(self):
+        super().setUp()
+        self.e = progress.RepoEvalRunEachSkipSomeLastCommit(self.config['operation']['python_path'])
+    
+    def test_eval_file_base(self):
+        file_path = __file__
+        result_dict = self.e.eval_file_base(filename=file_path)
+        self.assertIn('sha', result_dict)
+
+        final_sha = result_dict['sha']
+
+        # get git log of the last commit
+        p = subprocess.Popen(('git', 'log', '-1', file_path), stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        msgo, msge = str(p.stdout.read(),encoding='utf-8'), str(p.stderr.read(),encoding='utf-8')
+
+        p.stdout.close()
+        p.stderr.close()
+
+        if msgo:
+            self.assertIn(final_sha, msgo, msg=f'\nresult = {final_sha}\nlog = {msgo}')
+        else:
+            raise IOError('Unable to obtain git log\nmsgo = {log!r}\nmsge = {err!r}'.format(log=msgo, err=msge))
+
+
 class TestRepoEvalCountOneCommitLog(unittest.TestCase):
     def setUp(self):
         self.e = progress.RepoEvalCountOneCommitLog()
