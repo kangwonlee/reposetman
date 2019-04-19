@@ -69,6 +69,26 @@ class TestGit(unittest.TestCase):
         else:
             raise IOError('Unable to obtain git log\nmsgo = {log!r}\nmsge = {err!r}'.format(log=msgo, err=msge))
 
+    def test_git_last_sha_file(self):
+        filepath = os.path.abspath(__file__)
+
+        result = git.get_last_sha(path=filepath)
+
+        # get git log of the last commit
+        p = subprocess.Popen(('git', 'log', '-1', filepath), stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        msgo, msge = str(p.stdout.read(),encoding='utf-8'), str(p.stderr.read(),encoding='utf-8')
+
+        p.stdout.close()
+        p.stderr.close()
+
+        if msgo:
+            self.assertTrue(result in msgo, msg='\nresult = {result}\nlog = {log}'.format(
+                result=result,
+                log=msgo,
+            ))
+        else:
+            raise IOError('Unable to obtain git log\nmsgo = {log!r}\nmsge = {err!r}'.format(log=msgo, err=msge))
+
     def test_get_refs_tag_deref(self):
         # function under test
         result = git.get_refs_tag_deref()
