@@ -434,7 +434,7 @@ def is_too_frequent(last_sent_gmtime_sec, comment_period_days=7, b_verbose=True)
     """
     Considering last sent time, is it too frequent?
     """
-    if b_verbose: print(f"last sent time : {time.localtime(last_sent_gmtime_sec)}")
+    if b_verbose: print(f"last sent time : {time.asctime(time.localtime(last_sent_gmtime_sec))}")
 
     since_last_sent_sec = time.time() - last_sent_gmtime_sec
 
