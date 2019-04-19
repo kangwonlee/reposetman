@@ -375,7 +375,7 @@ def run_all(config, section, repo_list):
 
 
 @timeit.timeit
-def build_todo_list_grammar(config, section, all_outputs, b_verbose=False, todo_list=[]):
+def build_todo_list_grammar(config, section, all_outputs, b_verbose=False, todo_list=False):
     """
     Build a json file for GitHub commit comments
     For now, just for syntax checking
@@ -385,6 +385,9 @@ def build_todo_list_grammar(config, section, all_outputs, b_verbose=False, todo_
     all_outputs : RepoTable on each file
     """
     if b_verbose :print('build_comment_list_run_all() starts')
+
+    if not todo_list:
+        todo_list = []
 
     # output filename
     todo_list_filename = config[section]['todo_list_file']
