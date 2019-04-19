@@ -372,6 +372,7 @@ def run_all(config, section, repo_list):
     return run_all_txt, run_all_md, run_all_html
 
 
+@timeit.timeit
 def build_todo_list_grammar(config, all_outputs, b_verbose=False, todo_list=[]):
     if b_verbose :print('build_comment_list_run_all() starts')
 
