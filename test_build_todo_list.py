@@ -151,3 +151,24 @@ class TestBuildTodoListGrammar(unittest.TestCase):
             f"far_last_send_gmtime_sec = {far_last_send_gmtime_sec}\n"
             )
         )
+
+    def test_get_last_sent_gmtime_sec_available(self):
+        last_sent_filename = get_temp_filename()
+
+        gmtime_sec = time.time()
+
+        with open(last_sent_filename, 'wt') as f:
+            f.write(str(gmtime_sec))
+
+        last_sent_gmtime_sec = progress.get_last_sent_gmtime_sec(last_sent_filename)
+
+        self.assertAlmostEqual(last_sent_gmtime_sec, gmtime_sec)
+
+    def test_get_last_sent_gmtime_sec_not_available(self):
+        last_sent_filename = get_temp_filename()
+
+        gmtime_sec = time.time()
+
+        last_sent_gmtime_sec = progress.get_last_sent_gmtime_sec(last_sent_filename)
+
+        self.assertLess(last_sent_gmtime_sec, gmtime_sec)
