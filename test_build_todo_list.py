@@ -89,13 +89,16 @@ class TestBuildTodoListGrammar(unittest.TestCase):
         del self.send_sha
 
     def test_build_todo_list_grammar(self):
+
+        section_name = self.section_list[0]
+
         # force always run
-        self.config['operation']['last_sent_file'] = get_temp_filename()
-        if os.path.exists(self.config['operation']['last_sent_file']):
-            os.remove(self.config['operation']['last_sent_file'])
+        self.config[section_name]['last_sent_file'] = get_temp_filename()
+        if os.path.exists(self.config[section_name]['last_sent_file']):
+            os.remove(self.config[section_name]['last_sent_file'])
 
         # function under test
-        result_list = progress.build_todo_list_grammar(self.config, self.section_list[0], self.all_outputs,)
+        result_list = progress.build_todo_list_grammar(self.config, section_name, self.all_outputs, b_verbose=True)
 
         send_sha = list(self.send_sha)
 
@@ -113,8 +116,8 @@ class TestBuildTodoListGrammar(unittest.TestCase):
         self.assertFalse(send_sha)
 
         # remove temp file
-        if os.path.exists(self.config['operation']['last_sent_file']):
-            os.remove(self.config['operation']['last_sent_file'])
+        if os.path.exists(self.config[section_name]['last_sent_file']):
+            os.remove(self.config[section_name]['last_sent_file'])
 
     def test_write_last_sent(self):
         gmtime_sec = time.time()
