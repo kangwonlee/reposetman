@@ -438,7 +438,7 @@ def build_todo_list_grammar(config, section, all_outputs, b_verbose=False, todo_
 
         # write to json file
         with open(todo_list_filename, 'wt', encoding='utf-8') as todo_list_file:
-            json.dump(todo_list, todo_list_file)
+            json.dump(todo_list, todo_list_file, indent=4, sort_keys=True)
 
         # record last sent date
         with open(last_sent_filename, 'wt') as last_sent_file:
