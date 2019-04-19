@@ -351,7 +351,7 @@ def run_all(config, section, repo_list):
     Run (almost) all .py files from the section
     """
 
-    all_runner = RepoEvalRunEachSkipSome(config['operation']['python_path'])
+    all_runner = RepoEvalRunEachSkipSomeLastCommit(config['operation']['python_path'])
     all_outputs = all_runner.eval_repo_list(repo_list)
     print('run_all() : finished eval_repo_list()')
 
