@@ -1,3 +1,4 @@
+import ast
 import configparser
 import os
 import shutil
@@ -78,6 +79,7 @@ class TestBuildTodoListGrammar(unittest.TestCase):
             self.init_test_cfg_build_todo_list()
 
         self.config.read(self.config_filename)
+        self.section_list = ast.literal_eval(self.config['operation']['sections'])
 
         self.all_outputs, self.send_sha = self.init_all_outputs()
 
