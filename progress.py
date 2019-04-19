@@ -371,6 +371,76 @@ def run_all(config, section, repo_list):
     return run_all_txt, run_all_md, run_all_html
 
 
+def build_todo_list_grammar(config, all_outputs, b_verbose=False, todo_list=[]):
+    if b_verbose :print('build_comment_list_run_all() starts')
+
+    todo_list_filename = config['operation']['todo_list_file']
+    last_sent_filename = config['operation']['last_sent_file']
+    comment_period_days = float(config['operation']['comment_period_days'])
+
+    try:
+        # read from file
+        with open(last_sent_filename, 'r') as sent:
+            last_sent_gmtime_sec = ast.literal_eval(sent.readline().strip())
+    except:
+        # send if fails
+        last_sent_gmtime_sec = time.time() - (comment_period_days * 24 * 3600 * 2)
+
+    print(f"last sent time : {time.localtime(last_sent_gmtime_sec)}")
+
+    since_last_sent_sec = time.time() - last_sent_gmtime_sec
+
+    # https://docs.python.org/3.7/library/time.html#time.localtime
+    since_time_struct = time.gmtime(since_last_sent_sec)
+    # https://docs.python.org/3.7/library/time.html#time.struct_time
+
+    since_last_sent_days = since_last_sent_sec/3600/24
+    since_last_sent_days_int = int(since_last_sent_days)
+
+    print(f"{since_last_sent_days_int:d}d "
+        f"{since_time_struct.tm_hour:02d}h "
+        f"{since_time_struct.tm_min:02d}m "
+        f"{since_time_struct.tm_sec:02d}s passed")
+
+    if since_last_sent_days < comment_period_days:
+        print("Message may be too frequent?")
+    else:
+        org_name = ast.literal_eval(config['operation']['organization'])
+
+        for repo_name in all_outputs.index:
+            for local_path in all_outputs[repo_name]:
+                run_result_dict = all_outputs[repo_name][local_path]
+                if isinstance(run_result_dict, dict):
+                    if not run_result_dict.get('grammar pass', True):
+                        # {"owner": "<github id or org>", "repo": "<repo_name>", "sha": "052a67a8d9bc253cc0cdef225f4d58cf85f9bbf2", "comment_str": "testing commit comment 052a67a"},
+                        todo_dict = {
+                            "owner": org_name,
+                            "repo": repo_name,
+                            "sha": run_result_dict['sha'],
+                            "comment_str": (
+                                f"파일 {local_path} 구문 확인 바랍니다. (자동 생성 메시지 시험중)\n"
+                                f"Please verify syntax of {local_path}. (Testing auto comments)"
+                            )
+                        }
+                        todo_list.append(todo_dict)
+
+        # write to json file
+        import json
+        with open(todo_list_filename, 'wt', encoding='utf-8') as todo_list_file:
+            json.dump(todo_list, todo_list_file)
+
+        gmtime = time.time()
+
+        with open(last_sent_filename, 'wt') as last_sent_file:
+            last_sent_file.write(
+                f"{gmtime}\n"
+                f"{time.asctime(gmtime)}\n"
+            )
+
+    if b_verbose :print('build_comment_list_run_all() ends')
+    return todo_list
+
+
 @timeit.timeit
 def pound_count(config, section, repo_list):
     """
