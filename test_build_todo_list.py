@@ -33,7 +33,6 @@ class TestBuildTodoListGrammar(unittest.TestCase):
             'last_sent_file' : 'test-todo-lastsent.txt',
             'comment_period_days' : '7',
             'organization' : 'test-group',
-            'sections' : [self.section_name]
         }
 
         with open(self.config_filename, 'w') as cfg_file:
