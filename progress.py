@@ -366,6 +366,7 @@ def run_all(config, section, repo_list):
         filename_prefix='run_all',
         sorted_row=sorted_row,
     )
+    print('run_all() : finished write_tables()')
 
     return run_all_txt, run_all_md, run_all_html
 
