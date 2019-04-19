@@ -476,7 +476,7 @@ def write_last_sent(last_sent_file, gmtime_sec=time.time()):
 
     last_sent_file.write(
         f"{gmtime_sec}\n"
-        f"{time.asctime(gmtime_sec)}\n"
+        f"{time.localtime(gmtime_sec)}\n"
     )
 
 
