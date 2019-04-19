@@ -22,12 +22,18 @@ class TestBuildTodoListGrammar(unittest.TestCase):
         if not os.path.exists(self.config_filename):
             config = configparser.ConfigParser()
 
+            self.section_name = 'test_section'
+
             config['operation'] = {
                 'python_path': shutil.which('python'),
-                'todo_list_file' : 'cpf19-lpthw-todo.json',
-                'last_sent_file' : 'cpf19-lpthw-todo-lastsent.txt',
+            }
+
+            config[self.section_name] = {
+                'todo_list_file' : 'test-todo.json',
+                'last_sent_file' : 'test-todo-lastsent.txt',
                 'comment_period_days' : '7',
-                'organization' : 'kpumecpf',
+                'organization' : 'test-group',
+                'sections' : [self.section_name]
             }
 
             with open(self.config_filename, 'w') as cfg_file:
