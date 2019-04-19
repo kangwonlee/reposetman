@@ -354,7 +354,7 @@ def run_all(config, section, repo_list):
 
     all_runner = RepoEvalRunEachSkipSomeLastCommit(config['operation']['python_path'])
     all_outputs = all_runner.eval_repo_list(repo_list)
-    print('run_all() : finished eval_repo_list()')
+    print(f'run_all() : finished eval_repo_list()')
 
     # repository names in order
     sorted_row = all_outputs.get_sorted_row(' total')
@@ -369,27 +369,33 @@ def run_all(config, section, repo_list):
     )
     print('run_all() : finished write_tables()')
 
-    build_todo_list_grammar(config, all_outputs)
+    build_todo_list_grammar(config, section, all_outputs)
 
     return run_all_txt, run_all_md, run_all_html
 
 
 @timeit.timeit
-def build_todo_list_grammar(config, all_outputs, b_verbose=False, todo_list=[]):
+def build_todo_list_grammar(config, section, all_outputs, b_verbose=False, todo_list=False):
     """
     Build a json file for GitHub commit comments
     For now, just for syntax checking
 
     config : see sample progress.cfg file
+    section : section name
     all_outputs : RepoTable on each file
     """
-    if b_verbose :print('build_comment_list_run_all() starts')
+    if b_verbose: print('build_comment_list_run_all() starts')
+
+    if not todo_list:
+        todo_list = []
+
+    if b_verbose: print(f'build_comment_list_run_all() : len(todo_list) = {len(todo_list)}')
 
     # output filename
-    todo_list_filename = config['operation']['todo_list_file']
+    todo_list_filename = config[section]['todo_list_file']
     # not to broadcast too frequently
-    last_sent_filename = config['operation']['last_sent_file']
-    comment_period_days = float(config['operation']['comment_period_days'])
+    last_sent_filename = config[section]['last_sent_file']
+    comment_period_days = float(config[section]['comment_period_days'])
 
     last_sent_gmtime_sec = get_last_sent_gmtime_sec(last_sent_filename)
 
@@ -397,7 +403,7 @@ def build_todo_list_grammar(config, all_outputs, b_verbose=False, todo_list=[]):
         print("Message may be too frequent?")
     else:
         # usually organization for the class
-        org_name = ast.literal_eval(config['operation']['organization'])
+        org_name = config[section]['organization']
 
         # row loop == repository loop
         for repo_name in all_outputs.index:
@@ -425,6 +431,8 @@ def build_todo_list_grammar(config, all_outputs, b_verbose=False, todo_list=[]):
                             )
                         }
                         todo_list.append(todo_dict)
+                        if b_verbose: print(f"build_todo_list_grammar() : appending {todo_dict}")
+                        if b_verbose: print(f"build_todo_list_grammar() : len(todo_list) = {len(todo_list)}")
             # end of file loop
         # end of repo loop
 
@@ -437,7 +445,7 @@ def build_todo_list_grammar(config, all_outputs, b_verbose=False, todo_list=[]):
             write_last_sent(last_sent_file)
     # end of if too frequent
 
-    if b_verbose :print('build_comment_list_run_all() ends')
+    if b_verbose: print('build_comment_list_run_all() ends')
     return todo_list
 
 
