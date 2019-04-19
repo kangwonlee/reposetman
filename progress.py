@@ -403,7 +403,7 @@ def build_todo_list_grammar(config, section, all_outputs, b_verbose=False, todo_
         print("Message may be too frequent?")
     else:
         # usually organization for the class
-        org_name = ast.literal_eval(config[section]['organization'])
+        org_name = config[section]['organization']
 
         # row loop == repository loop
         for repo_name in all_outputs.index:
