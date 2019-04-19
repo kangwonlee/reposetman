@@ -369,6 +369,8 @@ def run_all(config, section, repo_list):
     )
     print('run_all() : finished write_tables()')
 
+    build_todo_list_grammar(config, all_outputs)
+
     return run_all_txt, run_all_md, run_all_html
 
 
