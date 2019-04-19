@@ -379,13 +379,7 @@ def build_todo_list_grammar(config, all_outputs, b_verbose=False, todo_list=[]):
     last_sent_filename = config['operation']['last_sent_file']
     comment_period_days = float(config['operation']['comment_period_days'])
 
-    try:
-        # read from file
-        with open(last_sent_filename, 'r') as sent:
-            last_sent_gmtime_sec = ast.literal_eval(sent.readline().strip())
-    except:
-        # send if fails
-        last_sent_gmtime_sec = time.time() - (comment_period_days * 24 * 3600 * 2)
+    last_sent_gmtime_sec = get_last_sent_gmtime_sec(last_sent_filename)
 
     print(f"last sent time : {time.localtime(last_sent_gmtime_sec)}")
 
