@@ -248,13 +248,15 @@ def process_section(config, re_git_log, section):
 
 
 def call_run_all(config, section, repo_list, results):
-    run_all_txt, run_all_md, run_all_html = run_all(config, section, repo_list)
+    run_all_txt, run_all_md, run_all_html, all_outputs = run_all(
+        config, section, repo_list)
     results.update({
         'run_all':
             {
                 'txt': run_all_txt,
                 'md': run_all_md,
-                'html': run_all_html
+                'html': run_all_html,
+                'table': all_outputs,
             }
     })
 
@@ -386,7 +388,7 @@ def run_all(config, section, repo_list):
 
     build_todo_list_grammar(config, section, all_outputs)
 
-    return run_all_txt, run_all_md, run_all_html
+    return run_all_txt, run_all_md, run_all_html, all_outputs
 
 
 @timeit.timeit
