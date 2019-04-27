@@ -253,6 +253,10 @@ def postprocess(config, section, results):
     build_todo_list_grammar(config, section, results['run_all']['table'])
 
 
+def get_last_sent_filename(config, section):
+    return config[section]['last_sent_file']
+
+
 def call_run_all(config, section, repo_list, results):
     run_all_dict = run_all(config, section, repo_list)
     results.update(
