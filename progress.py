@@ -278,16 +278,12 @@ def call_commit_count(config, section, repo_list, results):
     :param list(dict) repo_list : list of repository_information_dictionary
     :param dict results: contains dictionary of results
     """
-    commit_count_txt, commit_count_md, commit_count_html = count_commits(
-        config, section, repo_list)
-    results.update({
-        'count_commits':
-            {
-                'txt': commit_count_txt,
-                'md': commit_count_md,
-                'html': commit_count_html
-            }
-    })
+    count_commits_dict = count_commits(config, section, repo_list)
+    results.update(
+        {
+            'count_commits': count_commits_dict,
+        }
+    )
 
 
 @timeit.timeit
@@ -332,7 +328,14 @@ def count_commits(config, section, repo_list):
         sorted_row=sorted_row
     )
 
-    return commit_count_txt, commit_count_md, commit_count_html
+    result_dict = {
+        'txt': commit_count_txt,
+        'md': commit_count_md,
+        'html': commit_count_html,
+        'table': commit_count,
+    }
+
+    return result_dict
 
 
 @timeit.timeit
