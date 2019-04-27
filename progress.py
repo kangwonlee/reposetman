@@ -252,17 +252,12 @@ def process_section(config, re_git_log, section):
 
 
 def call_run_all(config, section, repo_list, results):
-    run_all_txt, run_all_md, run_all_html, all_outputs = run_all(
-        config, section, repo_list)
-    results.update({
-        'run_all':
-            {
-                'txt': run_all_txt,
-                'md': run_all_md,
-                'html': run_all_html,
-                'table': all_outputs,
-            }
-    })
+    run_all_dict = run_all(config, section, repo_list)
+    results.update(
+        {
+            'run_all': run_all_dict,
+        }
+    )
 
 
 def call_pound_count(config, section, repo_list, results):
@@ -390,7 +385,14 @@ def run_all(config, section, repo_list):
     )
     print('run_all() : finished write_tables()')
 
-    return run_all_txt, run_all_md, run_all_html, all_outputs
+    result_dict = {
+        'txt': run_all_txt,
+        'md': run_all_md,
+        'html': run_all_html,
+        'table': all_outputs,
+    }
+
+    return result_dict
 
 
 @timeit.timeit
