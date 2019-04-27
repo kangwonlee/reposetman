@@ -320,7 +320,7 @@ def count_commits(config, section, repo_list):
     sorted_row = commit_count.get_sorted_row(' total')
 
     # write tables
-    commit_count_txt, commit_count_md, commit_count_html = write_tables(
+    write_tables_dict = write_tables(
         section,
         repo_list,
         commit_count,
@@ -328,14 +328,9 @@ def count_commits(config, section, repo_list):
         sorted_row=sorted_row
     )
 
-    result_dict = {
-        'txt': commit_count_txt,
-        'md': commit_count_md,
-        'html': commit_count_html,
-        'table': commit_count,
-    }
+    write_tables_dict['table'] = commit_count
 
-    return result_dict
+    return write_tables_dict
 
 
 @timeit.timeit
@@ -358,7 +353,13 @@ def write_tables(section, repo_list, table, filename_prefix, sorted_row=None):
         table, section, sorted_row, filename_prefix=filename_prefix, repo_list=repo_list)
     finished_html_table = html_table_writter.write()
 
-    return finished_txt_table, finished_md_table, finished_html_table
+    result_dict = {
+        'txt': finished_txt_table,
+        'md': finished_md_table,
+        'html': finished_html_table,
+    }
+
+    return result_dict
 
 
 @timeit.timeit
@@ -376,7 +377,7 @@ def run_all(config, section, repo_list):
     sorted_row = all_outputs.get_sorted_row(' total')
 
     # write tables
-    run_all_txt, run_all_md, run_all_html = write_tables(
+    write_tables_dict = write_tables(
         section,
         repo_list,
         all_outputs,
@@ -385,14 +386,9 @@ def run_all(config, section, repo_list):
     )
     print('run_all() : finished write_tables()')
 
-    result_dict = {
-        'txt': run_all_txt,
-        'md': run_all_md,
-        'html': run_all_html,
-        'table': all_outputs,
-    }
+    write_tables_dict['table'] = all_outputs
 
-    return result_dict
+    return write_tables_dict
 
 
 @timeit.timeit
@@ -549,7 +545,7 @@ def pound_count(config, section, repo_list):
     sorted_row = pound_numbers.get_sorted_row(' total')
 
     # write tables
-    pound_count_txt, pound_count_md, pound_count_html = write_tables(
+    write_tables_dict = write_tables(
         section,
         repo_list,
         pound_numbers,
@@ -557,14 +553,9 @@ def pound_count(config, section, repo_list):
         sorted_row=sorted_row
     )
 
-    result_dict = {
-        'txt': pound_count_txt,
-        'md': pound_count_md,
-        'html': pound_count_html,
-        'table': pound_numbers,
-    }
+    write_tables_dict['table'] = pound_numbers
 
-    return result_dict
+    return write_tables_dict
 
 
 class RepoTable(object):
