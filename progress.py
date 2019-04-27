@@ -244,6 +244,10 @@ def process_section(config, re_git_log, section):
     if 'True' == config[section]['run_all']:
         call_run_all(config, section, repo_list, results)
 
+    # post processing
+
+    build_todo_list_grammar(config, section, results['run_all']['table'])
+
     return results
 
 
@@ -385,8 +389,6 @@ def run_all(config, section, repo_list):
         sorted_row=sorted_row,
     )
     print('run_all() : finished write_tables()')
-
-    build_todo_list_grammar(config, section, all_outputs)
 
     return run_all_txt, run_all_md, run_all_html, all_outputs
 
