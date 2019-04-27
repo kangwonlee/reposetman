@@ -262,14 +262,11 @@ def call_run_all(config, section, repo_list, results):
 
 def call_pound_count(config, section, repo_list, results):
     pound_reports = pound_count(config, section, repo_list)
-    results.update({
-        'pound_counts':
-            {
-                'txt': pound_reports[0],
-                'md': pound_reports[1],
-                'html': pound_reports[2],
-            }
-    })
+    results.update(
+        {
+            'pound_counts': pound_reports
+        }
+    )
 
 
 def call_commit_count(config, section, repo_list, results):
@@ -557,7 +554,14 @@ def pound_count(config, section, repo_list):
         sorted_row=sorted_row
     )
 
-    return pound_count_txt, pound_count_md, pound_count_html
+    result_dict = {
+        'txt': pound_count_txt,
+        'md': pound_count_md,
+        'html': pound_count_html,
+        'table': pound_numbers,
+    }
+
+    return result_dict
 
 
 class RepoTable(object):
