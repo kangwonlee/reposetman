@@ -250,7 +250,16 @@ def process_section(config, re_git_log, section):
 
 
 def postprocess(config, section, results):
-    build_todo_list_grammar(config, section, results['run_all']['table'])
+    # not to broadcast too frequently
+    last_sent_filename = get_last_sent_filename(config, section)
+    comment_period_days = float(config[section]['comment_period_days'])
+
+    last_sent_gmtime_sec = get_last_sent_gmtime_sec(last_sent_filename)
+
+    if is_too_frequent(last_sent_gmtime_sec, comment_period_days):
+        print("Message may be too frequent?")
+    else:
+        build_todo_list_grammar(config, section, results['run_all']['table'])
 
 
 def get_last_sent_filename(config, section):
@@ -419,64 +428,55 @@ def build_todo_list_grammar(config, section, all_outputs, b_verbose=False, todo_
 
     # output filename
     todo_list_filename = config[section]['todo_list_file']
-    # not to broadcast too frequently
-    last_sent_filename = config[section]['last_sent_file']
-    comment_period_days = float(config[section]['comment_period_days'])
+    # usually organization for the class
+    org_name = config[section]['organization']
 
-    last_sent_gmtime_sec = get_last_sent_gmtime_sec(last_sent_filename)
+    # row loop == repository loop
+    for repo_name in all_outputs.index:
+        # column loop == folder/file loop
+        for local_path in all_outputs[repo_name]:
+            run_result_dict = all_outputs[repo_name][local_path]
+            # otherwise, usually not a .py file
+            if isinstance(run_result_dict, dict):
+                # if the dict has 'grammar pass' and the value is False
+                if not run_result_dict.get('grammar pass', True):
+                    # json example
+                    # {
+                    #   "owner": "<github user id or organization id>",
+                    #   "repo": "<repository id>",
+                    #   "sha": "<SHA of the commit of the repository>",
+                    #   "comment_str": "<comment string>"
+                    # },
+                    todo_dict = {
+                        "owner": org_name,
+                        "repo": repo_name,
+                        "sha": run_result_dict['sha'],
+                        "comment_str": (
+                            f"파일 {local_path} 구문 확인 바랍니다. (자동 생성 메시지 시험중)\n"
+                            f"Please verify syntax of {local_path}. (Testing auto comments)"
+                        )
+                    }
+                    todo_list.append(todo_dict)
+                    if b_verbose:
+                        print(
+                            f"build_todo_list_grammar() : appending {todo_dict}")
+                    if b_verbose:
+                        print(
+                            f"build_todo_list_grammar() : len(todo_list) = {len(todo_list)}")
+        # end of file loop
+    # end of repo loop
 
-    if is_too_frequent(last_sent_gmtime_sec, comment_period_days):
-        print("Message may be too frequent?")
-    else:
-        # usually organization for the class
-        org_name = config[section]['organization']
+    # write to json file
+    with open(todo_list_filename, 'wt', encoding='utf-8') as todo_list_file:
+        json.dump(todo_list, todo_list_file, indent=4, sort_keys=True)
 
-        # row loop == repository loop
-        for repo_name in all_outputs.index:
-            # column loop == folder/file loop
-            for local_path in all_outputs[repo_name]:
-                run_result_dict = all_outputs[repo_name][local_path]
-                # otherwise, usually not a .py file
-                if isinstance(run_result_dict, dict):
-                    # if the dict has 'grammar pass' and the value is False
-                    if not run_result_dict.get('grammar pass', True):
-                        # json example
-                        # {
-                        #   "owner": "<github user id or organization id>",
-                        #   "repo": "<repository id>",
-                        #   "sha": "<SHA of the commit of the repository>",
-                        #   "comment_str": "<comment string>"
-                        # },
-                        todo_dict = {
-                            "owner": org_name,
-                            "repo": repo_name,
-                            "sha": run_result_dict['sha'],
-                            "comment_str": (
-                                f"파일 {local_path} 구문 확인 바랍니다. (자동 생성 메시지 시험중)\n"
-                                f"Please verify syntax of {local_path}. (Testing auto comments)"
-                            )
-                        }
-                        todo_list.append(todo_dict)
-                        if b_verbose:
-                            print(
-                                f"build_todo_list_grammar() : appending {todo_dict}")
-                        if b_verbose:
-                            print(
-                                f"build_todo_list_grammar() : len(todo_list) = {len(todo_list)}")
-            # end of file loop
-        # end of repo loop
-
-        # write to json file
-        with open(todo_list_filename, 'wt', encoding='utf-8') as todo_list_file:
-            json.dump(todo_list, todo_list_file, indent=4, sort_keys=True)
-
-        # record last sent date
-        with open(last_sent_filename, 'wt') as last_sent_file:
-            write_last_sent(last_sent_file)
-    # end of if too frequent
+    # record last sent date
+    with open(get_last_sent_filename(config, section), 'wt') as last_sent_file:
+        write_last_sent(last_sent_file)
 
     if b_verbose:
         print('build_comment_list_run_all() ends')
+
     return todo_list
 
 
