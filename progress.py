@@ -480,6 +480,17 @@ def build_todo_list_grammar(config, section, all_outputs, b_verbose=False, todo_
     return todo_list
 
 
+def write_message_files(todo_list, todo_list_filename, last_sent_filename):
+
+    # write to json file
+    with open(todo_list_filename, 'wt', encoding='utf-8') as todo_list_file:
+        json.dump(todo_list, todo_list_file, indent=4, sort_keys=True)
+
+    # record last sent date
+    with open(last_sent_filename, 'wt') as last_sent_file:
+        write_last_sent(last_sent_file)
+
+
 def is_too_frequent(last_sent_gmtime_sec, comment_period_days=7, b_verbose=True):
     """
     Considering last sent time, is it too frequent?
