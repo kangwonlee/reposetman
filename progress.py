@@ -244,11 +244,13 @@ def process_section(config, re_git_log, section):
     if 'True' == config[section]['run_all']:
         call_run_all(config, section, repo_list, results)
 
-    # post processing
-
-    build_todo_list_grammar(config, section, results['run_all']['table'])
+    postprocess(config, section, results)
 
     return results
+
+
+def postprocess(config, section, results):
+    build_todo_list_grammar(config, section, results['run_all']['table'])
 
 
 def call_run_all(config, section, repo_list, results):
