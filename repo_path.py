@@ -37,8 +37,6 @@ def cd(path):
     change directory & return original path
     '''
     original_path = os.path.abspath(os.curdir)
-    
+
     os.chdir(path)
     return original_path
-    
-    

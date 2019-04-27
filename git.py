@@ -61,7 +61,7 @@ def find_git_in_path():
         for path in os.environ[PATH].split(os.pathsep):
             if os.path.exists(path):
                 if 'git' in os.listdir(path):
-                    print (f"{path} has git")
+                    print(f"{path} has git")
                     result.append(path)
             else:
                 print(f"{path} does not exist")
@@ -96,7 +96,8 @@ def run_command(cmd, b_verbose=True, in_txt=None, b_show_cmd=False):
     if b_show_cmd:
         print('run_command({cmd!r})'.format(cmd=cmd))
 
-    p = subprocess.Popen(cmd, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    p = subprocess.Popen(cmd, stdin=subprocess.PIPE,
+                         stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     if in_txt is None:
         fi, fo, fe = p.stdin, p.stdout, p.stderr
 
@@ -151,7 +152,7 @@ def git_common(cmd, b_verbose=True):
     return run_command((git_exe_path,) + tuple(cmd), b_verbose)
 
 
-def git(cmd, bVerbose = True):
+def git(cmd, bVerbose=True):
     """
     execute git command & print
 
@@ -163,7 +164,7 @@ def git(cmd, bVerbose = True):
     """
 
     msgo, msge = git_common(cmd, bVerbose)
-    
+
     if msgo:
         if not msge:
             msg = msgo
@@ -172,7 +173,7 @@ def git(cmd, bVerbose = True):
 ''' + msge
     else:
         msg = msge
-    
+
     del msgo, msge
     return msg
 
@@ -185,8 +186,8 @@ def checkout(commit=False, repo_path=False, b_verbose=False):
 
     # checkout specific commit
     checkout_cmd_list = [git_exe_path,
-        'checkout',
-    ]
+                         'checkout',
+                         ]
 
     if commit:
         checkout_cmd_list.append(commit)
@@ -201,15 +202,17 @@ def checkout(commit=False, repo_path=False, b_verbose=False):
 
         b_stderr_already_on = stderr.startswith('Already on ')
         b_stderr_detached_head = "You are in 'detached HEAD' state." in stderr
-        b_switch_success = "Switched to branch '{branch}'".format(branch=commit) in stderr
-        b_previous_now = (stderr.startswith('Previous HEAD position was')) and ('HEAD is now at' in stderr)
+        b_switch_success = "Switched to branch '{branch}'".format(
+            branch=commit) in stderr
+        b_previous_now = (stderr.startswith('Previous HEAD position was')) and (
+            'HEAD is now at' in stderr)
 
         if all([not b_stderr_already_on, not b_stderr_detached_head, not b_switch_success, not b_previous_now]):
             print(os.getcwd())
             print(stderr)
 
     else:
-        if b_verbose: 
+        if b_verbose:
             print(stdout)
 
     if repo_path:
@@ -224,14 +227,14 @@ def log_last_commit():
         (git_exe_path, 'log', '-1'),
         b_verbose=False
     )
-    
+
     # output error check
     if msgo and not msge:
         msgo_split = msgo.split()
         result = msgo_split[0]
     else:
         result = 'N/A'
-    
+
     return result
 
 
@@ -242,11 +245,12 @@ def get_last_sha(b_full=False, path=''):
     else:
         format_string = '%h'
 
-    command_list = [git_exe_path, 'log', '--pretty=format:{h}'.format(h=format_string), '-1']
+    command_list = [git_exe_path, 'log',
+                    '--pretty=format:{h}'.format(h=format_string), '-1']
 
-    if path: 
+    if path:
         command_list.append(path)
-        
+
     # get the last sha from git log of the latest commit
     msgo, msge = run_command(
         tuple(command_list),
@@ -259,7 +263,7 @@ def get_last_sha(b_full=False, path=''):
         result = msgo_split[0]
     else:
         result = 'N/A'
-    
+
     return result
 
 
@@ -276,7 +280,8 @@ def tag(tag_string, revision=''):
     )
 
     if msgo or msge:
-        print('tag({tag}) failed.\nmsgo:\n{msgo}\nmsge:\n{msge}'.format(tag=tag_string, msgo=msgo, msge=msge))
+        print('tag({tag}) failed.\nmsgo:\n{msgo}\nmsge:\n{msge}'.format(
+            tag=tag_string, msgo=msgo, msge=msge))
 
     return not (msgo or msge)
 
@@ -301,7 +306,7 @@ def get_tags():
         b_verbose=False,
     )
 
-    return [tag.strip() for tag in msgo.splitlines()] 
+    return [tag.strip() for tag in msgo.splitlines()]
 
 
 def get_refs_tag_deref():
@@ -319,17 +324,17 @@ def get_refs_tag_deref():
         b_verbose=False,
     )
 
-    if msge :
+    if msge:
         raise SystemError(msge)
 
     # Obtain SHA's from the log
     stdout_log, stderr_log = run_command(
-        (git_exe_path, 'log', '--pretty=%H'), 
+        (git_exe_path, 'log', '--pretty=%H'),
         b_verbose=False,
     )
-    if stderr_log :
+    if stderr_log:
         raise SystemError(stderr_log)
-    
+
     sha_tuple = tuple(stdout_log.splitlines())
 
     # collect tags and sha's from the dereference
@@ -382,7 +387,7 @@ def ls_remote_tag(remote='origin', b_verbose=False):
             sha, ref = line.split()
             tag = ref.replace('^{}', '').replace('refs/tags/', '')
             result_list.append((sha, tag))
-    
+
     return result_list
 
 
@@ -402,7 +407,7 @@ def has_a_tag(commit=None):
 
 
 def clean_xdf(b_verbose=False):
-    if b_verbose: 
+    if b_verbose:
         print('clean_xdf(): cwd =', os.getcwd())
 
     run_command((git_exe_path, 'clean', '-x', '-d', '-f'), b_verbose=b_verbose)
@@ -417,7 +422,8 @@ def get_remote_branch_list(b_verbose=False):
     """
     Get a list of remote branches of current repository
     """
-    stdout, _ = run_command((git_exe_path, 'branch', '--remote'), b_verbose=b_verbose)
+    stdout, _ = run_command(
+        (git_exe_path, 'branch', '--remote'), b_verbose=b_verbose)
 
     result = []
 
@@ -471,7 +477,8 @@ def set_id_to_url(url, id):
         i = p.netloc.index('@')
         netloc = id + p.netloc[i:]
     # make the new url
-    new_url = up.urlunparse((p.scheme, netloc, p.path, p.params, p.query, p.fragment))
+    new_url = up.urlunparse(
+        (p.scheme, netloc, p.path, p.params, p.query, p.fragment))
 
     return new_url
 

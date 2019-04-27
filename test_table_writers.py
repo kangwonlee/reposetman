@@ -33,13 +33,14 @@ class BaseTestTableWriterRepoLinks(unittest.TestCase):
         self.column_title_list = [self.filename1, self.filename2]
 
         table = {
-            self.reponame1 : {self.filename1:11, self.filename2:12},
-            self.reponame2 : {self.filename1:21, self.filename2:22},
+            self.reponame1: {self.filename1: 11, self.filename2: 12},
+            self.reponame2: {self.filename1: 21, self.filename2: 22},
         }
 
         for repo_name in self.row_title_list:
             for path_name in self.column_title_list:
-                self.d.set_row_column(repo_name, path_name, table[repo_name][path_name])
+                self.d.set_row_column(
+                    repo_name, path_name, table[repo_name][path_name])
 
         self.repo_url_lookup = {}
 
@@ -59,8 +60,8 @@ class BaseTestTableWriterTable(unittest.TestCase):
         self.d = progress.RepoTable()
         for row_title in self.row_title_list:
             for column_title in self.column_title_list:
-                self.d.set_row_column(row_title, column_title, 
-                self.get_row_column_item(row_title, column_title))
+                self.d.set_row_column(row_title, column_title,
+                                      self.get_row_column_item(row_title, column_title))
 
         self.section = 'test_section'
         self.file_prefix = 'test_output'
@@ -73,13 +74,15 @@ class BaseTestTableWriterTable(unittest.TestCase):
 
 class TestTextTableWriter(BaseTestTableWriterTable):
     def get_expected_list(self, writer):
-        title_row = writer.col_sep.join([''] + self.column_title_list) + writer.row_sep
-        
+        title_row = writer.col_sep.join(
+            [''] + self.column_title_list) + writer.row_sep
+
         expected_list = [title_row]
         for row_title in self.row_title_list:
             row_item_list = [row_title]
             for column_title in self.column_title_list:
-                row_item_list.append(self.get_row_column_item(row_title, column_title))
+                row_item_list.append(
+                    self.get_row_column_item(row_title, column_title))
             row_str = writer.col_sep.join(row_item_list) + writer.row_sep
             expected_list.append(row_str)
 
@@ -100,9 +103,9 @@ class TestTextTableWriter(BaseTestTableWriterTable):
 
         for expected_str, result_str in zip(expected_list, writer.gen_rows()):
             self.assertEqual(expected_str, result_str, msg='\n'
-            f'expected = {repr(expected_str)}\n'
-            f'result = {repr(result_str)}'
-            )
+                             f'expected = {repr(expected_str)}\n'
+                             f'result = {repr(result_str)}'
+                             )
 
 
 class TestMarkdownTableWriter(BaseTestTableWriterTable):
@@ -110,16 +113,19 @@ class TestMarkdownTableWriter(BaseTestTableWriterTable):
 
         space_sep_space = f"  {writer.col_sep}  "
 
-        first_row = space_sep_space.join([writer.col_sep+'  '] + self.column_title_list)
-        second_row = writer.col_sep.join([''] + [':-----:'] * (len(self.column_title_list)+1) + [''])
+        first_row = space_sep_space.join(
+            [writer.col_sep+'  '] + self.column_title_list)
+        second_row = writer.col_sep.join(
+            [''] + [':-----:'] * (len(self.column_title_list)+1) + [''])
 
         title_row = writer.row_sep.join([first_row, second_row])
-        
+
         expected_list = [title_row]
         for row_title in self.row_title_list:
             row_item_list = ['', row_title]
             for column_title in self.column_title_list:
-                row_item_list.append(self.get_row_column_item(row_title, column_title))
+                row_item_list.append(
+                    self.get_row_column_item(row_title, column_title))
             row_str = space_sep_space.join(row_item_list) + writer.row_sep
             expected_list.append(row_str)
 
@@ -127,7 +133,7 @@ class TestMarkdownTableWriter(BaseTestTableWriterTable):
 
     def test_gen_rows_body(self):
 
-        writer = progress.MarkdownTableWriter (
+        writer = progress.MarkdownTableWriter(
             self.d,
             self.section,
             self.row_title_list,
@@ -142,16 +148,16 @@ class TestMarkdownTableWriter(BaseTestTableWriterTable):
             expected_split_list = expected_str.split()
             result_split_list = result_str.split()
             self.assertSequenceEqual(expected_split_list, result_split_list,
-                '\n'
-                f'expected_str = {repr(expected_str)}\n'
-                f'result_str = {repr(result_str)}\n'
-                f'expected_str.split() = {repr(expected_split_list)}\n'
-                f'result_str.split() = {repr(result_split_list)}'
-            )
+                                     '\n'
+                                     f'expected_str = {repr(expected_str)}\n'
+                                     f'result_str = {repr(result_str)}\n'
+                                     f'expected_str.split() = {repr(expected_split_list)}\n'
+                                     f'result_str.split() = {repr(result_split_list)}'
+                                     )
 
     def test_gen_rows_header(self):
 
-        writer = progress.MarkdownTableWriter (
+        writer = progress.MarkdownTableWriter(
             self.d,
             self.section,
             self.row_title_list,
@@ -161,26 +167,30 @@ class TestMarkdownTableWriter(BaseTestTableWriterTable):
 
         expected_list = self.get_expected_list(writer)
 
-        expected_header_row, expected_second_row = expected_list[0].splitlines()
+        expected_header_row, expected_second_row = expected_list[0].splitlines(
+        )
 
-        expected_header_row_split = [string.strip() for string in expected_header_row.split(writer.col_sep)]
+        expected_header_row_split = [
+            string.strip() for string in expected_header_row.split(writer.col_sep)]
         expected_second_row_split = expected_second_row.split(writer.col_sep)
 
         result_header = next(writer.gen_rows())
         result_header_row, result_second_row = result_header.splitlines()
 
-        result_header_row_split = [string.strip() for string in result_header_row.split(writer.col_sep)]
+        result_header_row_split = [
+            string.strip() for string in result_header_row.split(writer.col_sep)]
         result_second_row_split = result_second_row.split(writer.col_sep)
 
-        self.assertSequenceEqual(expected_header_row_split, result_header_row_split)
+        self.assertSequenceEqual(
+            expected_header_row_split, result_header_row_split)
 
         # second row
         self.assertEqual(len(expected_second_row_split), len(result_second_row_split), msg='\n'
-                f'expected_str = {repr(expected_second_row)}\n'
-                f'result_str = {repr(result_second_row)}\n'
-                f'expected_str.split() = {repr(expected_second_row_split)}\n'
-                f'result_str.split() = {repr(result_second_row_split)}'
-        )
+                         f'expected_str = {repr(expected_second_row)}\n'
+                         f'result_str = {repr(result_second_row)}\n'
+                         f'expected_str.split() = {repr(expected_second_row_split)}\n'
+                         f'result_str.split() = {repr(result_second_row_split)}'
+                         )
 
         for item in result_second_row_split:
             if item:
@@ -220,9 +230,9 @@ class TestHtmlTableWriter(BaseTestTableWriterTable):
         header_row = rows_list[0]
         body_rows_list = rows_list[1:]
 
-        self.assertEqual(len(self.row_title_list), len(body_rows_list), 
-            msg="number of body rows different\n"
-        )
+        self.assertEqual(len(self.row_title_list), len(body_rows_list),
+                         msg="number of body rows different\n"
+                         )
 
         self.check_table_header(header_row)
 
@@ -243,7 +253,8 @@ class TestHtmlTableWriter(BaseTestTableWriterTable):
             columns_list = row.find_all('td')
 
             row_header = columns_list[0]
-            self.assertEqual(expected_row_header, row_header.get_text().strip())
+            self.assertEqual(expected_row_header,
+                             row_header.get_text().strip())
 
             row_items_list = columns_list[1:]
             self.assertEqual(len(self.column_title_list), len(row_items_list))
@@ -258,15 +269,16 @@ class TestHtmlTableWriter(BaseTestTableWriterTable):
 class TestMDlinkTableWriter(BaseTestTableWriterRepoLinks):
     def setUp(self):
         super().setUp()
-        self.table_writer = progress.MDlinkTableWriter(self.d, self.row_title_list, 'test_MD_link_table', 
-            repo_list=self.repo_dict_list,
-        )
+        self.table_writer = progress.MDlinkTableWriter(self.d, self.row_title_list, 'test_MD_link_table',
+                                                       repo_list=self.repo_dict_list,
+                                                       )
 
     def test_get_repo_url(self):
         for repo_name in self.row_title_list:
             result = self.table_writer.get_repo_url(repo_name)
             expected = self.repo_url_lookup[repo_name]
-            self.assertEqual(result, expected, f"\ninput = {repo_name}\nresult = {result}")
+            self.assertEqual(result, expected,
+                             f"\ninput = {repo_name}\nresult = {result}")
 
     def test_start_row(self):
         for repo_name in self.row_title_list:
@@ -277,17 +289,20 @@ class TestMDlinkTableWriter(BaseTestTableWriterRepoLinks):
             expected_url = self.repo_url_lookup[repo_name]
             expected = f"| [{expected_name}]({expected_url}) "
 
-            self.assertEqual(result, expected, f"\ninput = {repo_name}\nresult = {result}")
+            self.assertEqual(result, expected,
+                             f"\ninput = {repo_name}\nresult = {result}")
 
     def test_get_file_url(self):
         ref_name = 'commit'
         for repo_name in self.row_title_list:
             for file_path in self.column_title_list:
                 # function under test
-                result = self.table_writer.get_file_url(repo_name, file_path, ref_name)
+                result = self.table_writer.get_file_url(
+                    repo_name, file_path, ref_name)
 
                 expected_url = self.repo_url_lookup[repo_name]
-                expected = self.get_expected_url(expected_url, file_path, ref_name)
+                expected = self.get_expected_url(
+                    expected_url, file_path, ref_name)
 
                 self.assertEqual(expected, result)
 
@@ -296,10 +311,12 @@ class TestMDlinkTableWriter(BaseTestTableWriterRepoLinks):
         for repo_name in self.row_title_list:
             for file_path in self.column_title_list:
 
-                result = self.table_writer.get_cell_text(repo_name, file_path, ref_name=ref_name)
+                result = self.table_writer.get_cell_text(
+                    repo_name, file_path, ref_name=ref_name)
 
                 expected_repo_url = self.repo_url_lookup[repo_name]
-                expected_file_url = self.get_expected_url(expected_repo_url, file_path, ref_name)
+                expected_file_url = self.get_expected_url(
+                    expected_repo_url, file_path, ref_name)
                 expected = f'| [{self.d[repo_name][file_path]}]({expected_file_url}) '
 
                 self.assertEqual(expected, result)
@@ -308,15 +325,16 @@ class TestMDlinkTableWriter(BaseTestTableWriterRepoLinks):
 class TestHtmlLinkTableWriter(BaseTestTableWriterRepoLinks):
     def setUp(self):
         super().setUp()
-        self.table_writer = progress.HtmlLinkTableWriter(self.d, self.row_title_list, 'test_HTML_link_table', 
-            repo_list=self.repo_dict_list,
-        )
+        self.table_writer = progress.HtmlLinkTableWriter(self.d, self.row_title_list, 'test_HTML_link_table',
+                                                         repo_list=self.repo_dict_list,
+                                                         )
 
     def test_get_repo_url(self):
         for repo_name in self.row_title_list:
             result = self.table_writer.get_repo_url(repo_name)
             expected = self.repo_url_lookup[repo_name]
-            self.assertEqual(result, expected, f"\ninput = {repo_name}\nresult = {result}")
+            self.assertEqual(result, expected,
+                             f"\ninput = {repo_name}\nresult = {result}")
 
     def test_start_row(self):
         for repo_name in self.row_title_list:
@@ -327,17 +345,20 @@ class TestHtmlLinkTableWriter(BaseTestTableWriterRepoLinks):
             expected_url = self.repo_url_lookup[repo_name]
             expected = f'<tr><td> <a href="{expected_url}">{expected_name}</a> '
 
-            self.assertEqual(result, expected, f"\ninput = {repo_name}\nresult = {result}")
+            self.assertEqual(result, expected,
+                             f"\ninput = {repo_name}\nresult = {result}")
 
     def test_get_file_url(self):
         ref_name = 'commit'
         for repo_name in self.row_title_list:
             for file_path in self.column_title_list:
                 # function under test
-                result = self.table_writer.get_file_url(repo_name, file_path, ref_name)
+                result = self.table_writer.get_file_url(
+                    repo_name, file_path, ref_name)
 
                 expected_url = self.repo_url_lookup[repo_name]
-                expected = self.get_expected_url(expected_url, file_path, ref_name)
+                expected = self.get_expected_url(
+                    expected_url, file_path, ref_name)
 
                 self.assertEqual(expected, result)
 
@@ -346,10 +367,12 @@ class TestHtmlLinkTableWriter(BaseTestTableWriterRepoLinks):
         for repo_name in self.row_title_list:
             for file_path in self.column_title_list:
 
-                result = self.table_writer.get_cell_text(repo_name, file_path, ref_name=ref_name)
+                result = self.table_writer.get_cell_text(
+                    repo_name, file_path, ref_name=ref_name)
 
                 expected_repo_url = self.repo_url_lookup[repo_name]
-                expected_file_url = self.get_expected_url(expected_repo_url, file_path, ref_name)
+                expected_file_url = self.get_expected_url(
+                    expected_repo_url, file_path, ref_name)
                 expected = f'</td><td> <a href="{expected_file_url}">{self.d[repo_name][file_path]}</a> '
 
                 self.assertEqual(expected, result)

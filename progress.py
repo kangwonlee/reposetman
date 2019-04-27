@@ -34,7 +34,8 @@ import unique_list
 # https://stackoverflow.com/questions/1681836/how-to-debug-a-memoryerror-in-python-tools-for-tracking-memory-use
 def get_size_of(one, name):
     # may need to investigate MemoryError
-    print('** get_size_of({name}) = {size} **'.format(name=name, size=sys.getsizeof(one)))
+    print(
+        '** get_size_of({name}) = {size} **'.format(name=name, size=sys.getsizeof(one)))
 
 
 def get_type(arg):
@@ -56,13 +57,14 @@ class ProgressReportBuilder(object):
     input file name : in progress.cfg
 
     """
+
     def __init__(self, config_filename=False):
         self.config = configparser.ConfigParser()
 
         if not config_filename:
             config_filename = 'progress.cfg'
 
-        self.config.read(config_filename)        
+        self.config.read(config_filename)
 
         # compile regex here not to repeat later
         self.re_git_log = RepoEvalCountCommit.get_regex_parse_git_log()
@@ -71,7 +73,8 @@ class ProgressReportBuilder(object):
         op_key = 'operation'
         if 'sections' not in self.config[op_key]:
             if 'section' not in self.config[op_key]:
-                raise IOError('Unable to find section list from the config file')
+                raise IOError(
+                    'Unable to find section list from the config file')
             else:
                 sections_txt = self.config[op_key]['section']
         else:
@@ -101,25 +104,27 @@ class ProgressReportBuilder(object):
         :return:
         """
         # get repository url list
-        repo_url_list = ret.get_github_url_list(self.config[section]['list'].strip())
+        repo_url_list = ret.get_github_url_list(
+            self.config[section]['list'].strip())
         print('process_section() : # repositories =', len(repo_url_list))
 
         # clone or update student repositories
         repo_list = ret.clone_or_pull_repo_list(
-            repo_url_list, 
-            section_folder=self.config[section]['folder'], 
-            b_update_repo=('True' ==self.config['operation']['update_repo'].strip())
+            repo_url_list,
+            section_folder=self.config[section]['folder'],
+            b_update_repo=(
+                'True' == self.config['operation']['update_repo'].strip())
         )
 
         results = {}
 
         # evaluate repositories within the section
         if 'True' == self.config[section]['count_commits']:
-            call_commit_count(self.config, section, repo_list, results) 
+            call_commit_count(self.config, section, repo_list, results)
         if 'True' == self.config[section]['pound_count']:
             call_pound_count(self.config, section, repo_list, results)
         if 'True' == self.config[section]['run_all']:
-            call_run_all(self.config, section, repo_list, results) 
+            call_run_all(self.config, section, repo_list, results)
 
         return results
 
@@ -190,14 +195,16 @@ def get_section_list(config):
     if op_key in config:
         if 'sections' not in config[op_key]:
             if 'section' not in config[op_key]:
-                raise IOError('Unable to find section list from the config file')
+                raise IOError(
+                    'Unable to find section list from the config file')
             else:
                 sections_txt = config[op_key]['section']
         else:
             sections_txt = config[op_key]['sections']
 
     else:
-        raise ValueError(f"key 'operation' missing\nAvailable keys : {list(config.keys())}")
+        raise ValueError(
+            f"key 'operation' missing\nAvailable keys : {list(config.keys())}")
 
     # to obtain the list from text
     # https://stackoverflow.com/questions/335695/lists-in-configparser
@@ -222,33 +229,34 @@ def process_section(config, re_git_log, section):
 
     # clone or update student repositories
     repo_list = ret.clone_or_pull_repo_list(
-        repo_url_list, 
-        section_folder=config[section]['folder'], 
-        b_update_repo=('True' ==config['operation']['update_repo'].strip())
+        repo_url_list,
+        section_folder=config[section]['folder'],
+        b_update_repo=('True' == config['operation']['update_repo'].strip())
     )
 
     results = {}
 
     # evaluate repositories within the section
     if 'True' == config[section]['count_commits']:
-        call_commit_count(config, section, repo_list, results) 
+        call_commit_count(config, section, repo_list, results)
     if 'True' == config[section]['pound_count']:
         call_pound_count(config, section, repo_list, results)
     if 'True' == config[section]['run_all']:
-        call_run_all(config, section, repo_list, results) 
+        call_run_all(config, section, repo_list, results)
 
     return results
+
 
 def call_run_all(config, section, repo_list, results):
     run_all_txt, run_all_md, run_all_html = run_all(config, section, repo_list)
     results.update({
         'run_all':
             {
-            'txt': run_all_txt, 
-            'md': run_all_md, 
-            'html': run_all_html
+                'txt': run_all_txt,
+                'md': run_all_md,
+                'html': run_all_html
             }
-    }) 
+    })
 
 
 def call_pound_count(config, section, repo_list, results):
@@ -272,15 +280,16 @@ def call_commit_count(config, section, repo_list, results):
     :param list(dict) repo_list : list of repository_information_dictionary
     :param dict results: contains dictionary of results
     """
-    commit_count_txt, commit_count_md, commit_count_html = count_commits(config, section, repo_list) 
+    commit_count_txt, commit_count_md, commit_count_html = count_commits(
+        config, section, repo_list)
     results.update({
         'count_commits':
             {
-            'txt': commit_count_txt, 
-            'md': commit_count_md, 
-            'html': commit_count_html
+                'txt': commit_count_txt,
+                'md': commit_count_md,
+                'html': commit_count_html
             }
-    }) 
+    })
 
 
 @timeit.timeit
@@ -291,34 +300,36 @@ def count_commits(config, section, repo_list):
     # git log interval settings
     after = config[section].get('after', None)
     before = config[section].get('before', None)
-    exclude_email_tuple = tuple(ast.literal_eval(config['operation']['initial_email_addresses']))
+    exclude_email_tuple = tuple(ast.literal_eval(
+        config['operation']['initial_email_addresses']))
 
-    commit_counter = RepoEvalCountOneCommitLog(after, before, exclude_email_tuple)
+    commit_counter = RepoEvalCountOneCommitLog(
+        after, before, exclude_email_tuple)
     commit_count = commit_counter.eval_repo_list(repo_list)
 
     # if the header row seems to include '\' character in the header row
     if commit_count.is_backslash_in_header():
         print(
-            "'\\' in column title row.\n" \
-            'Could you please run following git command to change its configuration?\n' \
-            '\n'\
-            '    git config core.quotepath false\n'\
-            '\n'\
-            'or\n'\
-            '\n'\
-            '    git config --global core.quotepath false\n'\
+            "'\\' in column title row.\n"
+            'Could you please run following git command to change its configuration?\n'
+            '\n'
+            '    git config core.quotepath false\n'
+            '\n'
+            'or\n'
+            '\n'
+            '    git config --global core.quotepath false\n'
             '\n'
         )
 
     # sort with total
-    # TODO : more adaptive argument?    
+    # TODO : more adaptive argument?
     sorted_row = commit_count.get_sorted_row(' total')
 
     # write tables
     commit_count_txt, commit_count_md, commit_count_html = write_tables(
-        section, 
+        section,
         repo_list,
-        commit_count, 
+        commit_count,
         filename_prefix='commit_count',
         sorted_row=sorted_row
     )
@@ -329,18 +340,21 @@ def count_commits(config, section, repo_list):
 @timeit.timeit
 def write_tables(section, repo_list, table, filename_prefix, sorted_row=None):
 
-    #if sorted_row not given, make one from repo_list
+    # if sorted_row not given, make one from repo_list
     if sorted_row is None:
         # TODO : Possibly repeating too frequently
         sorted_row = tuple([repo_dict['name'] for repo_dict in repo_list])
 
-    txt_table_writer = TextTableWriter(table, section, sorted_row, filename_prefix=filename_prefix)
+    txt_table_writer = TextTableWriter(
+        table, section, sorted_row, filename_prefix=filename_prefix)
     finished_txt_table = txt_table_writer.write()
 
-    md_table_writer = MDlinkTableWriter(table, section, sorted_row, filename_prefix=filename_prefix, repo_list=repo_list)
+    md_table_writer = MDlinkTableWriter(
+        table, section, sorted_row, filename_prefix=filename_prefix, repo_list=repo_list)
     finished_md_table = md_table_writer.write()
 
-    html_table_writter = HtmlLinkTableWriter(table, section, sorted_row, filename_prefix=filename_prefix, repo_list=repo_list)
+    html_table_writter = HtmlLinkTableWriter(
+        table, section, sorted_row, filename_prefix=filename_prefix, repo_list=repo_list)
     finished_html_table = html_table_writter.write()
 
     return finished_txt_table, finished_md_table, finished_html_table
@@ -352,7 +366,8 @@ def run_all(config, section, repo_list):
     Run (almost) all .py files from the section
     """
 
-    all_runner = RepoEvalRunEachSkipSomeLastCommit(config['operation']['python_path'])
+    all_runner = RepoEvalRunEachSkipSomeLastCommit(
+        config['operation']['python_path'])
     all_outputs = all_runner.eval_repo_list(repo_list)
     print(f'run_all() : finished eval_repo_list()')
 
@@ -361,8 +376,8 @@ def run_all(config, section, repo_list):
 
     # write tables
     run_all_txt, run_all_md, run_all_html = write_tables(
-        section, 
-        repo_list, 
+        section,
+        repo_list,
         all_outputs,
         filename_prefix='run_all',
         sorted_row=sorted_row,
@@ -384,12 +399,15 @@ def build_todo_list_grammar(config, section, all_outputs, b_verbose=False, todo_
     section : section name
     all_outputs : RepoTable on each file
     """
-    if b_verbose: print('build_comment_list_run_all() starts')
+    if b_verbose:
+        print('build_comment_list_run_all() starts')
 
     if not todo_list:
         todo_list = []
 
-    if b_verbose: print(f'build_comment_list_run_all() : len(todo_list) = {len(todo_list)}')
+    if b_verbose:
+        print(
+            f'build_comment_list_run_all() : len(todo_list) = {len(todo_list)}')
 
     # output filename
     todo_list_filename = config[section]['todo_list_file']
@@ -416,9 +434,9 @@ def build_todo_list_grammar(config, section, all_outputs, b_verbose=False, todo_
                     if not run_result_dict.get('grammar pass', True):
                         # json example
                         # {
-                        #   "owner": "<github user id or organization id>", 
-                        #   "repo": "<repository id>", 
-                        #   "sha": "<SHA of the commit of the repository>", 
+                        #   "owner": "<github user id or organization id>",
+                        #   "repo": "<repository id>",
+                        #   "sha": "<SHA of the commit of the repository>",
                         #   "comment_str": "<comment string>"
                         # },
                         todo_dict = {
@@ -431,8 +449,12 @@ def build_todo_list_grammar(config, section, all_outputs, b_verbose=False, todo_
                             )
                         }
                         todo_list.append(todo_dict)
-                        if b_verbose: print(f"build_todo_list_grammar() : appending {todo_dict}")
-                        if b_verbose: print(f"build_todo_list_grammar() : len(todo_list) = {len(todo_list)}")
+                        if b_verbose:
+                            print(
+                                f"build_todo_list_grammar() : appending {todo_dict}")
+                        if b_verbose:
+                            print(
+                                f"build_todo_list_grammar() : len(todo_list) = {len(todo_list)}")
             # end of file loop
         # end of repo loop
 
@@ -445,7 +467,8 @@ def build_todo_list_grammar(config, section, all_outputs, b_verbose=False, todo_
             write_last_sent(last_sent_file)
     # end of if too frequent
 
-    if b_verbose: print('build_comment_list_run_all() ends')
+    if b_verbose:
+        print('build_comment_list_run_all() ends')
     return todo_list
 
 
@@ -453,7 +476,9 @@ def is_too_frequent(last_sent_gmtime_sec, comment_period_days=7, b_verbose=True)
     """
     Considering last sent time, is it too frequent?
     """
-    if b_verbose: print(f"last sent time : {time.asctime(time.localtime(last_sent_gmtime_sec))}")
+    if b_verbose:
+        print(
+            f"last sent time : {time.asctime(time.localtime(last_sent_gmtime_sec))}")
 
     since_last_sent_sec = time.time() - last_sent_gmtime_sec
 
@@ -467,13 +492,13 @@ def is_too_frequent(last_sent_gmtime_sec, comment_period_days=7, b_verbose=True)
     since_last_sent_days_int = int(since_last_sent_days)
 
     # how many days since last message?
-    if b_verbose: 
+    if b_verbose:
         print(f"{since_last_sent_days_int:d}d "
               f"{since_time_struct.tm_hour:02d}h "
               f"{since_time_struct.tm_min:02d}m "
               f"{since_time_struct.tm_sec:02d}s passed"
-        )
-    
+              )
+
     # verdict
     b_too_frequent = since_last_sent_days < comment_period_days
 
@@ -514,14 +539,14 @@ def pound_count(config, section, repo_list):
     print('pound_count() : finished eval_repo_list()')
 
     # sort with total
-    # TODO : more adaptive argument?    
+    # TODO : more adaptive argument?
     sorted_row = pound_numbers.get_sorted_row(' total')
 
     # write tables
     pound_count_txt, pound_count_md, pound_count_html = write_tables(
-        section, 
-        repo_list, 
-        pound_numbers, 
+        section,
+        repo_list,
+        pound_numbers,
         filename_prefix='pound_count',
         sorted_row=sorted_row
     )
@@ -595,7 +620,7 @@ class RepoTable(object):
         :return:
         """
         msg = 'Overwrite attempt at [{row}][{column}]. current value = {current} new_value = {new}'.format(
-                row=row, column=column, current=self.index[row][column], new=value)
+            row=row, column=column, current=self.index[row][column], new=value)
         if self.index[row][column] != value:
             raise ValueError(msg)
         else:
@@ -617,7 +642,7 @@ class RepoTable(object):
         """
 
         def key(row):
-            # if point same, sort by repository name 
+            # if point same, sort by repository name
             return (-self.index[row].get(column), row)
 
         rows = list(self.index.keys())
@@ -688,19 +713,19 @@ class RepoEval(object):
         self.repo_path = repo['path']
         # to obtain the name of the class:
         # https://stackoverflow.com/questions/510972/getting-the-class-name-of-an-instance-in-python
-        print('{repoEval}.eval_repo({k:2d}) start: name={name}'.format(repoEval=self.get_class_name(), k=k, name=repo['name']))
+        print('{repoEval}.eval_repo({k:2d}) start: name={name}'.format(
+            repoEval=self.get_class_name(), k=k, name=repo['name']))
 
         for path_dirs_files in os.walk(self.repo_path):
             self.eval_folder_in_repo(path_dirs_files[0], path_dirs_files[2])
 
         print('{repoEval:s}.eval_repo({k:2d}) end: name={name} ({time:g} sec)'.format(
-                k=k, name=repo['name'], time=(time.time() - start_time_sec),
-                repoEval=self.get_class_name()
-            ))
+            k=k, name=repo['name'], time=(time.time() - start_time_sec),
+            repoEval=self.get_class_name()
+        ))
         return self.table
 
     def eval_folder_in_repo(self, path, filename_list):
-
         """
         call back function for os.path.walk()
         filter if path interesting (.git, xcode, ...)
@@ -747,19 +772,20 @@ class RepoEval(object):
         is_vscode_path = '.vscode' in path
         is_pycache_path = '__pycache__' in path
         is_ipynb_checkpoints_path = '.ipynb_checkpoints' in path
-        b_ignore = any((is_dot_git_path, is_xcode_path, is_pycharm_path, is_vscode_path, is_pycache_path, is_ipynb_checkpoints_path))
+        b_ignore = any((is_dot_git_path, is_xcode_path, is_pycharm_path,
+                        is_vscode_path, is_pycache_path, is_ipynb_checkpoints_path))
         return b_ignore
 
     def is_ignore_filename(self, filename):
         return any((
-            self.is_readme(filename), 
+            self.is_readme(filename),
             self.is_dot_git(filename),
         ))
 
     @staticmethod
     def is_readme(filename):
         return filename.startswith('README')
-    
+
     @staticmethod
     def is_dot_git(filename):
         return '.git' == filename
@@ -781,10 +807,11 @@ class RepoEval(object):
         try:
             result = ret.read_utf_or_cp(filename)
         except UnicodeDecodeError:
-            print('%s : unable to read %s' % (self.get_class_name(), os.path.join(os.getcwd(), filename)))
+            print('%s : unable to read %s' %
+                  (self.get_class_name(), os.path.join(os.getcwd(), filename)))
             result = ''
 
-        return result        
+        return result
 
     def get_class_name(self):
         # to obtain the name of the class:
@@ -814,7 +841,7 @@ class RepoEvalCountCommit(RepoEval):
         
             initialized Git repository    
         '''
-        
+
         # regular expression pattern
         # https://stackoverflow.com/questions/587345/regular-expression-matching-a-multiline-block-of-text
         pattern_string_1 = r"^commit\s+(?P<sha>.+)\nAuthor:\s+(?P<author>.+)\nDate:\s+(?P<date>.+)\n"
@@ -868,9 +895,10 @@ class RepoEvalCountOneCommitLog(RepoEval):
     """
     Obtain information on all files from one git log
     """
-    def __init__(self, after=None, before=None, exclude_email_tuple=[], 
-            commit_split_token='__reposetman_new_commit_start__',
-            field_split_token='__reposetman_field_split__',):
+
+    def __init__(self, after=None, before=None, exclude_email_tuple=[],
+                 commit_split_token='__reposetman_new_commit_start__',
+                 field_split_token='__reposetman_field_split__',):
         """
         One commit log from one repository
 
@@ -895,7 +923,7 @@ class RepoEvalCountOneCommitLog(RepoEval):
 
         # not easy to handle if too long
         cmd_list = [
-            'log', # must be the first
+            'log',  # must be the first
             '--encoding=utf-8',
             '--numstat',
             '--all',
@@ -906,7 +934,7 @@ class RepoEvalCountOneCommitLog(RepoEval):
             cmd_list.append('--after="{after}"'.format(after=after))
         elif self.after:
             cmd_list.append('--after="{after}"'.format(after=self.after))
-        
+
         if before:
             cmd_list.append('--before="{before}"'.format(before=before))
         elif self.before:
@@ -917,7 +945,7 @@ class RepoEvalCountOneCommitLog(RepoEval):
     def eval_repo(self, k_repo):
         """
         Evaluate one repository
-        """        
+        """
         start_time_sec = time.time()
 
         k, repo = k_repo
@@ -927,12 +955,14 @@ class RepoEvalCountOneCommitLog(RepoEval):
         self.repo_path = repo['path']
         # to obtain the name of the class:
         # https://stackoverflow.com/questions/510972/getting-the-class-name-of-an-instance-in-python
-        print('{repoEval}.eval_repo({k:2d}) start: name={name}'.format(repoEval=self.get_class_name(), k=k, name=repo['name']))
+        print('{repoEval}.eval_repo({k:2d}) start: name={name}'.format(
+            repoEval=self.get_class_name(), k=k, name=repo['name']))
 
         path_org = os.getcwd()
         os.chdir(self.repo_path)
 
-        git_log__err_msg = git.git_common_list(self.get_git_cmd(), b_verbose=False)
+        git_log__err_msg = git.git_common_list(
+            self.get_git_cmd(), b_verbose=False)
 
         os.chdir(path_org)
 
@@ -942,14 +972,15 @@ class RepoEvalCountOneCommitLog(RepoEval):
 
         # update evaluation result
         for column in column_set:
-            self.table.set_row_column(self.repo_name, column, eval_dict[column])
+            self.table.set_row_column(
+                self.repo_name, column, eval_dict[column])
 
         # to obtain the name of the class:
         # https://stackoverflow.com/questions/510972/getting-the-class-name-of-an-instance-in-python
         print('{repoEval:s}.eval_repo({k:2d}) end: name={name} ({time:g} sec)'.format(
-                k=k, name=repo['name'], time=(time.time() - start_time_sec),
-                repoEval=self.get_class_name()
-            ))
+            k=k, name=repo['name'], time=(time.time() - start_time_sec),
+            repoEval=self.get_class_name()
+        ))
         return self.table
 
     def convert_git_log_to_table(self, git_log):
@@ -963,14 +994,14 @@ class RepoEvalCountOneCommitLog(RepoEval):
         git_log_split_blocks = git_log.split(self.commit_split_token)
 
         # remove empty string
-        # TODO : consider git_log.strip(self.commit_split_token).split(self.commit_split_token) 
+        # TODO : consider git_log.strip(self.commit_split_token).split(self.commit_split_token)
         #        to avoid a special case
         if not git_log_split_blocks[0]:
             del git_log_split_blocks[0]
 
         temporary_file_list = unique_list.unique_list(['no commit yet'])
 
-        last_commit_dict = {'subject':'no commit yet'}
+        last_commit_dict = {'subject': 'no commit yet'}
 
         # commit loop
         for git_log_block in git_log_split_blocks:
@@ -991,7 +1022,8 @@ class RepoEvalCountOneCommitLog(RepoEval):
 
             if isinstance(last_commit_dict, (str, bytes)):
                 # if double quote is wrapping the output from the git log
-                last_commit_dict = self.get_commit_dict(git_log_lines[0].strip('"'))
+                last_commit_dict = self.get_commit_dict(
+                    git_log_lines[0].strip('"'))
 
             if isinstance(last_commit_dict, (str, bytes)):
                 # if still a str or bytes, try again
@@ -1045,7 +1077,8 @@ class RepoEvalCountOneCommitLog(RepoEval):
                 # build commit count table
                 # loop over files in commit
                 for files_in_commit in temporary_file_list:
-                    eval_dict[files_in_commit] = eval_dict.get(files_in_commit, 0) + point
+                    eval_dict[files_in_commit] = eval_dict.get(
+                        files_in_commit, 0) + point
 
                 # if it is still not a dict
                 if isinstance(last_commit_dict, str):
@@ -1053,10 +1086,12 @@ class RepoEvalCountOneCommitLog(RepoEval):
                     print(f'last_commit_dict = {repr(last_commit_dict)}')
                     last_commit_dict = ast.literal_eval(last_commit_dict)
                     if not isinstance(last_commit_dict, dict):
-                        raise ValueError(f'last_commit_dict = {repr(last_commit_dict)}')
+                        raise ValueError(
+                            f'last_commit_dict = {repr(last_commit_dict)}')
                 last_commit_dict['files'] = temporary_file_list
             else:
-                print(f'\n{self.get_class_name()}.convert_git_log_to_table() : end of file list but temporary_file_list empty')
+                print(
+                    f'\n{self.get_class_name()}.convert_git_log_to_table() : end of file list but temporary_file_list empty')
                 print(f'line = {line}')
                 print('last_commit_dict =', repr(last_commit_dict))
 
@@ -1097,9 +1132,9 @@ class RepoEvalCountOneCommitLog(RepoEval):
             }
         else:
             raise ValueError(
-                    f'len(fields) == {len(fields)}\n'
-                    f'line = {line}\n'
-                    f'fields = {fields}\n'
+                f'len(fields) == {len(fields)}\n'
+                f'line = {line}\n'
+                f'fields = {fields}\n'
             )
 
         return last_commit_dict
@@ -1140,7 +1175,8 @@ class RepoEvalPoundLineCounter(RepoEval):
                 result = {'readable': False}
             else:
                 with open(filename, encoding='utf-8') as file_object:
-                    comments_list = self.get_comments_list_from_readline(file_object.readline, filename=filename)
+                    comments_list = self.get_comments_list_from_readline(
+                        file_object.readline, filename=filename)
                 result = self.get_points_from_comments_list(comments_list)
         return result
 
@@ -1160,7 +1196,8 @@ class RepoEvalPoundLineCounter(RepoEval):
         repo_name = k_repo[1]['name']
 
         # add a representative number
-        self.table.set_row_column(repo_name, ' total', self.get_total(repo_name))
+        self.table.set_row_column(
+            repo_name, ' total', self.get_total(repo_name))
 
         return self.table
 
@@ -1206,6 +1243,7 @@ class RepoEvalPoundByteCounter(RepoEvalPoundLineCounter):
 
 class RepoEvalPoundByteCounterExcludingRef(RepoEvalPoundByteCounter):
     reference_cfg_filename = 'reference.cfg'
+
     def __init__(self):
         super(RepoEvalPoundByteCounterExcludingRef, self).__init__()
 
@@ -1228,7 +1266,7 @@ class RepoEvalPoundByteCounterExcludingRef(RepoEvalPoundByteCounter):
         Initialize reference config file and raise error
         """
         config_ref = configparser.ConfigParser()
-        #sample cfg file
+        # sample cfg file
         r'''
         [operation]
         folder=data\ref
@@ -1246,31 +1284,33 @@ class RepoEvalPoundByteCounterExcludingRef(RepoEvalPoundByteCounter):
             # will clone reference repositories to this folder
             'folder': os.path.join('data', 'ref'),
             # will write sample comment set to this file
-            'comment_output_file' : 'reference_comment.txt',
+            'comment_output_file': 'reference_comment.txt',
         }
         config_ref['urls'] = {
             # urls of the reference repositories
-            'a':'reference repository a url here',
-            'b':'reference repository b url here',
-            'c':'reference repository c url here',
+            'a': 'reference repository a url here',
+            'b': 'reference repository b url here',
+            'c': 'reference repository c url here',
         }
         config_ref['commits'] = {
             # hashes of reference commits here
-            'a':'reference repository a base hash here',
-            'b':'reference repository b base hash here',
-            'c':'reference repository c base hash here',
+            'a': 'reference repository a base hash here',
+            'b': 'reference repository b base hash here',
+            'c': 'reference repository c base hash here',
         }
 
         with open(self.reference_cfg_filename, 'w') as ref_cfg_file:
             config_ref.write(ref_cfg_file)
 
-        raise FileNotFoundError(f'please configure {self.reference_cfg_filename}, run reference.py, and restart')
+        raise FileNotFoundError(
+            f'please configure {self.reference_cfg_filename}, run reference.py, and restart')
 
     def get_line_point(self, comment, b_verbose=False):
         if comment.strip() not in self.comments_ref:
-            if b_verbose: 
+            if b_verbose:
                 print(comment)
-            point = super(RepoEvalPoundByteCounterExcludingRef, self).get_line_point(comment)
+            point = super(RepoEvalPoundByteCounterExcludingRef,
+                          self).get_line_point(comment)
         else:
             point = 0
         return point
@@ -1339,7 +1379,8 @@ class RepoEvalRunEach(RepoEval):
         elif isinstance(arguments, list):
             python_cmd_list += arguments
         else:
-            raise NotImplementedError(msg='type of arguments = %s' % type(arguments))
+            raise NotImplementedError(
+                msg='type of arguments = %s' % type(arguments))
 
         # print('RepoEvalRunEach.run_script() : cwd = ', os.getcwd())
         # print('RepoEvalRunEach.run_script() : python_cmd = ', python_cmd)
@@ -1349,19 +1390,24 @@ class RepoEvalRunEach(RepoEval):
         if 'Error' in msge:
             # to help debugging
             # present info only if exception happens
-            print('{type:s}.run_script() : cwd = {cwd}'.format(type=self.get_class_name(), cwd=os.getcwd()))
-            print('{type:s}.run_script() : python_cmd = {cmd!s}'.format(type=self.get_class_name(), cmd=python_cmd_list))
+            print('{type:s}.run_script() : cwd = {cwd}'.format(
+                type=self.get_class_name(), cwd=os.getcwd()))
+            print('{type:s}.run_script() : python_cmd = {cmd!s}'.format(
+                type=self.get_class_name(), cmd=python_cmd_list))
             try:
-                print('{type:s}.run_script() : error message = {msge}'.format(type=self.get_class_name(), msge=msge))
+                print('{type:s}.run_script() : error message = {msge}'.format(
+                    type=self.get_class_name(), msge=msge))
             except UnicodeEncodeError:
-                print('{type:s}.run_script() : error message(r) = {msge}'.format(type=self.get_class_name(), msge=repr(msge)))
+                print('{type:s}.run_script() : error message(r) = {msge}'.format(
+                    type=self.get_class_name(), msge=repr(msge)))
 
             # If the .py script cannot find a file, present list of available files
             # to help improvement
             if 'FileNotFoundError:' in msge:
-                print('{type:s}.run_script() : available files = {files}\n'.format(type=self.get_class_name(), 
-                    files=str(os.listdir())
-                ))
+                print('{type:s}.run_script() : available files = {files}\n'.format(type=self.get_class_name(),
+                                                                                   files=str(
+                                                                                       os.listdir())
+                                                                                   ))
 
         # else:
         #     print('RepoEvalRunEach.run_script() : {cmd} OK'.format(cmd=python_cmd))
@@ -1401,7 +1447,7 @@ class RepoEvalRunEach(RepoEval):
 
                     if self.table[repo_name][field]['grammar pass']:
                         total += 1
-                
+
                 # if not readable
                 elif 'readable' in self.table[repo_name][field]:
                     if False == self.table[repo_name][field]['readable']:
@@ -1430,7 +1476,7 @@ class RepoEvalRunEach(RepoEval):
         # to prevent excessive file not found error
         input_list = ['1', '2', '3', '4', '5']
 
-        # frequent filename        
+        # frequent filename
         if 'test.txt' in os.listdir():
             input_list.insert(0, 'test.txt')
         elif 'ex15_sample.txt' in os.listdir():
@@ -1440,9 +1486,9 @@ class RepoEvalRunEach(RepoEval):
 
         # subprocess.Popen() needs bytes as input
         msgo, msge = git.run_command(
-                python_cmd, in_txt=bytes(input_txt, encoding='utf-8'),
-                b_verbose=False,
-            )
+            python_cmd, in_txt=bytes(input_txt, encoding='utf-8'),
+            b_verbose=False,
+        )
         return msgo, msge
 
 
@@ -1506,7 +1552,8 @@ class RepoEvalRunEachSkipSome(RepoEvalRunEach):
 
                         # leave a room for the default argument
                         for i in range(argn - 2):
-                            arguments_txt += '{c}.txt '.format(c=chr(ord('a') + i))
+                            arguments_txt += '{c}.txt '.format(
+                                c=chr(ord('a') + i))
 
                         # handle one special case
                         if filename.startswith('ex15'):
@@ -1519,15 +1566,15 @@ class RepoEvalRunEachSkipSome(RepoEvalRunEach):
 
                         if b_verbose:
                             print('{class_name}.eval_file_base({filename}) : argn = {argn} : arguments = {argv}'.format(
-                                    class_name=self.get_class_name(),
-                                    filename=filename,
-                                    argv = arguments_txt,
-                                    argn = argn,
+                                class_name=self.get_class_name(),
+                                filename=filename,
+                                argv=arguments_txt,
+                                argn=argn,
                             ))
 
                         result = self.run_script(filename, arguments_txt)
                         result.update({'type': 'argv'})
-                        
+
                     else:
                         result = self.run_script(filename)
 
@@ -1554,7 +1601,8 @@ class RepoEvalRunEachSkipSome(RepoEvalRunEach):
                     print('cwd=', os.getcwd())
                     print('filename =', filename)
             except IndentationError:
-                    print('{type} : {filename} : IndentationError'.format(type=type(self).__name__, filename=filename))
+                print('{type} : {filename} : IndentationError'.format(
+                    type=type(self).__name__, filename=filename))
 
         return result
 
@@ -1612,7 +1660,7 @@ def is_argv(txt):
     Is argv of sys in the text?
     """
     result = any((
-        is_sys_argv(txt), 
+        is_sys_argv(txt),
         is_from_sys_argv(txt)
     ))
 
@@ -1623,7 +1671,8 @@ def is_from_sys_argv(txt):
     """
     Using regex, check from sys import argv
     """
-    is_from_sys_import_argv = re.findall(r'from\s+sys\s+import\s+argv', txt, re.M|re.S)
+    is_from_sys_import_argv = re.findall(
+        r'from\s+sys\s+import\s+argv', txt, re.M | re.S)
     return is_from_sys_import_argv
 
 
@@ -1631,7 +1680,8 @@ def is_sys_argv(txt):
     """
     Using regex, check import sys and ??? = sys.argv
     """
-    is_sys_argv = re.findall (r'import\s+sys\s+.*=\s+sys.argv', txt, re.M|re.S)
+    is_sys_argv = re.findall(
+        r'import\s+sys\s+.*=\s+sys.argv', txt, re.M | re.S)
     return is_sys_argv
 
 
@@ -1699,7 +1749,7 @@ def get_argn(filename):
                 print('filename =', filename)
 
         except IndentationError:
-                print('{filename} : IndentationError'.format(filename=filename))
+            print('{filename} : IndentationError'.format(filename=filename))
 
     return result
 
@@ -1716,13 +1766,13 @@ def get_date_string_tuple_from_git_log_msg(msg):
     
         initialized Git repository    
     '''
-    
+
     # long text -> list of lines
     lines = msg.split('\n')
-    
-    # initialize result list 
+
+    # initialize result list
     result = []
-    
+
     for line in lines:
         # if string 'Date:' spotted
         if "Date:" == line.strip()[:5]:
@@ -1732,13 +1782,13 @@ def get_date_string_tuple_from_git_log_msg(msg):
             # print(date_string)
 
             # convert time string into time structure
-            # 'Fri Apr 4 21:51:58 2014' 
+            # 'Fri Apr 4 21:51:58 2014'
             # -> time.struct_time(
-            #       tm_year=2014, tm_mon=4, tm_mday=4, 
-            #       tm_hour=21, tm_min=51, tm_sec=58, 
+            #       tm_year=2014, tm_mon=4, tm_mday=4,
+            #       tm_hour=21, tm_min=51, tm_sec=58,
             #       tm_wday=4, tm_yday=94, tm_isdst=-1
             # )
-            result.append( time.strptime(date_string) )
+            result.append(time.strptime(date_string))
             # print(result[-1])
     return tuple(result)
 
@@ -1746,16 +1796,16 @@ def get_date_string_tuple_from_git_log_msg(msg):
 class TextTableWriter(object):
     # class variables
     ext = 'txt'
-    col_sep='\t'
-    row_sep='\n'
+    col_sep = '\t'
+    row_sep = '\n'
 
     # for each cell
     # to reuse get_cell_text() code
-    cell_formatter='{sep}{value}'    
+    cell_formatter = '{sep}{value}'
 
-    def __init__(self, d, section, sorted_row=None, 
-        filename_prefix='progress', path=os.curdir
-        ):
+    def __init__(self, d, section, sorted_row=None,
+                 filename_prefix='progress', path=os.curdir
+                 ):
         """
 
         :param RepoTable d:
@@ -1775,7 +1825,7 @@ class TextTableWriter(object):
 
         # for header
         self.field_list = self.get_field_list()
-    
+
     def write(self):
         """
         Top level method
@@ -1798,9 +1848,9 @@ class TextTableWriter(object):
     def get_filename(self):
         # different file names for each section
         return os.path.join(
-            self.path, 
+            self.path,
             "{prefix}_{section}.{ext}".format(
-                prefix=self.filename_prefix, 
+                prefix=self.filename_prefix,
                 section=self.section,
                 ext=self.ext,
             )
@@ -1847,11 +1897,11 @@ class TextTableWriter(object):
         # This part may depend on the format : Plain text, MD, HTML, ...
         # for example
         # [tab]a[tab]b...
-        
+
         return self.cell_formatter.format(
-                sep=self.col_sep, 
-                value=str(self.d[row_key].get(column_key, ''))
-            )
+            sep=self.col_sep,
+            value=str(self.d[row_key].get(column_key, ''))
+        )
 
 
 class MarkdownTableWriter(TextTableWriter):
@@ -1864,13 +1914,13 @@ class MarkdownTableWriter(TextTableWriter):
 
     cell_formatter = '{sep} {value} '
 
-    def __init__(self, d, section, sorted_row, 
-            filename_prefix='progress', path=os.curdir,
-        ):
+    def __init__(self, d, section, sorted_row,
+                 filename_prefix='progress', path=os.curdir,
+                 ):
 
-        super(MarkdownTableWriter, self).__init__(d, section, sorted_row, 
-                filename_prefix=filename_prefix, path=path, 
-            )
+        super(MarkdownTableWriter, self).__init__(d, section, sorted_row,
+                                                  filename_prefix=filename_prefix, path=path,
+                                                  )
 
         # '|   |  field1  |  field2  |  field3  |\n'
         # '|:--:|:----:|:----:|:----:|\n'
@@ -1883,10 +1933,10 @@ class MarkdownTableWriter(TextTableWriter):
         self.header_second_row_header = f'{self.col_sep}:-'
 
         # '|   |  field1  |  field2  |  field3 |\n'
-        #    ^^^^^      ^^^^^      ^^^^^ 
+        #    ^^^^^      ^^^^^      ^^^^^
         self.header_first_col_sep = f'  {self.col_sep}  '
         # '|:--:|:----:|:----:|:----:|\n'
-        #     ^^^^^^^^^^^^^^^^^^^^^ 
+        #     ^^^^^^^^^^^^^^^^^^^^^
         self.header_second_col_sep = f'-:{self.col_sep}:---'
 
         # '|   |  field1  |  field2  |  field3 |\n'
@@ -1915,7 +1965,7 @@ class MarkdownTableWriter(TextTableWriter):
 
         assert first_line.count('|') == second_line.count('|')
         try:
-            assert second_line.count(':') == (second_line.count('|') - 1)* 2
+            assert second_line.count(':') == (second_line.count('|') - 1) * 2
         except AssertionError as e:
             print('# | =', second_line.count('|'))
             print('# : =', second_line.count(':'))
@@ -1936,10 +1986,11 @@ class MDlinkTableWriter(MarkdownTableWriter):
     """
     Markdown Tables with links to repositories
     """
-    def __init__(self, d, section, sorted_row, 
-            filename_prefix='progress', path=os.curdir,
-            repo_list=[]
-        ):
+
+    def __init__(self, d, section, sorted_row,
+                 filename_prefix='progress', path=os.curdir,
+                 repo_list=[]
+                 ):
 
         super().__init__(d, section, sorted_row, filename_prefix, path)
 
@@ -1953,7 +2004,7 @@ class MDlinkTableWriter(MarkdownTableWriter):
 
         for repo_info_dict in self.repo_list:
             if repo_name == repo_info_dict['name']:
-                repo_url =  repo_info_dict['url']
+                repo_url = repo_info_dict['url']
 
         return repo_url
 
@@ -1989,7 +2040,7 @@ class MDlinkTableWriter(MarkdownTableWriter):
         return self.cell_formatter.format(
             sep=self.col_sep,
             value=value,
-            )
+        )
 
 
 class HtmlTableWriter(MarkdownTableWriter):
@@ -2005,8 +2056,8 @@ class HtmlTableWriter(MarkdownTableWriter):
                        'table, th, td {\n' \
                        '    border: 1px solid black;\n' \
                        '}\n' \
-                        'th, td {text-align: center;}\n'\
-                        'tr:nth-child(even) {background-color: #f2f2f2;}\n'\
+        'th, td {text-align: center;}\n'\
+        'tr:nth-child(even) {background-color: #f2f2f2;}\n'\
                        '</style>\n' \
                        '</head>\n'
     # Left-align Headings, https://www.w3schools.com/html/html_tables.asp
@@ -2045,7 +2096,7 @@ class HtmlTableWriter(MarkdownTableWriter):
         # define table style
         yield self.style_definition
 
-        ## table
+        # table
         yield self.table_header
 
         # reuse superclass code
@@ -2054,21 +2105,21 @@ class HtmlTableWriter(MarkdownTableWriter):
             yield item
 
         yield self.table_footer
-        ## table end
+        # table end
 
         yield self.html_footer
         # html end
 
     def get_header_row(self):
 
-        #### header column
+        # header column
         header_column = '{row_header}{item_header} {sep}'.format(
             row_header=self.row_header,
             item_header=self.header_row_header,
             sep=self.header_col_sep,
         )
 
-        #### column loop
+        # column loop
         body_columns = self.header_col_sep.join(
             [
                 ' {item:s} '.format(item=column_key)
@@ -2083,10 +2134,9 @@ class HtmlTableWriter(MarkdownTableWriter):
             footer=self.header_row_sep,
             end_header=self.end_table_header,
         )
-        
 
     def start_row(self, repo_name):
-        #### header column
+        # header column
         # assume </td> follows
         return '{row_header}{item_header} {repo_name} '.format(
             row_header=self.row_header, item_header=self.item_header,
@@ -2098,10 +2148,11 @@ class HtmlLinkTableWriter(HtmlTableWriter):
     """
     Markdown Tables with links to repositories
     """
-    def __init__(self, d, section, sorted_row, 
-            filename_prefix='progress', path=os.curdir,
-            repo_list=[]
-        ):
+
+    def __init__(self, d, section, sorted_row,
+                 filename_prefix='progress', path=os.curdir,
+                 repo_list=[]
+                 ):
 
         super().__init__(d, section, sorted_row, filename_prefix, path)
 
@@ -2117,7 +2168,7 @@ class HtmlLinkTableWriter(HtmlTableWriter):
 
         for repo_info_dict in self.repo_list:
             if repo_name == repo_info_dict['name']:
-                repo_url =  repo_info_dict['url']
+                repo_url = repo_info_dict['url']
 
         return repo_url
 
@@ -2158,7 +2209,7 @@ class HtmlLinkTableWriter(HtmlTableWriter):
         return self.cell_formatter.format(
             sep=self.col_sep,
             value=value,
-            )
+        )
 
 
 if "__main__" == __name__:

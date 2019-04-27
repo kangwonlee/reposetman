@@ -34,19 +34,19 @@ class TestProgress(unittest.TestCase):
                    'Author: Kangwon Lee <kangwon_fwd@naver.com>\n' \
                    'Date:   Thu Apr 3 23:12:59 2014 +0900\n' \
                    '\n' \
-                   '    refactored git() to git.py\n' 
+                   '    refactored git() to git.py\n'
 
     def test_get_date_string_tuple_from_git_log_msg(self):
         '''
         from a txt of multiple git log messages, extract time info
         '''
-        
+
         time_list = progress.get_date_string_tuple_from_git_log_msg(self.msg)
         expected = (
-                    time.strptime("Fri Apr 4 21:51:58 2014"),
-                    time.strptime("Fri Apr 4 02:43:55 2014"),
-                    time.strptime("Thu Apr 3 23:12:59 2014"),
-                    )
+            time.strptime("Fri Apr 4 21:51:58 2014"),
+            time.strptime("Fri Apr 4 02:43:55 2014"),
+            time.strptime("Thu Apr 3 23:12:59 2014"),
+        )
         self.assertSequenceEqual(time_list, expected)
 
     def test_get_regex_parse_git_log(self):
@@ -55,18 +55,18 @@ class TestProgress(unittest.TestCase):
 
         expected_list = [
             {
-                'sha': '0095423cbee960ab0e59c05bf0f1b75ea9ab5b18', 
-                'author': 'Kangwon Lee <kangwon_fwd@naver.com>', 
+                'sha': '0095423cbee960ab0e59c05bf0f1b75ea9ab5b18',
+                'author': 'Kangwon Lee <kangwon_fwd@naver.com>',
                 'date': 'Fri Apr 4 21:51:58 2014 +0900',
             },
             {
-                'sha': '85aa1a43881c9c1cf041b47d347a401509194604', 
-                'author': 'Kangwon Lee <kangwon_fwd@naver.com>', 
+                'sha': '85aa1a43881c9c1cf041b47d347a401509194604',
+                'author': 'Kangwon Lee <kangwon_fwd@naver.com>',
                 'date': 'Fri Apr 4 02:43:55 2014 +0900',
             },
             {
-                'sha': '27bb0904481765a966f2ce6c831a40a27408254b', 
-                'author': 'Kangwon Lee <kangwon_fwd@naver.com>', 
+                'sha': '27bb0904481765a966f2ce6c831a40a27408254b',
+                'author': 'Kangwon Lee <kangwon_fwd@naver.com>',
                 'date': 'Thu Apr 3 23:12:59 2014 +0900',
             },
         ]
@@ -123,7 +123,8 @@ class TestProgress(unittest.TestCase):
             # function under test
             progress.eval_file(arg, path, filename, arg['repo']['name'])
 
-            column_key = config['file']['path_in_repo'] + '/' + config['file']['name']
+            column_key = config['file']['path_in_repo'] + \
+                '/' + config['file']['name']
 
             # repository name
             self.assertIn(config['repo']['name'], arg)
@@ -135,7 +136,8 @@ class TestProgress(unittest.TestCase):
             os.chdir(current_path)
 
         else:
-            raise IOError("can't find config file {filename}".format(filename=config_filename))
+            raise IOError("can't find config file {filename}".format(
+                filename=config_filename))
 
 
 class TestRepoTable(unittest.TestCase):
@@ -236,10 +238,12 @@ class TestRepoEvalPoundCounter(unittest.TestCase):
             file_object.write(self.code)
             file_object.seek(0)
 
-            comments = set(evaluator.get_comments_list_from_readline(file_object.readline))
+            comments = set(evaluator.get_comments_list_from_readline(
+                file_object.readline))
 
-        expected = set(('this is comment 10', 'this is comment 08', 'this is comment 03', 'this is comment 4', 'this is comment 01', 'this is comment 06', 'this is comment 05', 'this is comment 07', 'this is comment 09', 'this is comment 02'))
-        
+        expected = set(('this is comment 10', 'this is comment 08', 'this is comment 03', 'this is comment 4', 'this is comment 01',
+                        'this is comment 06', 'this is comment 05', 'this is comment 07', 'this is comment 09', 'this is comment 02'))
+
         self.assertSetEqual(expected, comments)
 
 
@@ -248,6 +252,7 @@ folder = os.getcwd()
 
 class TestRepoEvalRunEachBase(unittest.TestCase):
     config_filename = 'test_run_each.cfg'
+
     def init_test_run_each(self):
         if not os.path.exists(self.config_filename):
             config = configparser.ConfigParser()
@@ -271,7 +276,8 @@ class TestRepoEvalRunEachBase(unittest.TestCase):
             self.init_test_run_each()
 
         self.config.read(self.config_filename)
-        self.e = progress.RepoEvalRunEachSkipSome(self.config['operation']['python_path'])
+        self.e = progress.RepoEvalRunEachSkipSome(
+            self.config['operation']['python_path'])
 
     def tearDown(self):
         del self.e
@@ -282,31 +288,35 @@ class TestRepoEvalRunEach(TestRepoEvalRunEachBase):
 
     def test_run_script_input(self):
         # function under test
-        msgo, msge = self.e.run_script_input([self.config['operation']['python_path'], os.path.join(os.path.split(__file__)[0], 'input_example.py')])
+        msgo, msge = self.e.run_script_input([self.config['operation']['python_path'], os.path.join(
+            os.path.split(__file__)[0], 'input_example.py')])
         self.assertFalse(msge, msg='\nstderr : %s' % msge)
         self.assertTrue(msgo, msg='\nstderr : %s' % msge)
 
     def test_run_script_input_cases(self):
         print('')
         for case in self.config['tests']:
-            path_hint = self.config['tests'][case] # .replace('/c/', 'c:\\').replace('/', '\\')
+            # .replace('/c/', 'c:\\').replace('/', '\\')
+            path_hint = self.config['tests'][case]
             py_file_list = glob.glob(path_hint+'*/*.py')
 
             for py_file in py_file_list:
                 msgo, msge = self.e.run_script_input('{python} {script}'.format(
-                    python=self.config['operation']['python_path'], 
+                    python=self.config['operation']['python_path'],
                     script=py_file,
                 ))
 
                 if 'ValueError' in msge:
-                    print('script {script} raise ValueError'.format(script=py_file))
+                    print('script {script} raise ValueError'.format(
+                        script=py_file))
                 else:
                     self.assertFalse(msge, msg='\nstderr : %s' % msge)
-                    self.assertTrue(msgo, msg='\n{file}\nstderr : {stderr}'.format(file=py_file, stderr=msge))
+                    self.assertTrue(msgo, msg='\n{file}\nstderr : {stderr}'.format(
+                        file=py_file, stderr=msge))
 
 
 class TestRepoEvalRunEachSkipSome(TestRepoEvalRunEachBase):
-    
+
     def test_is_input_just_comments(self):
         txt = '# coding: utf-8\n' \
               '# 입력 후 add, commit / Enter source code, add, and commit\n' \
@@ -316,7 +326,7 @@ class TestRepoEvalRunEachSkipSome(TestRepoEvalRunEachBase):
               "# print 'abc', 123 -> print('abc %s' % (123))\n" \
               "# print 'abc', abc, 'def' -> print('abc %s def' % (abc))\n" \
               "# print 'abc', -> print('abc', end=" ")\n" \
-              '# 이 예제는 command-line 에서 실행시킬 것 / Please run this from the command-line\n' 
+              '# 이 예제는 command-line 에서 실행시킬 것 / Please run this from the command-line\n'
 
         result = self.call_is_input_txt(txt)
 
@@ -324,63 +334,64 @@ class TestRepoEvalRunEachSkipSome(TestRepoEvalRunEachBase):
 
     def test_is_input_just_functions(self):
         txt = '''# coding: utf-8\n''' \
-                '''# reference: http://learnpythonthehardway.org/book/ex25.html\n''' \
-                '''# 입력 후 add, commit / Enter source code, add, and commit\n''' \
-                '''# 각 행 주석 입력 후 commit / Enter comment for each line and commit\n''' \
-                '''# 각자 Study drills 시도 후 필요시 commit / Try Study Drills and commit if necessary\n''' \
-                '''# print 'abc' -> print('abc')\n''' \
-                '''# print 'abc', 123 -> print('abc %s' % (123))\n''' \
-                '''# print 'abc', abc, 'def' -> print('abc %s def' % (abc))\n''' \
-                '''# print 'abc', -> print('abc', end=" ")\n''' \
-                '''# raw_input('abc') -> input('abc')\n''' \
-                '''# 오류노트 에 각자 오류노트 작성 / Please use your error-note\n''' \
-                '''\n''' \
-                '''\n''' \
-                '''def break_words(stuff):\n''' \
-                '''    """This function will break up words for us."""\n''' \
-                '''    words = stuff.split(' ')\n''' \
-                '''    return words\n''' \
-                '''\n''' \
-                '''\n''' \
-                '''def sort_words(words):\n''' \
-                '''    """Sorts the words."""\n''' \
-                '''    return sorted(words)\n''' \
-                '''\n''' \
-                '''\n''' \
-                '''def print_first_word(words):\n''' \
-                '''    """Prints the first word after popping it off."""\n''' \
-                '''    word = words.pop(0)\n''' \
-                '''    print(word)\n''' \
-                '''\n''' \
-                '''\n''' \
-                '''def print_last_word(words):\n''' \
-                '''    """Prints the last word after popping it off."""\n''' \
-                '''    word = words.pop(-1)\n''' \
-                '''    print(word)\n''' \
-                '''\n''' \
-                '''\n''' \
-                '''def sort_sentence(sentence):\n''' \
-                '''    """Takes in a full sentence and returns the sorted words."""\n''' \
-                '''    words = break_words(sentence)\n''' \
-                '''    return sort_words(words)\n''' \
-                '''\n''' \
-                '''\n''' \
-                '''def print_first_and_last(sentence):\n''' \
-                '''    """Prints the first and last words of the sentence."""\n''' \
-                '''    words = break_words(sentence)\n''' \
-                '''    print_first_word(words)\n''' \
-                '''    print_last_word(words)\n''' \
-                '''\n''' \
-                '''\n''' \
-                '''def print_first_and_last_sorted(sentence):\n''' \
-                '''    """Sorts the words then prints the first and last one."""\n''' \
-                '''    words = sort_sentence(sentence)\n''' \
-                '''    print_first_word(words)\n''' \
-                '''    print_last_word(words)\n'''
+            '''# reference: http://learnpythonthehardway.org/book/ex25.html\n''' \
+            '''# 입력 후 add, commit / Enter source code, add, and commit\n''' \
+            '''# 각 행 주석 입력 후 commit / Enter comment for each line and commit\n''' \
+            '''# 각자 Study drills 시도 후 필요시 commit / Try Study Drills and commit if necessary\n''' \
+            '''# print 'abc' -> print('abc')\n''' \
+            '''# print 'abc', 123 -> print('abc %s' % (123))\n''' \
+            '''# print 'abc', abc, 'def' -> print('abc %s def' % (abc))\n''' \
+            '''# print 'abc', -> print('abc', end=" ")\n''' \
+            '''# raw_input('abc') -> input('abc')\n''' \
+            '''# 오류노트 에 각자 오류노트 작성 / Please use your error-note\n''' \
+            '''\n''' \
+            '''\n''' \
+            '''def break_words(stuff):\n''' \
+            '''    """This function will break up words for us."""\n''' \
+            '''    words = stuff.split(' ')\n''' \
+            '''    return words\n''' \
+            '''\n''' \
+            '''\n''' \
+            '''def sort_words(words):\n''' \
+            '''    """Sorts the words."""\n''' \
+            '''    return sorted(words)\n''' \
+            '''\n''' \
+            '''\n''' \
+            '''def print_first_word(words):\n''' \
+            '''    """Prints the first word after popping it off."""\n''' \
+            '''    word = words.pop(0)\n''' \
+            '''    print(word)\n''' \
+            '''\n''' \
+            '''\n''' \
+            '''def print_last_word(words):\n''' \
+            '''    """Prints the last word after popping it off."""\n''' \
+            '''    word = words.pop(-1)\n''' \
+            '''    print(word)\n''' \
+            '''\n''' \
+            '''\n''' \
+            '''def sort_sentence(sentence):\n''' \
+            '''    """Takes in a full sentence and returns the sorted words."""\n''' \
+            '''    words = break_words(sentence)\n''' \
+            '''    return sort_words(words)\n''' \
+            '''\n''' \
+            '''\n''' \
+            '''def print_first_and_last(sentence):\n''' \
+            '''    """Prints the first and last words of the sentence."""\n''' \
+            '''    words = break_words(sentence)\n''' \
+            '''    print_first_word(words)\n''' \
+            '''    print_last_word(words)\n''' \
+            '''\n''' \
+            '''\n''' \
+            '''def print_first_and_last_sorted(sentence):\n''' \
+            '''    """Sorts the words then prints the first and last one."""\n''' \
+            '''    words = sort_sentence(sentence)\n''' \
+            '''    print_first_word(words)\n''' \
+            '''    print_last_word(words)\n'''
 
         result = self.call_is_input_txt(txt)
 
-        self.assertFalse(result, msg='\ntoktype, tok, start, end, line = %r' % str(result))
+        self.assertFalse(
+            result, msg='\ntoktype, tok, start, end, line = %r' % str(result))
 
     def prepare_input_file(self, txt):
         # create a temporary file in a secure manner
@@ -411,8 +422,9 @@ class TestRepoEvalRunEachSkipSomeLastCommit(TestRepoEvalRunEachBase):
 
     def setUp(self):
         super().setUp()
-        self.e = progress.RepoEvalRunEachSkipSomeLastCommit(self.config['operation']['python_path'])
-    
+        self.e = progress.RepoEvalRunEachSkipSomeLastCommit(
+            self.config['operation']['python_path'])
+
     def test_eval_file_base(self):
         file_path = __file__
         result_dict = self.e.eval_file_base(filename=file_path)
@@ -421,16 +433,20 @@ class TestRepoEvalRunEachSkipSomeLastCommit(TestRepoEvalRunEachBase):
         final_sha = result_dict['sha']
 
         # get git log of the last commit
-        p = subprocess.Popen(('git', 'log', '-1', file_path), stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        msgo, msge = str(p.stdout.read(),encoding='utf-8'), str(p.stderr.read(),encoding='utf-8')
+        p = subprocess.Popen(('git', 'log', '-1', file_path),
+                             stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        msgo, msge = str(
+            p.stdout.read(), encoding='utf-8'), str(p.stderr.read(), encoding='utf-8')
 
         p.stdout.close()
         p.stderr.close()
 
         if msgo:
-            self.assertIn(final_sha, msgo, msg=f'\nresult = {final_sha}\nlog = {msgo}')
+            self.assertIn(final_sha, msgo,
+                          msg=f'\nresult = {final_sha}\nlog = {msgo}')
         else:
-            raise IOError('Unable to obtain git log\nmsgo = {log!r}\nmsge = {err!r}'.format(log=msgo, err=msge))
+            raise IOError('Unable to obtain git log\nmsgo = {log!r}\nmsge = {err!r}'.format(
+                log=msgo, err=msge))
 
 
 class TestRepoEvalCountOneCommitLog(unittest.TestCase):
@@ -447,7 +463,8 @@ class TestRepoEvalCountOneCommitLog(unittest.TestCase):
         command = list(result)
         command.insert(0, 'git')
 
-        p = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        p = subprocess.Popen(
+            command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         stdout = p.stdout.read()
         p.stdout.close()
 
@@ -463,7 +480,8 @@ class TestRepoEvalCountOneCommitLog(unittest.TestCase):
         test_line = str(stdout.splitlines()[0], encoding='utf-8')
 
         # check if the line contains all the information correctly
-        expected_list = ['7dbdb9', 'KangWon LEE', 'kangwon.lee@kpu.ac.kr', 'Wed Jul 4 18:48:00 2018 +0900', 'Initial commit']
+        expected_list = ['7dbdb9', 'KangWon LEE', 'kangwon.lee@kpu.ac.kr',
+                         'Wed Jul 4 18:48:00 2018 +0900', 'Initial commit']
 
         for item in expected_list:
             self.assertIn(item, test_line)
@@ -474,41 +492,46 @@ class TestRepoEvalCountOneCommitLog(unittest.TestCase):
         # TODO : check if a test is desirable to depend on the internal architecture
 
         txt = (
-                f'{self.e.commit_split_token}0333282e3184bc17b16d42a313897a6c35ded482'
-                f'{self.e.field_split_token}Kang Won LEE'
-                f'{self.e.field_split_token}kangwon.lee@kpu.ac.kr'
-                f'{self.e.field_split_token}Fri Sep 14 01:44:09 2018 +0900'
-                f'{self.e.field_split_token}first-commit\n'
-                '185\t0\t00.ipynb\n'
-                '257\t0\t01.ipynb\n'
-                '404\t0\t02.ipynb\n'
-                '\n'
-                f'{self.e.commit_split_token}83274fd5396a2e81e0ad067371cebed8f54e547f'
-                f'{self.e.field_split_token}\'Kangwon Lee (Education)\''
-                f'{self.e.field_split_token}\'kangwonlee@users.noreply.github.com\''
-                f'{self.e.field_split_token}\'Thu Sep 13 09:42:31 2018 -0700\''
-                f'{self.e.field_split_token}\'Initial-commit\'\n'
-                '104\t0\t.gitignore\n'
+            f'{self.e.commit_split_token}0333282e3184bc17b16d42a313897a6c35ded482'
+            f'{self.e.field_split_token}Kang Won LEE'
+            f'{self.e.field_split_token}kangwon.lee@kpu.ac.kr'
+            f'{self.e.field_split_token}Fri Sep 14 01:44:09 2018 +0900'
+            f'{self.e.field_split_token}first-commit\n'
+            '185\t0\t00.ipynb\n'
+            '257\t0\t01.ipynb\n'
+            '404\t0\t02.ipynb\n'
+            '\n'
+            f'{self.e.commit_split_token}83274fd5396a2e81e0ad067371cebed8f54e547f'
+            f'{self.e.field_split_token}\'Kangwon Lee (Education)\''
+            f'{self.e.field_split_token}\'kangwonlee@users.noreply.github.com\''
+            f'{self.e.field_split_token}\'Thu Sep 13 09:42:31 2018 -0700\''
+            f'{self.e.field_split_token}\'Initial-commit\'\n'
+            '104\t0\t.gitignore\n'
         )
 
         result_columns, result_index = self.e.convert_git_log_to_table(txt)
 
-        expected_files_set = {'02.ipynb', '00.ipynb', '01.ipynb',  '.gitignore'}
-        expected_eval_dict = {'01.ipynb': 1.0, '00.ipynb':1.0, '02.ipynb': 1.0, '.gitignore':1.0}
+        expected_files_set = {'02.ipynb',
+                              '00.ipynb', '01.ipynb',  '.gitignore'}
+        expected_eval_dict = {'01.ipynb': 1.0,
+                              '00.ipynb': 1.0, '02.ipynb': 1.0, '.gitignore': 1.0}
 
-        self.assertFalse(expected_files_set - set(result_columns), f"set(result_columns) = {set(result_columns)}")
-        self.assertFalse(expected_files_set - set(result_index.keys()), f"set(result_index.keys()) = {set(result_index.keys())}")
+        self.assertFalse(expected_files_set - set(result_columns),
+                         f"set(result_columns) = {set(result_columns)}")
+        self.assertFalse(expected_files_set - set(result_index.keys()),
+                         f"set(result_index.keys()) = {set(result_index.keys())}")
 
         for filename in expected_files_set:
-            self.assertAlmostEqual(expected_eval_dict[filename], expected_eval_dict[filename])
+            self.assertAlmostEqual(
+                expected_eval_dict[filename], expected_eval_dict[filename])
 
     def get_git_log_commit_line(self, sha, author, email, date, subject,):
         return (
-                sha +
-                f'{self.e.field_split_token}{author}'
-                f'{self.e.field_split_token}{email}'
-                f'{self.e.field_split_token}{date}'
-                f'{self.e.field_split_token}{subject}'
+            sha +
+            f'{self.e.field_split_token}{author}'
+            f'{self.e.field_split_token}{email}'
+            f'{self.e.field_split_token}{date}'
+            f'{self.e.field_split_token}{subject}'
         )
 
     def test_get_commit_dict_00(self):
@@ -526,12 +549,13 @@ class TestRepoEvalCountOneCommitLog(unittest.TestCase):
         expected = {
             'sha': sha,
             'author': author,
-            'email':email,
-            'date':date,
+            'email': email,
+            'date': date,
             'subject': subject,
         }
 
-        self.assertDictEqual(expected, result, msg=f"type(result) = {type(result)}")
+        self.assertDictEqual(
+            expected, result, msg=f"type(result) = {type(result)}")
 
     def test_get_commit_dict_01(self):
         """
@@ -545,16 +569,16 @@ class TestRepoEvalCountOneCommitLog(unittest.TestCase):
         subject = u'ex08-n'
 
         txt = self.get_git_log_commit_line(
-            sha, 
-            author, 
+            sha,
+            author,
             email, date, subject,
         )
 
         result = self.e.get_commit_dict(txt)
-        expected = {'sha': sha, 
-                    'author': author, 
-                    'email': email, 
-                    'date': date, 
+        expected = {'sha': sha,
+                    'author': author,
+                    'email': email,
+                    'date': date,
                     'subject': subject}
         self.assertEqual(expected['sha'], result['sha'])
         self.assertEqual(expected['date'], result['date'])
@@ -571,18 +595,18 @@ class TestRepoEvalCountOneCommitLog(unittest.TestCase):
         subject = u'  Merge branch \'hotfix/branch_figure\'  '
 
         txt = self.get_git_log_commit_line(
-            sha, 
-            author, 
+            sha,
+            author,
             email, date, subject,
         )
 
         result = self.e.get_commit_dict(txt)
         expected = {
-            'sha': sha, 
-            'author': author, 
-            'email': email, 
-            'date': date, 
-            'subject': subject, 
+            'sha': sha,
+            'author': author,
+            'email': email,
+            'date': date,
+            'subject': subject,
         }
 
         self.assertEqual(expected['sha'], result['sha'])
@@ -601,7 +625,8 @@ class TestRepoEvalCountOneCommitLog(unittest.TestCase):
 
         git_cmd = ['git'] + git_cmd
 
-        p = subprocess.Popen(git_cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        p = subprocess.Popen(
+            git_cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         stdout = str(p.stdout.read(), encoding='utf-8')
         stderr = str(p.stderr.read(), encoding='utf-8')
 
@@ -637,24 +662,24 @@ class TestRepoEvalCountOneCommitLog(unittest.TestCase):
         subject = u'''"""가 print 명령어를 반복하지 않아도 되게 한다. 백슬래쉬를 사용하는 방법. (줄을 변경하게 함. 엔터효과)\\\\\\'''
 
         txt = self.get_git_log_commit_line(
-            sha, 
-            author, 
+            sha,
+            author,
             email, date, subject,
         )
 
         result = self.e.get_commit_dict(txt)
 
         expected = {
-            'sha': sha, 
-            'author': author, 
-            'email': email, 
-            'date': date, 
-            'subject': subject, 
+            'sha': sha,
+            'author': author,
+            'email': email,
+            'date': date,
+            'subject': subject,
         }
 
         # """가 print 명령어를 반복하지 않아도 되게 한다.
         # 백슬래쉬를 사용하는 방법. (줄을 변경하게 함. 엔터효과)\\\
-        self.maxDiff=None
+        self.maxDiff = None
         self.assertEqual(expected['sha'], result['sha'])
         self.assertEqual(expected['date'], result['date'])
         self.assertEqual(expected['subject'], result['subject'])
@@ -686,8 +711,9 @@ class TestSysArgv(unittest.TestCase):
         self.assertTrue(result)
 
     def test_get_argn(self):
-        
-        result = progress.get_argn(os.path.join(os.path.split(__file__)[0], 'sys_argv_example_00.py'))
+
+        result = progress.get_argn(os.path.join(
+            os.path.split(__file__)[0], 'sys_argv_example_00.py'))
 
         expected = 3
 
@@ -713,8 +739,9 @@ class TestFromSysImportArgv(unittest.TestCase):
         self.assertTrue(result)
 
     def test_get_argn(self):
-        
-        result = progress.get_argn(os.path.join(os.path.split(__file__)[0], 'from_sys_argv_example_00.py'))
+
+        result = progress.get_argn(os.path.join(os.path.split(__file__)[
+                                   0], 'from_sys_argv_example_00.py'))
 
         expected = 2
 
@@ -735,14 +762,18 @@ class TestRepoEvalCountOneCommitLogTimeSetting(unittest.TestCase):
 
         strptime_format = '%Y-%m-%d %z'
 
-        self.after_date_struct = time.strptime(self.after_date_str, strptime_format)
-        self.after_date_datetime = datetime.datetime.strptime(self.after_date_str, strptime_format)
+        self.after_date_struct = time.strptime(
+            self.after_date_str, strptime_format)
+        self.after_date_datetime = datetime.datetime.strptime(
+            self.after_date_str, strptime_format)
 
-        self.before_date_struct = time.strptime(self.before_date_str, strptime_format)
-        self.before_date_datetime = datetime.datetime.strptime(self.before_date_str, strptime_format)
+        self.before_date_struct = time.strptime(
+            self.before_date_str, strptime_format)
+        self.before_date_datetime = datetime.datetime.strptime(
+            self.before_date_str, strptime_format)
 
         self.e = progress.RepoEvalCountOneCommitLog(
-            after=time.strftime('%Y-%m-%d', self.after_date_struct), 
+            after=time.strftime('%Y-%m-%d', self.after_date_struct),
             before=time.strftime('%Y-%m-%d', self.before_date_struct),
         )
 
@@ -756,7 +787,8 @@ class TestRepoEvalCountOneCommitLogTimeSetting(unittest.TestCase):
         command = list(result)
         command.insert(0, 'git')
 
-        p = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        p = subprocess.Popen(
+            command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         stdout = str(p.stdout.read(), 'utf-8')
         p.stdout.close()
 
@@ -770,16 +802,18 @@ class TestRepoEvalCountOneCommitLogTimeSetting(unittest.TestCase):
                 commit_dict = ast.literal_eval(line)
                 commit_date_str = commit_dict['date']
                 # print(k, commit_date_str)
-                commit_datetime = datetime.datetime.strptime(commit_date_str, 
-                    # Wkd Mnt dd hh:mm:ss yyyy +tmzn
-                    # https://docs.python.org/3/library/datetime.html#strftime-and-strptime-behavior
-                    "%a %b %d %H:%M:%S %Y %z")
+                commit_datetime = datetime.datetime.strptime(commit_date_str,
+                                                             # Wkd Mnt dd hh:mm:ss yyyy +tmzn
+                                                             # https://docs.python.org/3/library/datetime.html#strftime-and-strptime-behavior
+                                                             "%a %b %d %H:%M:%S %Y %z")
 
                 msg = 'line = %d' % k
 
-                self.assertGreater(commit_datetime, self.after_date_datetime, msg=msg)
-                self.assertLess(commit_datetime, self.before_date_datetime, msg=msg)
-        
+                self.assertGreater(
+                    commit_datetime, self.after_date_datetime, msg=msg)
+                self.assertLess(commit_datetime,
+                                self.before_date_datetime, msg=msg)
+
 
 if "__main__" == __name__:
     unittest.main()

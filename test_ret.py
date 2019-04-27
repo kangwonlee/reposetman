@@ -37,13 +37,15 @@ class TestFetchAndReset(unittest.TestCase):
         self.second_repository = 'https://github.com/kangwonlee/test-reposetman-fetch-and-reset-conflict'
 
         self.cwd = os.getcwd()
-        self.clone_destination_folder = os.path.abspath('temp_test_fetch_and_reset')
+        self.clone_destination_folder = os.path.abspath(
+            'temp_test_fetch_and_reset')
 
         if os.path.exists(self.clone_destination_folder):
             self.reset_existing_repo()
         else:
             # clone the first test repository
-            os.system(f'git clone {self.first_repository} {self.clone_destination_folder}')
+            os.system(
+                f'git clone {self.first_repository} {self.clone_destination_folder}')
 
             # change default remote repository to another
             os.chdir(self.clone_destination_folder)

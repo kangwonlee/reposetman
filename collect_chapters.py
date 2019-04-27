@@ -21,6 +21,8 @@ If that file is available, it would use it.
 """
 
 
+
+
 import ast
 import configparser
 import itertools
@@ -29,13 +31,10 @@ import os
 import pprint
 import sys
 import urllib.parse as up
-
 import git
 import progress
 import regex_test as ret
 import timeit
-
-
 @timeit.timeit
 def main(argv):
     # read configuration file
@@ -52,7 +51,7 @@ def main(argv):
         # if the umbrella_folder was missing, try to update
         config['operation']['update_repo'] = 'False'
 
-    # to save time, if list file is available and 
+    # to save time, if list file is available and
     # config says so, read from the folder list file
     # TODO : consider moving folder list filename to cfg file
     if (os.path.exists('participant_folder_list.txt') and ('True' != config['operation']['update_repo'])):
@@ -88,7 +87,7 @@ def main(argv):
         participant_folder_list = init_or_update_umbrella_repos(
             transpose_dict(
                 get_sections_dict(config)
-                ), 
+            ),
             umbrella_folder
         )
 
@@ -153,7 +152,7 @@ def get_sections_dict(config):
     # section loop
     for section in ast.literal_eval(config['operation']['sections']):
         sections_dict[section] = {
-            'urls':ret.get_github_url_list(config[section]['list'].strip()),
+            'urls': ret.get_github_url_list(config[section]['list'].strip()),
         }
 
         url_parse_dict[section] = []
@@ -176,9 +175,9 @@ def get_sections_dict(config):
                 os.path.splitext(
                     os.path.split(
                         parse.path.strip('/')
-                        )[-1]  # last part of the path
-                    )[0][id_starts_here:]   # extract id
-                )
+                    )[-1]  # last part of the path
+                )[0][id_starts_here:]   # extract id
+            )
 
     # TODO : is it desirable to separate id extraction?
 
@@ -213,7 +212,8 @@ def transpose_dict(sections_dict):
                 # add admin id to url
                 # remove '/' if at the end
                 # add .git
-                url = git.set_id_to_url(url, ret.config['Admin']['id']).strip('/') + '.git'
+                url = git.set_id_to_url(
+                    url, ret.config['Admin']['id']).strip('/') + '.git'
             user_dict[section] = url
             ids_dict[user_id] = user_dict
 
@@ -252,7 +252,7 @@ def init_or_update_umbrella_repos(users_dict, umbrella_folder, b_parallel=True):
 
         # iterate over users_dict.items() repeating umbrella_folder
         repo_list = p.starmap(
-            init_or_update_user_umbrella, 
+            init_or_update_user_umbrella,
             gen_folder_user_dict(users_dict.items()),
         )
 
@@ -263,7 +263,7 @@ def init_or_update_umbrella_repos(users_dict, umbrella_folder, b_parallel=True):
 
         # iterate over users_dict.items() repeating umbrella_folder
         repo_list = itertools.starmap(
-            init_or_update_user_umbrella, 
+            init_or_update_user_umbrella,
             gen_folder_user_dict(users_dict.items()),
         )
 
@@ -274,9 +274,12 @@ def init_or_update_umbrella_repos(users_dict, umbrella_folder, b_parallel=True):
 
 def init_or_update_user_umbrella(umbrella_folder, user, section_url_dict):
 
-    assert os.path.exists(umbrella_folder), f'init_or_update_user_umbrella: missing folder {umbrella_folder}'
-    assert isinstance(user, str), f'init_or_update_user_umbrella: type({user}) = {type(user)}'
-    assert isinstance(section_url_dict, dict), f'init_or_update_user_umbrella: type({section_url_dict}) = {type(section_url_dict)}'
+    assert os.path.exists(
+        umbrella_folder), f'init_or_update_user_umbrella: missing folder {umbrella_folder}'
+    assert isinstance(
+        user, str), f'init_or_update_user_umbrella: type({user}) = {type(user)}'
+    assert isinstance(
+        section_url_dict, dict), f'init_or_update_user_umbrella: type({section_url_dict}) = {type(section_url_dict)}'
 
     user_folder = os.path.abspath(os.path.join(umbrella_folder, user))
     if not os.path.exists(user_folder):
@@ -301,12 +304,14 @@ def init_or_update_user_umbrella(umbrella_folder, user, section_url_dict):
         if not os.path.exists(os.path.join(user_folder, section)):
             print(f"folder missing : {os.path.join(user_folder, section)}")
             print('subtree add')
-            git.git(('subtree', 'add', f'--prefix={section}', section, 'master'))
+            git.git(
+                ('subtree', 'add', f'--prefix={section}', section, 'master'))
         else:
             print(f'subtree pull {section_url_dict[section]}')
-            git.git(('subtree', 'pull', f'--prefix={section}', section, 'master'))
+            git.git(
+                ('subtree', 'pull', f'--prefix={section}', section, 'master'))
 
-    os.chdir(start_folder)    
+    os.chdir(start_folder)
     return {'name': user, 'path': user_folder}
 
 
@@ -331,7 +336,7 @@ def init_user_umbrella_repo(user_dict):
 
 
 @timeit.timeit
-def generate_reports(repo_list, config, results = {}):
+def generate_reports(repo_list, config, results={}):
     progress.call_commit_count(config, 'umbrella', repo_list, results)
     progress.call_pound_count(config, 'umbrella', repo_list, results)
     progress.call_run_all(config, 'umbrella', repo_list, results)

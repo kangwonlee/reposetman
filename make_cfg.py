@@ -8,4 +8,4 @@ after = 2018-08-27 12:52
 """
 for i in range(5, 10+1):
     if 8 != i:
-        print(cfg_template.format(**{'i':i}))
+        print(cfg_template.format(**{'i': i}))
