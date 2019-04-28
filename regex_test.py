@@ -254,18 +254,14 @@ def tag_stamp(b_tag_after_update, repo_path_in_section, repo, branch='', commit=
 
         # decide tag string
         if branch:
+            if '/' in branch:
+                branch = branch[(branch.index('/')+1):]
+
             # add branch name
-            tag_string = '{time_stamp}__{branch}__{sha}'.format(
-                time_stamp=time.asctime().replace(' ', '_').replace(':', '_'),
-                sha=last_sha,
-                branch=branch,
-            )
+            tag_string = f'{get_timestamp_str()}__{branch}__{last_sha}'
         else:
             # just time stamp
-            tag_string = '{time_stamp}__{sha}'.format(
-                time_stamp=time.asctime().replace(' ', '_').replace(':', '_'),
-                sha=last_sha,
-            )
+            tag_string = f'{get_timestamp_str()}__{last_sha}'
 
         # Tag if the latest commit does not already have a tag
         if not git.has_a_tag(commit=commit):
