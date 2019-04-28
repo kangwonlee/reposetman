@@ -259,7 +259,14 @@ def postprocess(config, section, results):
     if is_too_frequent(last_sent_gmtime_sec, comment_period_days):
         print("Message may be too frequent?")
     else:
-        build_todo_list_grammar(config, section, results['run_all']['table'])
+        message_list = build_todo_list_grammar(
+            config, section, results['run_all']['table'])
+
+        write_message_files(
+            message_list,
+            get_message_filename(config, section),
+            get_last_sent_filename(config, section)
+        )
 
 
 def get_last_sent_filename(config, section):
@@ -467,13 +474,6 @@ def build_todo_list_grammar(config, section, all_outputs, b_verbose=False, todo_
                             f"build_todo_list_grammar() : len(todo_list) = {len(todo_list)}")
         # end of file loop
     # end of repo loop
-
-    # write to json file
-    write_message_files(
-        todo_list, 
-        get_message_filename(config, section), 
-        get_last_sent_filename(config, section)
-    )
 
     if b_verbose:
         print('build_comment_list_run_all() ends')
