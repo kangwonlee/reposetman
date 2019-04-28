@@ -250,7 +250,7 @@ def tag_stamp(b_tag_after_update, repo_path_in_section, repo, branch='', commit=
         os.chdir(repo_path_in_section)
 
         # get latest hash value
-        last_sha = git.get_last_sha()
+        last_sha = git.get_last_sha(branch=branch)
 
         # decide tag string
         if branch:
