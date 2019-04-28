@@ -278,7 +278,7 @@ def tag_all_remote_branches(b_tag_after_update, repo_abs_path, repo):
     Tag all remote branches with timestamps and branch names
     """
     # preserve current status
-    current_section_branch = git.get_current_branch()
+    # current_section_branch = git.get_current_branch()
     # probably section path
     section_path = os.getcwd()
 
@@ -304,7 +304,7 @@ def tag_all_remote_branches(b_tag_after_update, repo_abs_path, repo):
 
     # return to section path
     os.chdir(section_path)
-    git.checkout(current_section_branch)
+    # git.checkout(current_section_branch)
 
 
 def get_git_naver_anon(proj_id):
