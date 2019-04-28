@@ -469,7 +469,11 @@ def build_todo_list_grammar(config, section, all_outputs, b_verbose=False, todo_
     # end of repo loop
 
     # write to json file
-    write_message_files(todo_list, config[section]['todo_list_file'], get_last_sent_filename(config, section))
+    write_message_files(
+        todo_list, 
+        get_message_filename(config, section), 
+        get_last_sent_filename(config, section)
+    )
 
     if b_verbose:
         print('build_comment_list_run_all() ends')
