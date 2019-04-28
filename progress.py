@@ -423,6 +423,16 @@ def run_all(config, section, repo_list):
 
 class MessageListBuilder(object):
     def __init__(self, config, section, table, b_verbose=False, message_list=[]):
+        """
+        Build a json file for GitHub commit messages
+
+        config : see sample progress.cfg file
+        section : section name
+        table : RepoTable on each file
+        b_verbose = False
+        message = [] : if there is an existing message list
+        """
+
         self.config = config
         self.section = section
         self.table = table
