@@ -519,6 +519,15 @@ class MessageListBuilderGrammar(MessageListBuilderBase):
         return todo_dict
 
 
+class MessageListBuilderPound(MessageListBuilderBase):
+    def __init__(self, config, section, result_dict, b_verbose=False, message_list=[]):
+        super().__init__(config, section, result_dict['run_all']['table'], b_verbose, message_list)
+
+        self.run_all = result_dict['run_all']['table']
+        self.commit_count = result_dict['count_commits']['table']
+        self.pound_count = result_dict['pound_counts']['table']
+
+
 def write_message_files(todo_list, todo_list_filename, last_sent_filename):
 
     # write to json file
