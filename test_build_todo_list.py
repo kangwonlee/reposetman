@@ -86,6 +86,8 @@ class TestBuildTodoListGrammar(unittest.TestCase):
 
         self.all_outputs, self.send_sha = self.init_all_outputs()
 
+        self.object_under_test = progress.MessageListBuilderGrammar(self.config, self.section_list[0], self.all_outputs, b_verbose=True)
+
     def tearDown(self):
         del self.config
         del self.all_outputs
@@ -101,8 +103,7 @@ class TestBuildTodoListGrammar(unittest.TestCase):
             os.remove(self.config[section_name]['last_sent_file'])
 
         # function under test
-        result_list = progress.build_todo_list_grammar(
-            self.config, section_name, self.all_outputs, b_verbose=True)
+        result_list = self.object_under_test.build_message_list()
 
         send_sha = list(self.send_sha)
 
