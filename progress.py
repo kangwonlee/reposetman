@@ -448,34 +448,16 @@ def build_todo_list_grammar(config, section, all_outputs, b_verbose=False, todo_
     for repo_name in all_outputs.index:
         # column loop == folder/file loop
         for local_path in all_outputs[repo_name]:
-            run_result_dict = all_outputs[repo_name][local_path]
-            # otherwise, usually not a .py file
-            if isinstance(run_result_dict, dict):
-                # if the dict has 'grammar pass' and the value is False
-                if not run_result_dict.get('grammar pass', True):
-                    # json example
-                    # {
-                    #   "owner": "<github user id or organization id>",
-                    #   "repo": "<repository id>",
-                    #   "sha": "<SHA of the commit of the repository>",
-                    #   "comment_str": "<comment string>"
-                    # },
-                    todo_dict = {
-                        "owner": org_name,
-                        "repo": repo_name,
-                        "sha": run_result_dict['sha'],
-                        "comment_str": (
-                            f"파일 {local_path} 구문 확인 바랍니다. (자동 생성 메시지 시험중)\n"
-                            f"Please verify syntax of {local_path}. (Testing auto comments)"
-                        )
-                    }
-                    todo_list.append(todo_dict)
-                    if b_verbose:
-                        print(
-                            f"build_todo_list_grammar() : appending {todo_dict}")
-                    if b_verbose:
-                        print(
-                            f"build_todo_list_grammar() : len(todo_list) = {len(todo_list)}")
+            message_dict = build_message_dict_grammar(all_outputs, repo_name, local_path, org_name, b_verbose=False)
+
+            if message_dict:
+                todo_list.append(message_dict)
+                if b_verbose:
+                    print(
+                        f"build_todo_list_grammar() : appending {message_dict}")
+                if b_verbose:
+                    print(
+                        f"build_todo_list_grammar() : len(todo_list) = {len(todo_list)}")
         # end of file loop
     # end of repo loop
 
