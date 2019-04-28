@@ -450,6 +450,44 @@ class MessageListBuilder(object):
     def get_message_filename(self):
         return self.config[self.section]['todo_list_file']
 
+    @timeit.timeit
+    def build_message_list(self):
+        if self.b_verbose:
+            print('build_message_list() starts')
+
+        if self.b_verbose:
+            print(
+                f'build_message_list() : len(message_list) = {len(self.message_list)}')
+
+        # usually organization for the class
+        org_name = self.get_section_name()
+
+        # row loop == repository loop
+        for repo_name in self.table.index:
+            # column loop == folder/file loop
+            for local_path in self.table[repo_name]:
+                message_dict = self.build_message_dict(
+                    repo_name, local_path, org_name, b_verbose=False)
+
+                if message_dict:
+                    self.message_list.append(message_dict)
+                    if self.b_verbose:
+                        print(
+                            f"build_message_list() : appending {message_dict}")
+                    if self.b_verbose:
+                        print(
+                            f"build_message_list() : len(message_list) = {len(self.message_list)}")
+            # end of file loop
+        # end of repo loop
+
+        if self.b_verbose:
+            print('build_message_list() ends')
+
+        return self.message_list
+
+    def build_message_dict(self, row, column, org_name, b_verbose=False):
+        raise NotImplementedError
+
 
 @timeit.timeit
 def build_todo_list_grammar(config, section, all_outputs, b_verbose=False, todo_list=False):
@@ -478,7 +516,8 @@ def build_todo_list_grammar(config, section, all_outputs, b_verbose=False, todo_
     for repo_name in all_outputs.index:
         # column loop == folder/file loop
         for local_path in all_outputs[repo_name]:
-            message_dict = build_message_dict_grammar(all_outputs, repo_name, local_path, org_name, b_verbose=False)
+            message_dict = build_message_dict_grammar(
+                all_outputs, repo_name, local_path, org_name, b_verbose=False)
 
             if message_dict:
                 todo_list.append(message_dict)
