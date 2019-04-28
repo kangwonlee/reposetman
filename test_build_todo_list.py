@@ -40,6 +40,15 @@ class BaseTestBuildMessageList(unittest.TestCase):
         with open(self.config_filename, 'w') as cfg_file:
             config.write(cfg_file)
 
+    def setUp(self):
+        self.config = configparser.ConfigParser()
+        if not os.path.exists(self.config_filename):
+            self.init_test_cfg_build_todo_list()
+
+        self.config.read(self.config_filename)
+        self.section_list = ast.literal_eval(
+            self.config['operation']['sections'])
+
 
 class TestBuildTodoListGrammar(BaseTestBuildMessageList):
     def init_all_outputs(self):
@@ -78,13 +87,7 @@ class TestBuildTodoListGrammar(BaseTestBuildMessageList):
         return all_outputs, send_sha
 
     def setUp(self):
-        self.config = configparser.ConfigParser()
-        if not os.path.exists(self.config_filename):
-            self.init_test_cfg_build_todo_list()
-
-        self.config.read(self.config_filename)
-        self.section_list = ast.literal_eval(
-            self.config['operation']['sections'])
+        super().setUp()
 
         self.all_outputs, self.send_sha = self.init_all_outputs()
 
