@@ -421,7 +421,7 @@ def run_all(config, section, repo_list):
     return write_tables_dict
 
 
-class MessageListBuilder(object):
+class MessageListBuilderBase(object):
     def __init__(self, config, section, table, b_verbose=False, message_list=[]):
         """
         Build a json file for GitHub commit messages
@@ -489,7 +489,7 @@ class MessageListBuilder(object):
         raise NotImplementedError
 
 
-class MessageListBuilderGrammar(MessageListBuilder):
+class MessageListBuilderGrammar(MessageListBuilderBase):
     def build_message_dict(self, row, column, org_name, b_verbose=False):
         run_result_dict = self.table[row][column]
         # otherwise, usually not a .py file
