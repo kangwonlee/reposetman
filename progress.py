@@ -459,6 +459,7 @@ class MessageListBuilderBase(object):
             print(
                 f'build_message_list() : len(message_list) = {len(self.message_list)}')
 
+        # usually organization for the class
         org_name = self.get_section_name()
 
         # row loop == repository loop
@@ -491,11 +492,10 @@ class MessageListBuilderBase(object):
 class MessageListBuilderGrammar(MessageListBuilderBase):
     def build_message_dict(self, row, column, org_name, b_verbose=False):
         run_result_dict = self.table[row][column]
-        # otherwise, usually not a .py file
 
         todo_dict = {}
 
-        # usually organization for the class
+        # otherwise, usually not a .py file
         if isinstance(run_result_dict, dict):
             # if the dict has 'grammar pass' and the value is False
             if not run_result_dict.get('grammar pass', True):
