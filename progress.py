@@ -489,6 +489,36 @@ class MessageListBuilder(object):
         raise NotImplementedError
 
 
+class MessageListBuilderGrammar(MessageListBuilder):
+    def build_message_dict(self, row, column, org_name, b_verbose=False):
+        run_result_dict = self.table[row][column]
+        # otherwise, usually not a .py file
+
+        todo_dict = {}
+
+        if isinstance(run_result_dict, dict):
+            # if the dict has 'grammar pass' and the value is False
+            if not run_result_dict.get('grammar pass', True):
+                # json example
+                # {
+                #   "owner": "<github user id or organization id>",
+                #   "repo": "<repository id>",
+                #   "sha": "<SHA of the commit of the repository>",
+                #   "comment_str": "<comment string>"
+                # },
+                todo_dict = {
+                    "owner": self.get_section_name(),
+                    "repo": row,
+                    "sha": run_result_dict['sha'],
+                    "comment_str": (
+                        f"파일 {column} 구문 확인 바랍니다. (자동 생성 메시지 시험중)\n"
+                        f"Please verify syntax of {column}. (Testing auto comments)"
+                    )
+                }
+
+        return todo_dict
+
+
 @timeit.timeit
 def build_todo_list_grammar(config, section, all_outputs, b_verbose=False, todo_list=False):
     """
