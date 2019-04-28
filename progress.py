@@ -259,8 +259,8 @@ def postprocess(config, section, results):
     if is_too_frequent(last_sent_gmtime_sec, comment_period_days):
         print("Message may be too frequent?")
     else:
-        message_list = build_todo_list_grammar(
-            config, section, results['run_all']['table'])
+        message_list_builder_grammar = MessageListBuilderGrammar(config, section, results['run_all']['table'])
+        message_list = message_list_builder_grammar.build_message_list()
 
         write_message_files(
             message_list,
@@ -517,82 +517,6 @@ class MessageListBuilderGrammar(MessageListBuilder):
                 }
 
         return todo_dict
-
-
-@timeit.timeit
-def build_todo_list_grammar(config, section, all_outputs, b_verbose=False, todo_list=False):
-    """
-    Build a json file for GitHub commit comments
-    For now, just for syntax checking
-
-    config : see sample progress.cfg file
-    section : section name
-    all_outputs : RepoTable on each file
-    """
-    if b_verbose:
-        print('build_comment_list_run_all() starts')
-
-    if not todo_list:
-        todo_list = []
-
-    if b_verbose:
-        print(
-            f'build_comment_list_run_all() : len(todo_list) = {len(todo_list)}')
-
-    # usually organization for the class
-    org_name = get_section_name(config, section)
-
-    # row loop == repository loop
-    for repo_name in all_outputs.index:
-        # column loop == folder/file loop
-        for local_path in all_outputs[repo_name]:
-            message_dict = build_message_dict_grammar(
-                all_outputs, repo_name, local_path, org_name, b_verbose=False)
-
-            if message_dict:
-                todo_list.append(message_dict)
-                if b_verbose:
-                    print(
-                        f"build_todo_list_grammar() : appending {message_dict}")
-                if b_verbose:
-                    print(
-                        f"build_todo_list_grammar() : len(todo_list) = {len(todo_list)}")
-        # end of file loop
-    # end of repo loop
-
-    if b_verbose:
-        print('build_comment_list_run_all() ends')
-
-    return todo_list
-
-
-def build_message_dict_grammar(table, row, column, orgname, b_verbose=False):
-    run_result_dict = table[row][column]
-    # otherwise, usually not a .py file
-
-    todo_dict = {}
-
-    if isinstance(run_result_dict, dict):
-        # if the dict has 'grammar pass' and the value is False
-        if not run_result_dict.get('grammar pass', True):
-            # json example
-            # {
-            #   "owner": "<github user id or organization id>",
-            #   "repo": "<repository id>",
-            #   "sha": "<SHA of the commit of the repository>",
-            #   "comment_str": "<comment string>"
-            # },
-            todo_dict = {
-                "owner": orgname,
-                "repo": row,
-                "sha": run_result_dict['sha'],
-                "comment_str": (
-                    f"파일 {column} 구문 확인 바랍니다. (자동 생성 메시지 시험중)\n"
-                    f"Please verify syntax of {column}. (Testing auto comments)"
-                )
-            }
-
-    return todo_dict
 
 
 def write_message_files(todo_list, todo_list_filename, last_sent_filename):
