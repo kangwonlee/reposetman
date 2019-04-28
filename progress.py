@@ -269,6 +269,10 @@ def postprocess(config, section, results):
         )
 
 
+def get_section_name(config, section):
+    return config[section]['organization']
+
+
 def get_last_sent_filename(config, section):
     return config[section]['last_sent_file']
 
