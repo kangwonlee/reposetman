@@ -75,7 +75,7 @@ def process_tags():
         tags_dict[sha].append((datetime_struct, tag))
 
     # sha loop
-    s = 0 # to see if processed all tags
+    s = 0  # to see if processed all tags
     for k, sha in enumerate(tags_dict):
         n = len(tags_dict[sha])
         print('\t\tproces_tags(): {k:3d} {sha} {n}'.format(sha=sha, k=k, n=n))

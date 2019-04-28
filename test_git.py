@@ -55,8 +55,10 @@ class TestGit(unittest.TestCase):
         result = git.get_last_sha()
 
         # get git log of the last commit
-        p = subprocess.Popen(('git', 'log', '-1'), stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        msgo, msge = str(p.stdout.read(),encoding='utf-8'), str(p.stderr.read(),encoding='utf-8')
+        p = subprocess.Popen(('git', 'log', '-1'),
+                             stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        msgo, msge = str(
+            p.stdout.read(), encoding='utf-8'), str(p.stderr.read(), encoding='utf-8')
 
         p.stdout.close()
         p.stderr.close()
@@ -67,7 +69,8 @@ class TestGit(unittest.TestCase):
                 log=msgo,
             ))
         else:
-            raise IOError('Unable to obtain git log\nmsgo = {log!r}\nmsge = {err!r}'.format(log=msgo, err=msge))
+            raise IOError('Unable to obtain git log\nmsgo = {log!r}\nmsge = {err!r}'.format(
+                log=msgo, err=msge))
 
     def test_git_last_sha_file(self):
         filepath = os.path.abspath(__file__)
@@ -75,8 +78,10 @@ class TestGit(unittest.TestCase):
         result = git.get_last_sha(path=filepath)
 
         # get git log of the last commit
-        p = subprocess.Popen(('git', 'log', '-1', filepath), stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        msgo, msge = str(p.stdout.read(),encoding='utf-8'), str(p.stderr.read(),encoding='utf-8')
+        p = subprocess.Popen(('git', 'log', '-1', filepath),
+                             stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        msgo, msge = str(
+            p.stdout.read(), encoding='utf-8'), str(p.stderr.read(), encoding='utf-8')
 
         p.stdout.close()
         p.stderr.close()
@@ -87,7 +92,8 @@ class TestGit(unittest.TestCase):
                 log=msgo,
             ))
         else:
-            raise IOError('Unable to obtain git log\nmsgo = {log!r}\nmsge = {err!r}'.format(log=msgo, err=msge))
+            raise IOError('Unable to obtain git log\nmsgo = {log!r}\nmsge = {err!r}'.format(
+                log=msgo, err=msge))
 
     def test_get_refs_tag_deref(self):
         # function under test
@@ -111,12 +117,13 @@ class TestGit(unittest.TestCase):
 
         # run command
         p = subprocess.Popen(
-            ['git', 'log', '--pretty="{t1}%H{t1}{t2}%d{t2}"'.format(t1=token1, t2=token2)], 
+            ['git', 'log',
+                '--pretty="{t1}%H{t1}{t2}%d{t2}"'.format(t1=token1, t2=token2)],
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
         )
 
-        # result of the command        
+        # result of the command
         msgo = str(p.stdout.read(), encoding='utf-8')
         msge = str(p.stderr.read(), encoding='utf-8')
 
@@ -135,7 +142,8 @@ class TestGit(unittest.TestCase):
 
                 expected_dict[d['sha']] = tag_list
 
-        result_in_expected = [result_sha in expected_dict for result_sha in result_dict]
+        result_in_expected = [
+            result_sha in expected_dict for result_sha in result_dict]
         self.assertTrue(any(result_in_expected))
 
     def test_ls_remote_tag(self):
@@ -147,12 +155,12 @@ class TestGit(unittest.TestCase):
         # prepare for the expected set
         # run command
         p = subprocess.Popen(
-            ['git', 'show-ref', '--tags', '--dereference'], 
+            ['git', 'show-ref', '--tags', '--dereference'],
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
         )
 
-        # result of the command        
+        # result of the command
         msgo = str(p.stdout.read(), encoding='utf-8')
         msge = str(p.stderr.read(), encoding='utf-8')
 
@@ -176,12 +184,12 @@ class TestGit(unittest.TestCase):
         # prepare for the expected set
         # run command
         p = subprocess.Popen(
-            ['git', 'show-ref', '--tags', '--dereference'], 
+            ['git', 'show-ref', '--tags', '--dereference'],
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
         )
 
-        # result of the command        
+        # result of the command
         msgo = str(p.stdout.read(), encoding='utf-8')
         msge = str(p.stderr.read(), encoding='utf-8')
 

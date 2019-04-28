@@ -5,7 +5,7 @@ import os
 def get_comments_list_from_filename(filename, encoding='utf-8'):
     with open(filename, encoding=encoding) as f:
         result = get_comments_list_from_readline(f.readline, filename=filename)
-    
+
     return result
 
 
@@ -28,6 +28,7 @@ def get_comments_list_from_readline(readline, filename=None):
         show_line_info(filename, line, readline)
 
     return comments
+
 
 def show_line_info(filename, line, readline=None):
     print('cwd=', os.getcwd())
