@@ -527,6 +527,41 @@ class MessageListBuilderPound(MessageListBuilderBase):
         self.commit_count = result_dict['count_commits']['table']
         self.pound_count = result_dict['pound_counts']['table']
 
+    def build_message_dict(self, row, column, org_name, b_verbose=False):
+        no_commits = self.commit_count[row][column]
+        no_pound_bytes = self.pound_count[row][column]
+        run_result_dict = self.table[row][column]
+
+        todo_dict = {}
+
+        if b_verbose:
+            print(f'no_commits = {no_commits}')
+            print(f'no_pound_bytes = {no_pound_bytes}')
+            print(f'run_result_dict = {run_result_dict}')
+
+        # otherwise, usually not a .py file
+        if isinstance(run_result_dict, dict):
+            # if the dict has 'grammar pass' and the value is False
+            if (0 < no_commits) and (0 == no_pound_bytes):
+                # json example
+                # {
+                #   "owner": "<github user id or organization id>",
+                #   "repo": "<repository id>",
+                #   "sha": "<SHA of the commit of the repository>",
+                #   "comment_str": "<comment string>"
+                # },
+                todo_dict = {
+                    "owner": self.get_section_name(),
+                    "repo": row,
+                    "sha": run_result_dict['sha'],
+                    "comment_str": (
+                        f"파일 {column} 각 행 주석 추가 바랍니다. (자동 생성 메시지 시험중)\n"
+                        f"Please add comments to lines of {column}. (Testing auto comments)"
+                    )
+                }
+
+        return todo_dict
+
 
 def write_message_files(todo_list, todo_list_filename, last_sent_filename):
 
