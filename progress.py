@@ -426,8 +426,6 @@ def build_todo_list_grammar(config, section, all_outputs, b_verbose=False, todo_
         print(
             f'build_comment_list_run_all() : len(todo_list) = {len(todo_list)}')
 
-    # output filename
-    todo_list_filename = config[section]['todo_list_file']
     # usually organization for the class
     org_name = config[section]['organization']
 
@@ -467,12 +465,7 @@ def build_todo_list_grammar(config, section, all_outputs, b_verbose=False, todo_
     # end of repo loop
 
     # write to json file
-    with open(todo_list_filename, 'wt', encoding='utf-8') as todo_list_file:
-        json.dump(todo_list, todo_list_file, indent=4, sort_keys=True)
-
-    # record last sent date
-    with open(get_last_sent_filename(config, section), 'wt') as last_sent_file:
-        write_last_sent(last_sent_file)
+    write_message_files(todo_list, config[section]['todo_list_file'], get_last_sent_filename(config, section))
 
     if b_verbose:
         print('build_comment_list_run_all() ends')
