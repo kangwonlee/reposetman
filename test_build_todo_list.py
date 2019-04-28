@@ -17,7 +17,7 @@ def get_temp_filename(mode='w+t'):
     return name
 
 
-class TestBuildTodoListGrammar(unittest.TestCase):
+class BaseTestBuildMessageList(unittest.TestCase):
     config_filename = 'test_build_todo_list.cfg'
 
     def init_test_cfg_build_todo_list(self):
@@ -40,6 +40,8 @@ class TestBuildTodoListGrammar(unittest.TestCase):
         with open(self.config_filename, 'w') as cfg_file:
             config.write(cfg_file)
 
+
+class TestBuildTodoListGrammar(BaseTestBuildMessageList):
     def init_all_outputs(self):
 
         send_sha = ['sha_send_01', 'sha_send_11']
