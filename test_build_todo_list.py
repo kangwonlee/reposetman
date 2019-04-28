@@ -40,20 +40,6 @@ class BaseTestBuildMessageList(unittest.TestCase):
         with open(self.config_filename, 'w') as cfg_file:
             config.write(cfg_file)
 
-    def setUp(self):
-        self.config = configparser.ConfigParser()
-        if not os.path.exists(self.config_filename):
-            self.init_test_cfg_build_todo_list()
-
-        self.config.read(self.config_filename)
-        self.section_list = ast.literal_eval(
-            self.config['operation']['sections'])
-
-    def tearDown(self):
-        del self.config
-
-
-class TestBuildTodoListGrammar(BaseTestBuildMessageList):
     def init_all_outputs(self):
 
         send_sha = ['sha_send_01', 'sha_send_11']
@@ -90,15 +76,36 @@ class TestBuildTodoListGrammar(BaseTestBuildMessageList):
         return all_outputs, send_sha
 
     def setUp(self):
-        super().setUp()
+        self.config = configparser.ConfigParser()
+        if not os.path.exists(self.config_filename):
+            self.init_test_cfg_build_todo_list()
+
+        self.config.read(self.config_filename)
+        self.section_list = ast.literal_eval(
+            self.config['operation']['sections'])
 
         self.all_outputs, self.send_sha = self.init_all_outputs()
 
-        self.object_under_test = progress.MessageListBuilderGrammar(self.config, self.section_list[0], self.all_outputs, b_verbose=True)
-
     def tearDown(self):
         del self.all_outputs
+        del self.config
         del self.send_sha
+
+
+class TestBuildTodoListGrammar(BaseTestBuildMessageList):
+    def setUp(self):
+        super().setUp()
+
+        self.object_under_test = progress.MessageListBuilderGrammar(
+            self.config, 
+            self.section_list[0], 
+            self.all_outputs, 
+            b_verbose=True
+        )
+
+    def tearDown(self):
+
+        del self.object_under_test
 
         super().tearDown()
 
