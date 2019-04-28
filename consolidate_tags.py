@@ -65,9 +65,20 @@ def process_tags():
     for tag__sha in tag_sha_list:
         tag, sha = tag__sha
         tags_dict[sha] = tags_dict.get(sha, [])
-        date_time_str, small_sha = tag.split('__')
+        tag_split_list = tag.split('__')
 
-        assert sha.startswith(small_sha)
+        if 2 == len(tag_split_list):
+            date_time_str, small_sha = tag_split_list
+        elif 3 == len(tag_split_list):
+            date_time_str, _, small_sha = tag_split_list
+        elif 4 == len(tag_split_list):
+            date_time_str0, date_time_str1, _, small_sha = tag_split_list
+            date_time_str = '_'.join([date_time_str0, date_time_str1])
+        else:
+            print(tag_split_list)
+            raise(ValueError)
+
+        assert sha.startswith(small_sha), f"sha = {sha}, small_sha = {small_sha}"
 
         # Tue_Apr_24_16_54_15_2018
         datetime_struct = time.strptime(date_time_str, '%a_%b_%d_%H_%M_%S_%Y')
