@@ -266,6 +266,10 @@ def get_last_sent_filename(config, section):
     return config[section]['last_sent_file']
 
 
+def get_message_filename(config, section):
+    return config[section]['todo_list_file']
+
+
 def call_run_all(config, section, repo_list, results):
     run_all_dict = run_all(config, section, repo_list)
     results.update(
