@@ -49,6 +49,9 @@ class BaseTestBuildMessageList(unittest.TestCase):
         self.section_list = ast.literal_eval(
             self.config['operation']['sections'])
 
+    def tearDown(self):
+        del self.config
+
 
 class TestBuildTodoListGrammar(BaseTestBuildMessageList):
     def init_all_outputs(self):
@@ -94,9 +97,10 @@ class TestBuildTodoListGrammar(BaseTestBuildMessageList):
         self.object_under_test = progress.MessageListBuilderGrammar(self.config, self.section_list[0], self.all_outputs, b_verbose=True)
 
     def tearDown(self):
-        del self.config
         del self.all_outputs
         del self.send_sha
+
+        super().tearDown()
 
     def test_build_todo_list_grammar(self):
 
