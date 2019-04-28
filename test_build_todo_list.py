@@ -133,6 +133,8 @@ class TestBuildTodoListGrammar(BaseTestBuildMessageList):
         if os.path.exists(self.config[section_name]['last_sent_file']):
             os.remove(self.config[section_name]['last_sent_file'])
 
+
+class TestBuildTodoSupportFunctions(unittest.TestCase):
     def test_write_last_sent(self):
         gmtime_sec = time.time()
 
