@@ -262,6 +262,14 @@ def postprocess(config, section, results):
         message_list_builder_grammar = MessageListBuilderGrammar(config, section, results['run_all']['table'])
         message_list = message_list_builder_grammar.build_message_list()
 
+        if (
+                ('True' == config[section]['count_commits']) 
+                and ('True' == config[section]['pound_count']) 
+                and ('True' == config[section]['run_all'])
+            ):
+            message_list_builder_pound = MessageListBuilderPound(config, section, results, message_list=message_list)
+            message_list = message_list_builder_pound.build_message_list()
+
         write_message_files(
             message_list,
             get_message_filename(config, section),
