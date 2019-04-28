@@ -528,8 +528,8 @@ class MessageListBuilderPound(MessageListBuilderBase):
         self.pound_count = result_dict['pound_counts']['table']
 
     def build_message_dict(self, row, column, org_name, b_verbose=False):
-        no_commits = self.commit_count[row][column]
-        no_pound_bytes = self.pound_count[row][column]
+        no_commits = self.commit_count[row].get(column, 0)
+        no_pound_bytes = self.pound_count[row].get(column, -1)
         run_result_dict = self.table[row][column]
 
         todo_dict = {}
