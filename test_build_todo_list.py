@@ -17,7 +17,7 @@ def get_temp_filename(mode='w+t'):
     return name
 
 
-class TestBuildTodoListGrammar(unittest.TestCase):
+class BaseTestBuildMessageList(unittest.TestCase):
     config_filename = 'test_build_todo_list.cfg'
 
     def init_test_cfg_build_todo_list(self):
@@ -87,9 +87,27 @@ class TestBuildTodoListGrammar(unittest.TestCase):
         self.all_outputs, self.send_sha = self.init_all_outputs()
 
     def tearDown(self):
-        del self.config
         del self.all_outputs
+        del self.config
         del self.send_sha
+
+
+class TestBuildTodoListGrammar(BaseTestBuildMessageList):
+    def setUp(self):
+        super().setUp()
+
+        self.object_under_test = progress.MessageListBuilderGrammar(
+            self.config, 
+            self.section_list[0], 
+            self.all_outputs, 
+            b_verbose=True
+        )
+
+    def tearDown(self):
+
+        del self.object_under_test
+
+        super().tearDown()
 
     def test_build_todo_list_grammar(self):
 
@@ -101,8 +119,7 @@ class TestBuildTodoListGrammar(unittest.TestCase):
             os.remove(self.config[section_name]['last_sent_file'])
 
         # function under test
-        result_list = progress.build_todo_list_grammar(
-            self.config, section_name, self.all_outputs, b_verbose=True)
+        result_list = self.object_under_test.build_message_list()
 
         send_sha = list(self.send_sha)
 
@@ -123,6 +140,8 @@ class TestBuildTodoListGrammar(unittest.TestCase):
         if os.path.exists(self.config[section_name]['last_sent_file']):
             os.remove(self.config[section_name]['last_sent_file'])
 
+
+class TestBuildTodoSupportFunctions(unittest.TestCase):
     def test_write_last_sent(self):
         gmtime_sec = time.time()
 
@@ -191,3 +210,112 @@ class TestBuildTodoListGrammar(unittest.TestCase):
             last_sent_filename)
 
         self.assertLess(last_sent_gmtime_sec, gmtime_sec)
+
+
+class TestBuildTodoListPound(BaseTestBuildMessageList):
+    def init_pound_count(self):
+
+        # input case
+        pound_comments_dict = {
+            'repo0': {
+                'do not send 00': 'N/A',
+                'send 01': 0,
+                'do not send 02': 300,
+            },  # repo 0
+            'repo1': {
+                'do not send 10': 'N/A',
+                'send 11': 0,
+            },  # repo 1
+        }  # pound_counts
+
+        pound_counts = progress.RepoTable()
+        for repo in pound_comments_dict:
+            for filename in pound_comments_dict[repo]:
+                pound_counts.set_row_column(
+                    repo, filename, pound_comments_dict[repo][filename])
+
+        return pound_counts
+
+    def init_commit_counts(self):
+        # input case
+        commit_comments_dict = {
+            'repo0': {
+                'do not send 00': 1,
+                'send 01': 1,
+                'do not send 02': 0,
+            },  # repo 0
+            'repo1': {
+                'do not send 10': 1,
+                'send 11': 2,
+            },  # repo 1
+        }  # commit_comments_dict
+
+        commit_comments = progress.RepoTable()
+        for repo in commit_comments_dict:
+            for filename in commit_comments_dict[repo]:
+                commit_comments.set_row_column(
+                    repo, filename, commit_comments_dict[repo][filename])
+
+        return commit_comments
+
+    def setUp(self):
+        super().setUp()
+
+        self.pound_counts = self.init_pound_count()
+        self.commit_counts = self.init_commit_counts()
+
+        self.result_dict = {
+            'count_commits': {'table': self.commit_counts},
+            'pound_counts': {'table': self.pound_counts},
+            'run_all': {'table': self.all_outputs},
+        }
+
+        self.object_under_test = progress.MessageListBuilderPound(
+            self.config, self.section_list[0], self.result_dict, b_verbose=True)
+
+    def tearDown(self):
+        del self.object_under_test
+
+        del self.result_dict
+
+        del self.pound_counts
+        del self.commit_counts
+
+        super().tearDown()
+
+    def test_build_message_list_pound(self):
+
+        section_name = self.section_list[0]
+
+        # force always run
+        self.config[section_name]['last_sent_file'] = get_temp_filename()
+        if os.path.exists(self.config[section_name]['last_sent_file']):
+            os.remove(self.config[section_name]['last_sent_file'])
+
+        # function under test
+        result_list = self.object_under_test.build_message_list()
+
+        self.assertTrue(result_list)
+
+        send_sha = list(self.send_sha)
+
+        for send_record_dict in result_list:
+            if 'do not send' not in send_record_dict:
+                if send_record_dict['sha'] in send_sha:
+                    send_sha.remove(send_record_dict['sha'])
+                else:
+                    raise ValueError(
+                        '\n'
+                        f'send_record_dict = {send_record_dict}'
+                    )
+
+        # check all sent
+        self.assertFalse(send_sha)
+
+        # remove temp file
+        if os.path.exists(self.config[section_name]['last_sent_file']):
+            os.remove(self.config[section_name]['last_sent_file'])
+
+
+if "__main__" == __name__:
+    unittest.main()
