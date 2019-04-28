@@ -442,7 +442,7 @@ def build_todo_list_grammar(config, section, all_outputs, b_verbose=False, todo_
             f'build_comment_list_run_all() : len(todo_list) = {len(todo_list)}')
 
     # usually organization for the class
-    org_name = config[section]['organization']
+    org_name = get_section_name(config, section)
 
     # row loop == repository loop
     for repo_name in all_outputs.index:
