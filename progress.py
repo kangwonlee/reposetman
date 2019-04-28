@@ -439,6 +439,17 @@ class MessageListBuilder(object):
         self.b_verbose = b_verbose
         self.message_list = message_list
 
+    def get_section_name(self):
+        return self.config[self.section]['organization']
+
+
+    def get_last_sent_filename(self):
+        return self.config[self.section]['last_sent_file']
+
+
+    def get_message_filename(self):
+        return self.config[self.section]['todo_list_file']
+
 
 @timeit.timeit
 def build_todo_list_grammar(config, section, all_outputs, b_verbose=False, todo_list=False):
