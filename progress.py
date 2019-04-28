@@ -421,6 +421,15 @@ def run_all(config, section, repo_list):
     return write_tables_dict
 
 
+class MessageListBuilder(object):
+    def __init__(self, config, section, table, b_verbose=False, message_list=[]):
+        self.config = config
+        self.section = section
+        self.table = table
+        self.b_verbose = b_verbose
+        self.message_list = message_list
+
+
 @timeit.timeit
 def build_todo_list_grammar(config, section, all_outputs, b_verbose=False, todo_list=False):
     """
