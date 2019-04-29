@@ -259,7 +259,7 @@ def postprocess(config, section, results):
     if is_too_frequent(last_sent_gmtime_sec, comment_period_days):
         print("Message may be too frequent?")
     else:
-        message_list_builder_grammar = MessageListBuilderGrammar(config, section, results['run_all']['table'])
+        message_list_builder_grammar = MessageListBuilderGrammar(config, section, results['run_all']['table'], message_list=[])
         message_list = message_list_builder_grammar.build_message_list()
 
         if (
