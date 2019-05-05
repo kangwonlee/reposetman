@@ -512,13 +512,13 @@ class MessageListBuilderGrammar(MessageListBuilderBase):
                 #   "owner": "<github user id or organization id>",
                 #   "repo": "<repository id>",
                 #   "sha": "<SHA of the commit of the repository>",
-                #   "comment_str": "<comment string>"
+                #   "message": "<comment string>"
                 # },
                 todo_dict = {
                     "owner": self.get_section_name(),
                     "repo": row,
                     "sha": run_result_dict['sha'],
-                    "comment_str": (
+                    "message": (
                         f"파일 {column} 구문 확인 바랍니다. (자동 생성 메시지 시험중)\n"
                         f"Please verify syntax of {column}. (Testing auto comments)"
                     )
@@ -556,13 +556,13 @@ class MessageListBuilderPound(MessageListBuilderBase):
                 #   "owner": "<github user id or organization id>",
                 #   "repo": "<repository id>",
                 #   "sha": "<SHA of the commit of the repository>",
-                #   "comment_str": "<comment string>"
+                #   "message": "<comment string>"
                 # },
                 todo_dict = {
                     "owner": self.get_section_name(),
                     "repo": row,
                     "sha": run_result_dict['sha'],
-                    "comment_str": (
+                    "message": (
                         f"파일 {column} 각 행 주석 추가 바랍니다. (자동 생성 메시지 시험중)\n"
                         f"Please add comments to lines of {column}. (Testing auto comments)"
                     )
