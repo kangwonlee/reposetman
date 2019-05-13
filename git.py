@@ -118,12 +118,14 @@ def run_command(cmd, b_verbose=True, in_txt=None, b_show_cmd=False):
         try:
             msgo_decoded = msgo.decode('utf-8')
         except UnicodeDecodeError:
+            print(f'retrying {cmd}.stdout with cp949')
             msgo_decoded = msgo.decode('cp949')
 
     if isinstance(msge, bytes):
         try:
             msge_decoded = msge.decode('utf-8')
         except UnicodeDecodeError:
+            print(f'retrying {cmd}.stderr with cp949')
             msge_decoded = msge.decode('cp949')
 
     if b_verbose:
