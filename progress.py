@@ -1486,6 +1486,11 @@ class RepoEvalRunEach(RepoEval):
 
         # some file names may contain space
         python_cmd_list = [self.python_path, filename]
+
+        # more adaptive arguments
+        if os.path.split(os.getcwd())[-1].startswith('ex23'):
+            arguments = ['utf-8', 'replace']
+
         if isinstance(arguments, str):
             python_cmd_list += arguments.split()
         elif isinstance(arguments, list):
