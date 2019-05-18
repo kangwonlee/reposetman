@@ -96,8 +96,13 @@ def run_command(cmd, b_verbose=True, in_txt=None, b_show_cmd=False):
     if b_show_cmd:
         print('run_command({cmd!r})'.format(cmd=cmd))
 
+    # ideasman42, How to set sys.stdout encoding in Python 3?, Stackoverflow, 2011 10 23, https://stackoverflow.com/a/7865013
+    env = os.environ.copy()
+    env['PYTHONIOENCODING'] = 'utf-8'
+
     p = subprocess.Popen(cmd, stdin=subprocess.PIPE,
-                         stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+                         stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+                         env=env)
     if in_txt is None:
         fi, fo, fe = p.stdin, p.stdout, p.stderr
 
