@@ -94,7 +94,7 @@ def run_command(cmd, b_verbose=True, in_txt=None, b_show_cmd=False):
     # https://docs.python.org/3/library/subprocess.html#using-the-subprocess-module
 
     if b_show_cmd:
-        print('run_command({cmd!r})'.format(cmd=cmd))
+        print(f'run_command({repr(cmd)})')
 
     # ideasman42, How to set sys.stdout encoding in Python 3?, Stackoverflow, 2011 10 23, https://stackoverflow.com/a/7865013
     env = os.environ.copy()
