@@ -1586,7 +1586,7 @@ class RepoEvalRunEach(RepoEval):
 
         # adaptive input string based on list of available files
         # to prevent excessive file not found error
-        input_list = ['1', '2', '3', '4', '5']
+        input_list = list(str(i) for i in range(10))
 
         # frequent filename
         if 'test.txt' in os.listdir():
