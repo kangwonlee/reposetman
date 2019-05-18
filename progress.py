@@ -1491,10 +1491,7 @@ class RepoEvalRunEach(RepoEval):
             arguments = arguments.split()
 
         # more adaptive arguments
-        if os.path.split(os.getcwd())[-1].startswith('ex23'):
-            arguments = ['utf-8', 'replace']
-        elif 'test.txt' in os.listdir():
-            arguments.insert(0, 'test.txt')
+        arguments = self.update_args(filename, arguments)
 
         if isinstance(arguments, list):
             python_cmd_list += arguments
@@ -1539,6 +1536,14 @@ class RepoEvalRunEach(RepoEval):
         del msgo, msge, python_cmd_list
 
         return result
+
+    def update_args(self, filename, arguments):
+        # more adaptive arguments
+        if os.path.split(os.getcwd())[-1].startswith('ex23'):
+            arguments = ['utf-8', 'replace']
+        elif 'test.txt' in os.listdir():
+            arguments.insert(0, 'test.txt')
+        return arguments
 
     def get_total(self, repo_name, b_verbose=False):
         """
