@@ -1482,18 +1482,21 @@ class RepoEvalRunEach(RepoEval):
 
         return self.table
 
-    def run_script(self, filename, arguments='test.txt b.txt c.txt'):
+    def run_script(self, filename, arguments='a b c'):
 
         # some file names may contain space
         python_cmd_list = [self.python_path, filename]
 
+        if isinstance(arguments, str):
+            arguments = arguments.split()
+
         # more adaptive arguments
         if os.path.split(os.getcwd())[-1].startswith('ex23'):
             arguments = ['utf-8', 'replace']
+        elif 'test.txt' in os.listdir():
+            arguments.insert(0, 'test.txt')
 
-        if isinstance(arguments, str):
-            python_cmd_list += arguments.split()
-        elif isinstance(arguments, list):
+        if isinstance(arguments, list):
             python_cmd_list += arguments
         else:
             raise NotImplementedError(
