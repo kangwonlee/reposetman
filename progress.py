@@ -1598,7 +1598,8 @@ class RepoEvalRunEach(RepoEval):
 
         # subprocess.Popen() needs bytes as input
         msgo, msge = git.run_command(
-            python_cmd, in_txt=bytes(input_txt, encoding='utf-8'),
+            python_cmd,
+            in_txt=input_txt,
             b_verbose=False,
         )
         return msgo, msge
