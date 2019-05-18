@@ -100,9 +100,15 @@ def run_command(cmd, b_verbose=True, in_txt=None, b_show_cmd=False):
     env = os.environ.copy()
     env['PYTHONIOENCODING'] = 'utf-8'
 
-    p = subprocess.Popen(cmd, stdin=subprocess.PIPE,
-                         stdout=subprocess.PIPE, stderr=subprocess.PIPE,
-                         env=env)
+    p = subprocess.Popen(
+        cmd,
+        stdin=subprocess.PIPE,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        encoding='utf-8',
+        env=env,
+    )
+
     if in_txt is None:
         fi, fo, fe = p.stdin, p.stdout, p.stderr
 
