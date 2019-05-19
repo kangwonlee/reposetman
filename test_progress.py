@@ -820,9 +820,25 @@ class TestSysArgv(unittest.TestCase):
         self.assertTrue(result)
 
     def test_get_argn(self):
+        with tempfile.TemporaryFile(mode='a+t', encoding='utf-8') as argv_file:
+            argv_file.write(
+                "# comment a\n"
+                "# comment b\n"
+                "# commnet c\n"
+                "\n"
+                "import sys\n"
+                "\n"
+                "a, b, c = sys.argv\n"
+                "\n"
+                "print('a =', a)\n"
+                "print('b =', b)\n"
+                "print('c =', c)\n"
+                "\n"
+            )
 
-        result = progress.get_argn(os.path.join(
-            os.path.split(__file__)[0], 'sys_argv_example_00.py'))
+            argv_file.seek(0)
+
+            result = progress.get_argn(argv_file)
 
         expected = 3
 
