@@ -913,6 +913,33 @@ class TestSysArgv(unittest.TestCase):
 
         self.assertEqual(expected, result)
 
+    def test_get_argn_import_sys_with_inline_comment_trailing_comma(self):
+        _, filename = tempfile.mkstemp(suffix='.py', text=True)
+
+        with open(filename, mode='wt', encoding='utf-8') as argv_file:
+            argv_file.write(
+                "# comment a\n"
+                "# comment b\n"
+                "# commnet c\n"
+                "\n"
+                "import sys\n"
+                "\n"
+                "a, b, c, = sys.argv # inline comment\n"
+                "\n"
+                "print('a =', a)\n"
+                "print('b =', b)\n"
+                "print('c =', c)\n"
+                "\n"
+            )
+
+        result = progress.get_argn(argv_file.name)
+
+        os.remove(filename)
+
+        expected = 3
+
+        self.assertEqual(expected, result)
+
     def test_get_argn_from_sys_import_argv_no_inline_comment(self):
         _, filename = tempfile.mkstemp(suffix='.py', text=True)
 
@@ -952,6 +979,33 @@ class TestSysArgv(unittest.TestCase):
                 "from sys import argv\n"
                 "\n"
                 "a, b, c = argv # inline comment\n"
+                "\n"
+                "print('a =', a)\n"
+                "print('b =', b)\n"
+                "print('c =', c)\n"
+                "\n"
+            )
+
+        result = progress.get_argn(argv_file.name)
+
+        os.remove(filename)
+
+        expected = 3
+
+        self.assertEqual(expected, result)
+
+    def test_get_argn_from_sys_import_argv_with_inline_comment_trailing_comma(self):
+        _, filename = tempfile.mkstemp(suffix='.py', text=True)
+
+        with open(filename, mode='wt', encoding='utf-8') as argv_file:
+            argv_file.write(
+                "# comment a\n"
+                "# comment b\n"
+                "# commnet c\n"
+                "\n"
+                "from sys import argv\n"
+                "\n"
+                "a, b, c, = argv # inline comment\n"
                 "\n"
                 "print('a =', a)\n"
                 "print('b =', b)\n"
