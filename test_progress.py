@@ -316,7 +316,6 @@ class TestRepoEvalRunEach(TestRepoEvalRunEachBase):
 
     def test_get_arguments_ex23(self):
 
-        folder_name = tempfile.mkdtemp(prefix='ex23')
         with tempfile.TemporaryDirectory(prefix='ex23') as folder_name:
             cwd = os.getcwd()
             os.chdir(folder_name)
