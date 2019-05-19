@@ -374,6 +374,21 @@ class TestRepoEvalRunEach(TestRepoEvalRunEachBase):
 
         self.assertEqual(expected, found_list[0])
 
+    def test_get_sys_argv_assign_line_import_sys_2(self):
+        input_txt = (
+            'import sys\n'
+            'script, a, b = sys.argv\n'
+        )
+
+        found_list = self.e.findall_sys_argv_assign_line(input_txt)
+
+        self.assertTrue(found_list)
+
+        expected = 'script, a, b'
+
+        self.assertEqual(expected, found_list[0])
+
+
 class TestRepoEvalRunEachSkipSome(TestRepoEvalRunEachBase):
 
     def test_is_input_just_comments(self):
