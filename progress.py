@@ -1865,13 +1865,19 @@ def get_argn(filename):
                     if 1 == n_equal:
                         left = left__right[0]
                         # try to find number of variables on the left side
+                        # TODO : what if ( a, b, c ) = argv?
                         # TODO : what if (a, b, c) = argv?
                         # TODO : what if a, b, c            = argv?
                         # TODO : what if a, b, c, = argv?
                         # TODO : what if # a, b, c, = argv?
                         # TODO : repeat above for sys.argv case
                         # TODO : repeat above for import sys as ?? case
-                        argv_list = left.strip().split(',')
+                        argv_list = list(
+                            filter(
+                                lambda symbol: symbol.strip(), 
+                                left.strip().split(',')
+                            )
+                        )
 
                         # count the number of arguments
                         len_argv_now = len(argv_list)
