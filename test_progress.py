@@ -317,17 +317,17 @@ class TestRepoEvalRunEach(TestRepoEvalRunEachBase):
     def test_update_args_ex23(self):
 
         folder_name = tempfile.mkdtemp(prefix='ex23')
-        cwd = os.getcwd()
-        os.chdir(folder_name)
-        
-        input_args = []
-        copy_input_args = list(input_args)
+        with tempfile.TemporaryDirectory(prefix='ex23') as folder_name:
+            cwd = os.getcwd()
+            os.chdir(folder_name)
+            
+            input_args = []
+            copy_input_args = list(input_args)
 
-        with tempfile.TemporaryFile('a+t', encoding='utf-8') as temp_file:
-            result_args = self.e.update_args(script_file=temp_file, arguments=input_args)
+            with tempfile.TemporaryFile('a+t', encoding='utf-8') as temp_file:
+                result_args = self.e.update_args(script_file=temp_file, arguments=input_args)
 
-        os.chdir(cwd)
-        shutil.rmtree(folder_name)
+            os.chdir(cwd)
 
         self.assertSequenceEqual(['utf-8', 'replace'], result_args)
         self.assertSequenceEqual(input_args, copy_input_args)
