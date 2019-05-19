@@ -1491,8 +1491,7 @@ class RepoEvalRunEach(RepoEval):
             arguments = arguments.split()
 
         # more adaptive arguments
-        with open(filename, 'rt', encoding='utf-8') as script_file:
-            arguments = self.get_arguments(script_file)
+        arguments = self.get_arguments(filename)
 
         if isinstance(arguments, list):
             python_cmd_list += arguments
@@ -1538,16 +1537,14 @@ class RepoEvalRunEach(RepoEval):
 
         return result
 
-    def get_arguments(self, script_file):
+    def get_arguments(self, filename):
         # more adaptive arguments
         if os.path.split(os.getcwd())[-1].startswith('ex23'):
             arguments = ['utf-8', 'replace']
         else :
             arguments = []
 
-            script_file.seek(0)
-
-            n_argv = get_argn(script_file.name)
+            n_argv = get_argn(filename)
 
             if 1 < n_argv:
                 arguments = list(str(i) for i in range(1, n_argv))
