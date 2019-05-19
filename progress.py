@@ -1546,12 +1546,11 @@ class RepoEvalRunEach(RepoEval):
             arguments = []
 
             script_file.seek(0)
-            txt = script_file.read()
 
-            n_argv = self.count_nargv(txt)
+            n_argv = get_argn(script_file.name)
 
-            if 0 < n_argv:
-                arguments = list(str(i) for i in range(1, n_argv + 1))
+            if 1 < n_argv:
+                arguments = list(str(i) for i in range(1, n_argv))
 
                 other_file_list = list(
                     filter(
