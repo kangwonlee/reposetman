@@ -314,23 +314,19 @@ class TestRepoEvalRunEach(TestRepoEvalRunEachBase):
                     self.assertTrue(msgo, msg='\n{file}\nstderr : {stderr}'.format(
                         file=py_file, stderr=msge))
 
-    def test_update_args_ex23(self):
+    def test_get_arguments_ex23(self):
 
         folder_name = tempfile.mkdtemp(prefix='ex23')
         with tempfile.TemporaryDirectory(prefix='ex23') as folder_name:
             cwd = os.getcwd()
             os.chdir(folder_name)
             
-            input_args = []
-            copy_input_args = list(input_args)
-
             with tempfile.TemporaryFile('a+t', encoding='utf-8') as temp_file:
-                result_args = self.e.update_args(script_file=temp_file, arguments=input_args)
+                result_args = self.e.get_arguments(script_file=temp_file)
 
             os.chdir(cwd)
 
         self.assertSequenceEqual(['utf-8', 'replace'], result_args)
-        self.assertSequenceEqual(input_args, copy_input_args)
 
     def test_search_sys_argv_assign_line_from_sys_import_argv(self):
         input_txt = (
@@ -401,6 +397,30 @@ class TestRepoEvalRunEach(TestRepoEvalRunEachBase):
         expected = 'script, a, b'
 
         self.assertEqual(expected, match.group(1))
+
+    def test_get_arguments_two_args(self):
+        cwd = os.getcwd()
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+
+            os.chdir(temp_dir)
+
+            with tempfile.TemporaryFile(mode='a+t', encoding='utf-8') as script_file:
+
+                script_file.write(
+                    'import sys\n'
+                    'script, a, b = sys.argv\n'
+                )
+
+                script_file.seek(0)
+
+                result = self.e.get_arguments(script_file)
+
+            os.chdir(cwd)
+
+        expected = ['1', '2']
+
+        self.assertSequenceEqual(expected, result)
 
 
 class TestRepoEvalRunEachSkipSome(TestRepoEvalRunEachBase):

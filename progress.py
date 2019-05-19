@@ -1492,7 +1492,7 @@ class RepoEvalRunEach(RepoEval):
 
         # more adaptive arguments
         with open(filename, 'rt', encoding='utf-8') as script_file:
-            arguments = self.update_args(script_file, arguments)
+            arguments = self.get_arguments(script_file)
 
         if isinstance(arguments, list):
             python_cmd_list += arguments
@@ -1538,12 +1538,36 @@ class RepoEvalRunEach(RepoEval):
 
         return result
 
-    def update_args(self, script_file, arguments):
+    def get_arguments(self, script_file):
         # more adaptive arguments
         if os.path.split(os.getcwd())[-1].startswith('ex23'):
             arguments = ['utf-8', 'replace']
-        elif 'test.txt' in os.listdir():
-            arguments.insert(0, 'test.txt')
+        else :
+            arguments = []
+            n_argv = 0
+
+            script_file.seek(0)
+            txt = script_file.read()
+
+            match = self.search_sys_argv_assign_line(txt)
+            if match:
+                argv_list = match.group(1).split(',')
+                n_argv = len(argv_list) - 1
+
+            if 0 < n_argv:
+                arguments = list(str(i) for i in range(1, n_argv + 1))
+
+                other_file_list = list(
+                    filter(
+                        lambda fname : os.path.isfile(fname) and (not fname.endswith('.py')),
+                        os.listdir()
+                    )
+                )
+
+                if other_file_list:
+                    del arguments[-1]
+                    arguments.insert(0, other_file_list[0])
+
         return arguments
 
     def search_sys_argv_assign_line(self, txt):
