@@ -338,13 +338,13 @@ class TestRepoEvalRunEach(TestRepoEvalRunEachBase):
             'script = argv\n'
         )
 
-        found_list = self.e.search_sys_argv_assign_line(input_txt)
+        match = self.e.search_sys_argv_assign_line(input_txt)
 
-        self.assertTrue(found_list)
+        self.assertTrue(match)
 
         expected = 'script'
 
-        self.assertEqual(expected, found_list[0])
+        self.assertEqual(expected, match.group(1))
 
     def test_search_sys_argv_assign_line_from_sys_import_argv_1(self):
         input_txt = (
@@ -352,13 +352,13 @@ class TestRepoEvalRunEach(TestRepoEvalRunEachBase):
             'script, a = argv\n'
         )
 
-        found_list = self.e.search_sys_argv_assign_line(input_txt)
+        match = self.e.search_sys_argv_assign_line(input_txt)
 
-        self.assertTrue(found_list)
+        self.assertTrue(match)
 
         expected = 'script, a'
 
-        self.assertEqual(expected, found_list[0])
+        self.assertEqual(expected, match.group(1))
 
     def test_search_sys_argv_assign_line_from_sys_import_argv_2(self):
         input_txt = (
@@ -366,13 +366,13 @@ class TestRepoEvalRunEach(TestRepoEvalRunEachBase):
             'script, a, b = argv\n'
         )
 
-        found_list = self.e.search_sys_argv_assign_line(input_txt)
+        match = self.e.search_sys_argv_assign_line(input_txt)
 
-        self.assertTrue(found_list)
+        self.assertTrue(match)
 
         expected = 'script, a, b'
 
-        self.assertEqual(expected, found_list[0])
+        self.assertEqual(expected, match.group(1))
 
     def test_search_sys_argv_assign_line_import_sys_1(self):
         input_txt = (
@@ -380,13 +380,13 @@ class TestRepoEvalRunEach(TestRepoEvalRunEachBase):
             'script, a = sys.argv\n'
         )
 
-        found_list = self.e.search_sys_argv_assign_line(input_txt)
+        match = self.e.search_sys_argv_assign_line(input_txt)
 
-        self.assertTrue(found_list)
+        self.assertTrue(match)
 
         expected = 'script, a'
 
-        self.assertEqual(expected, found_list[0])
+        self.assertEqual(expected, match.group(1))
 
     def test_search_sys_argv_assign_line_import_sys_2(self):
         input_txt = (
@@ -394,13 +394,13 @@ class TestRepoEvalRunEach(TestRepoEvalRunEachBase):
             'script, a, b = sys.argv\n'
         )
 
-        found_list = self.e.search_sys_argv_assign_line(input_txt)
+        match = self.e.search_sys_argv_assign_line(input_txt)
 
-        self.assertTrue(found_list)
+        self.assertTrue(match)
 
         expected = 'script, a, b'
 
-        self.assertEqual(expected, found_list[0])
+        self.assertEqual(expected, match.group(1))
 
 
 class TestRepoEvalRunEachSkipSome(TestRepoEvalRunEachBase):

@@ -1547,7 +1547,7 @@ class RepoEvalRunEach(RepoEval):
         return arguments
 
     def search_sys_argv_assign_line(self, txt):
-            return re.findall(r'^(.+?)\s*=\s*(?:(?:sys.argv)|(?:argv))\s*$', txt, re.M)
+            return re.search(r'^(.+?)\s*=\s*(?:(?:sys.argv)|(?:argv))\s*$', txt, re.M)
 
     def get_total(self, repo_name, b_verbose=False):
         """
