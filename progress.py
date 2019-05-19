@@ -1546,6 +1546,9 @@ class RepoEvalRunEach(RepoEval):
             arguments.insert(0, 'test.txt')
         return arguments
 
+    def findall_sys_argv_assign_line(self, txt):
+            return re.findall(r'^(.+?)\s*=\s*argv$', txt, re.M)
+
     def get_total(self, repo_name, b_verbose=False):
         """
         Representative number on outputs and errors
