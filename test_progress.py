@@ -319,11 +319,16 @@ class TestRepoEvalRunEach(TestRepoEvalRunEachBase):
         with tempfile.TemporaryDirectory(prefix='ex23') as folder_name:
             cwd = os.getcwd()
             os.chdir(folder_name)
-            
-            with tempfile.TemporaryFile('a+t', encoding='utf-8') as temp_file:
-                result_args = self.e.get_arguments(script_file=temp_file)
+            try:
+                filename = get_tempfile_name(suffix='.py')
 
-            os.chdir(cwd)
+                result_args = self.e.get_arguments(filename)
+
+                os.chdir(cwd)
+            except BaseException as e:
+                os.chdir(cwd)
+
+                raise e
 
         self.assertSequenceEqual(['utf-8', 'replace'], result_args)
 
@@ -404,18 +409,25 @@ class TestRepoEvalRunEach(TestRepoEvalRunEachBase):
 
             os.chdir(temp_dir)
 
-            with tempfile.TemporaryFile(mode='a+t', encoding='utf-8') as script_file:
+            try:
 
-                script_file.write(
-                    'import sys\n'
-                    'script, a, b = sys.argv\n'
-                )
+                filename = get_tempfile_name(suffix='.py')
 
-                script_file.seek(0)
+                with open(filename, mode='w+t', encoding='utf-8') as script_file:
 
-                result = self.e.get_arguments(script_file)
+                    script_file.write(
+                        'import sys\n'
+                        'script, a, b = sys.argv\n'
+                    )
 
-            os.chdir(cwd)
+                result = self.e.get_arguments(filename)
+
+                os.chdir(cwd)
+            except BaseException as e:
+
+                os.chdir(cwd)
+
+                raise e
 
         expected = ['1', '2']
 

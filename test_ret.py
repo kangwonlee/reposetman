@@ -1,6 +1,7 @@
 import os
 import shutil
 import subprocess
+import tempfile
 import unittest
 
 import regex_test as ret
@@ -32,13 +33,18 @@ def onerror(func, path, exc_info):
 
 class TestFetchAndReset(unittest.TestCase):
     def setUp(self):
+
+        self.temp_folder_name = tempfile.mkdtemp()
+
         # test repositories
         self.first_repository = 'https://github.com/kangwonlee/test-reposetman-fetch-and-reset-00'
         self.second_repository = 'https://github.com/kangwonlee/test-reposetman-fetch-and-reset-conflict'
 
         self.cwd = os.getcwd()
-        self.clone_destination_folder = os.path.abspath(
-            'temp_test_fetch_and_reset')
+        self.clone_destination_folder = os.path.join(
+            self.temp_folder_name,
+            'temp_test_fetch_and_reset'
+        )
 
         if os.path.exists(self.clone_destination_folder):
             self.reset_existing_repo()
@@ -46,6 +52,8 @@ class TestFetchAndReset(unittest.TestCase):
             # clone the first test repository
             os.system(
                 f'git clone {self.first_repository} {self.clone_destination_folder}')
+
+            assert os.path.exists(self.clone_destination_folder)
 
             # change default remote repository to another
             os.chdir(self.clone_destination_folder)
@@ -55,17 +63,24 @@ class TestFetchAndReset(unittest.TestCase):
 
             # now `git pull` would cause a ** merge conflict **
 
-            os.chdir(self.cwd)
-
         self.show_remotes('setUp')
+
+    def tearDown(self):
+        shutil.rmtree(self.temp_folder_name)
 
     def reset_existing_repo(self):
         os.chdir(self.clone_destination_folder)
-        os.system(f'git remote set-url origin {self.first_repository}')
-        os.system(f'git fetch origin')
-        os.system(f"git reset --hard origin/master")
-        os.system(f'git remote set-url origin {self.second_repository}')
-        os.chdir(self.cwd)
+        try:
+            os.system(f'git remote set-url origin {self.first_repository}')
+            os.system(f'git fetch origin')
+            os.system(f"git reset --hard origin/master")
+            os.system(f'git remote set-url origin {self.second_repository}')
+            os.chdir(self.cwd)
+        except BaseException as e:
+            os.chdir(self.cwd)
+
+            raise e
+
         self.show_remotes('reset_existing_repo')
 
     def show_remotes(self, caller='show_remotes'):
