@@ -819,7 +819,7 @@ class TestSysArgv(unittest.TestCase):
 
         self.assertTrue(result)
 
-    def test_get_argn(self):
+    def test_get_argn_import_sys_no_inline_comment(self):
         with tempfile.TemporaryFile(mode='a+t', encoding='utf-8') as argv_file:
             argv_file.write(
                 "# comment a\n"
