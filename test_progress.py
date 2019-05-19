@@ -314,6 +314,23 @@ class TestRepoEvalRunEach(TestRepoEvalRunEachBase):
                     self.assertTrue(msgo, msg='\n{file}\nstderr : {stderr}'.format(
                         file=py_file, stderr=msge))
 
+    def test_update_args_ex23(self):
+
+        folder_name = tempfile.mkdtemp(prefix='ex23')
+        cwd = os.getcwd()
+        os.chdir(folder_name)
+        
+        input_args = []
+        copy_input_args = list(input_args)
+
+        result_args = self.e.update_args(filename='', arguments=input_args)
+
+        os.chdir(cwd)
+        shutil.rmtree(folder_name)
+
+        self.assertSequenceEqual(['utf-8', 'replace'], result_args)
+        self.assertSequenceEqual(input_args, copy_input_args)
+
 
 class TestRepoEvalRunEachSkipSome(TestRepoEvalRunEachBase):
 
