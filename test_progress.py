@@ -885,6 +885,34 @@ class TestSysArgv(unittest.TestCase):
 
         self.assertEqual(expected, result)
 
+    def test_get_argn_import_sys_comment(self):
+        _, filename = tempfile.mkstemp(suffix='.py', text=True)
+
+        with open(filename, mode='wt', encoding='utf-8') as argv_file:
+            argv_file.write(
+                "# comment a\n"
+                "# comment b\n"
+                "# commnet c\n"
+                "\n"
+                "import sys\n"
+                "\n"
+                "# a, b, c = sys.argv # comment\n"
+                "a, b, c = 1, 2, 3 # comment\n"
+                "\n"
+                "print('a =', a)\n"
+                "print('b =', b)\n"
+                "print('c =', c)\n"
+                "\n"
+            )
+
+        result = progress.get_argn(argv_file.name)
+
+        os.remove(filename)
+
+        expected = 0
+
+        self.assertEqual(expected, result)
+
     def test_get_argn_from_sys_import_argv_no_inline_comment(self):
         _, filename = tempfile.mkstemp(suffix='.py', text=True)
 
