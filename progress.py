@@ -1749,6 +1749,7 @@ class RepoEvalRunEachSkipSome(RepoEvalRunEach):
         result = False
         with open(filename, encoding='utf-8') as f:
             try:
+                # https://docs.python.org/3/library/tokenize.html#tokenize.tokenize
                 for toktype, tok, start, end, line in tokenize.generate_tokens(f.readline):
                     if (tokenize.COMMENT != toktype) and (token in tok):
                         result = toktype, tok, start, end, line
@@ -1851,6 +1852,7 @@ def get_argn(filename):
     with open(filename, 'r', encoding='utf-8') as f:
         try:
             # token loop
+            # https://docs.python.org/3/library/tokenize.html#tokenize.tokenize
             for toktype__tok__start__end__line in tokenize.generate_tokens(f.readline):
                 toktype = toktype__tok__start__end__line[0]
                 tok = toktype__tok__start__end__line[1]
