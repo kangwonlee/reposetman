@@ -1853,10 +1853,7 @@ def get_argn(filename):
         try:
             # token loop
             # https://docs.python.org/3/library/tokenize.html#tokenize.tokenize
-            for toktype__tok__start__end__line in tokenize.generate_tokens(f.readline):
-                toktype = toktype__tok__start__end__line[0]
-                tok = toktype__tok__start__end__line[1]
-                line = toktype__tok__start__end__line[4]
+            for toktype, tok, _, _, line in tokenize.generate_tokens(f.readline):
                 # find line with argv
                 if (toktype == tokenize.NAME) and ('argv' == tok) and ('=' in line):
                     # would need to look into the left side of '=' in this line
