@@ -100,6 +100,11 @@ def run_command(cmd, b_verbose=True, in_txt=None, b_show_cmd=False):
     env = os.environ.copy()
     env['PYTHONIOENCODING'] = 'utf-8'
 
+    assert isinstance(cmd, (tuple, list, str)), type(cmd)
+    if isinstance(cmd, (tuple, list)):
+        for cmd_element in cmd:
+            assert isinstance(cmd_element, str), cmd
+
     p = subprocess.Popen(
         cmd,
         stdin=subprocess.PIPE,
