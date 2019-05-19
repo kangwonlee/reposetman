@@ -512,13 +512,13 @@ class MessageListBuilderGrammar(MessageListBuilderBase):
                 #   "owner": "<github user id or organization id>",
                 #   "repo": "<repository id>",
                 #   "sha": "<SHA of the commit of the repository>",
-                #   "comment_str": "<comment string>"
+                #   "message": "<comment string>"
                 # },
                 todo_dict = {
                     "owner": self.get_section_name(),
                     "repo": row,
                     "sha": run_result_dict['sha'],
-                    "comment_str": (
+                    "message": (
                         f"파일 {column} 구문 확인 바랍니다. (자동 생성 메시지 시험중)\n"
                         f"Please verify syntax of {column}. (Testing auto comments)"
                     )
@@ -556,13 +556,13 @@ class MessageListBuilderPound(MessageListBuilderBase):
                 #   "owner": "<github user id or organization id>",
                 #   "repo": "<repository id>",
                 #   "sha": "<SHA of the commit of the repository>",
-                #   "comment_str": "<comment string>"
+                #   "message": "<comment string>"
                 # },
                 todo_dict = {
                     "owner": self.get_section_name(),
                     "repo": row,
                     "sha": run_result_dict['sha'],
-                    "comment_str": (
+                    "message": (
                         f"파일 {column} 각 행 주석 추가 바랍니다. (자동 생성 메시지 시험중)\n"
                         f"Please add comments to lines of {column}. (Testing auto comments)"
                     )
@@ -1482,13 +1482,18 @@ class RepoEvalRunEach(RepoEval):
 
         return self.table
 
-    def run_script(self, filename, arguments='test.txt b.txt c.txt'):
+    def run_script(self, filename, arguments='a b c'):
 
         # some file names may contain space
         python_cmd_list = [self.python_path, filename]
+
         if isinstance(arguments, str):
-            python_cmd_list += arguments.split()
-        elif isinstance(arguments, list):
+            arguments = arguments.split()
+
+        # more adaptive arguments
+        arguments = self.get_arguments(filename)
+
+        if isinstance(arguments, list):
             python_cmd_list += arguments
         else:
             raise NotImplementedError(
@@ -1531,6 +1536,46 @@ class RepoEvalRunEach(RepoEval):
         del msgo, msge, python_cmd_list
 
         return result
+
+    def get_arguments(self, filename):
+        # more adaptive arguments
+        if os.path.split(os.getcwd())[-1].startswith('ex23'):
+            arguments = ['utf-8', 'replace']
+        else :
+            arguments = []
+
+            n_argv = get_argn(filename)
+
+            if 1 < n_argv:
+                arguments = list(str(i) for i in range(1, n_argv))
+
+                other_file_list = list(
+                    filter(
+                        lambda fname : os.path.isfile(fname) and (not fname.endswith('.py')),
+                        os.listdir()
+                    )
+                )
+
+                if other_file_list:
+                    del arguments[-1]
+                    arguments.insert(0, other_file_list[0])
+
+        return arguments
+
+    def count_nargv(self, txt):
+
+        n_argv = 0
+
+        match = self.search_sys_argv_assign_line(txt)
+
+        if match:
+            argv_list = match.group(1).split(',')
+            n_argv = len(argv_list) - 1
+
+        return n_argv
+
+    def search_sys_argv_assign_line(self, txt):
+            return re.search(r'^(.+?)\s*=\s*(?:(?:sys.argv)|(?:argv))\s*$', txt, re.M)
 
     def get_total(self, repo_name, b_verbose=False):
         """
@@ -1586,7 +1631,7 @@ class RepoEvalRunEach(RepoEval):
 
         # adaptive input string based on list of available files
         # to prevent excessive file not found error
-        input_list = ['1', '2', '3', '4', '5']
+        input_list = list(str(i) for i in range(10))
 
         # frequent filename
         if 'test.txt' in os.listdir():
@@ -1598,7 +1643,8 @@ class RepoEvalRunEach(RepoEval):
 
         # subprocess.Popen() needs bytes as input
         msgo, msge = git.run_command(
-            python_cmd, in_txt=bytes(input_txt, encoding='utf-8'),
+            python_cmd,
+            in_txt=input_txt,
             b_verbose=False,
         )
         return msgo, msge
@@ -1703,6 +1749,7 @@ class RepoEvalRunEachSkipSome(RepoEvalRunEach):
         result = False
         with open(filename, encoding='utf-8') as f:
             try:
+                # https://docs.python.org/3/library/tokenize.html#tokenize.tokenize
                 for toktype, tok, start, end, line in tokenize.generate_tokens(f.readline):
                     if (tokenize.COMMENT != toktype) and (token in tok):
                         result = toktype, tok, start, end, line
@@ -1802,57 +1849,44 @@ def get_argn(filename):
     # initial value
     result = 0
 
+    token_list = []
+
+    last_new_line = 0
+    equals_of_this_line = []
+    # initial -> equal ->
+
     with open(filename, 'r', encoding='utf-8') as f:
         try:
             # token loop
-            for toktype__tok__start__end__line in tokenize.generate_tokens(f.readline):
-                toktype = toktype__tok__start__end__line[0]
-                tok = toktype__tok__start__end__line[1]
-                line = toktype__tok__start__end__line[4]
-                # find line with argv
-                if (toktype == tokenize.NAME) and ('argv' == tok) and ('=' in line):
-                    # would need to look into the left side of '=' in this line
-                    left__right = line.strip().split('=')
+            # https://docs.python.org/3/library/tokenize.html#tokenize.tokenize
 
-                    n_equal = line.count('=')
+            token_list = list(tokenize.generate_tokens(f.readline))
 
-                    # only one '=' in the line
-                    if 1 == n_equal:
-                        left = left__right[0]
-                        # try to find number of variables on the left side
-                        # TODO : what if (a, b, c) = argv?
-                        # TODO : what if a, b, c            = argv?
-                        # TODO : what if a, b, c, = argv?
-                        # TODO : what if # a, b, c, = argv?
-                        # TODO : repeat above for sys.argv case
-                        # TODO : repeat above for import sys as ?? case
-                        argv_list = left.strip().split(',')
+            # https://docs.python.org/3.6/library/tokenize.html#examples
+            for k, toktype__tok__start__end__line in enumerate(token_list):
+                toktype, tok, start, end, line = toktype__tok__start__end__line
 
-                        # count the number of arguments
-                        len_argv_now = len(argv_list)
+                if (toktype == tokenize.NEWLINE):
+                    last_new_line = k
+                    equals_of_this_line = []
 
+                elif (toktype == tokenize.OP) and ('=' == tok):
+                    equals_of_this_line.append(k)
+
+                elif (toktype == tokenize.NAME) and ('argv' == tok):
+
+                    if 1 == len(equals_of_this_line):
+                        left_list = token_list[(last_new_line + 1):equals_of_this_line[-1]]
+
+                        # count the number of names
+                        result = 0
+                        for item in left_list:
+                            if (tokenize.NAME == item[0]):
+                                result += 1
+                        break
                     # if two or more '='s
-                    elif 2 <= n_equal:
-                        # `script = sys, user_name = argv` is equivalent to
-                        # script = sys = argv1, user_name = argv2
-
-                        # remove the left most element
-                        left__right.pop()
-
-                        # reassemble the left side
-                        left_side = '='.join(left__right).split(',')
-
-                        # number of arguments = number of commas plus one
-                        len_argv_now = left_side.count(',') + 1
-
-                        # indicate the file
-                        print("get_argn() : more than one '='s in {filename} of {path}".format(
-                            filename=filename, path=os.getcwd()
-                        ))
-
-                    # find maximum
-                    if len_argv_now > result:
-                        result = len_argv_now
+                    elif 2 <= len(equals_of_this_line):
+                        raise NotImplementedError
 
         except tokenize.TokenError:
             print('*** tokenize.TokenError ***')

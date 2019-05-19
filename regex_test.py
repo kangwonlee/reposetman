@@ -337,6 +337,7 @@ def read_utf_or_cp(filename):
     try:
         txt = read_txt(filename, encoding='utf-8')
     except UnicodeError:
+        print(f'retrying file {filename} with cp949')
         txt = read_txt(filename, encoding='cp949')
 
     return txt

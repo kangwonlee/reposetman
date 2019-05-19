@@ -314,6 +314,125 @@ class TestRepoEvalRunEach(TestRepoEvalRunEachBase):
                     self.assertTrue(msgo, msg='\n{file}\nstderr : {stderr}'.format(
                         file=py_file, stderr=msge))
 
+    def test_get_arguments_ex23(self):
+
+        with tempfile.TemporaryDirectory(prefix='ex23') as folder_name:
+            cwd = os.getcwd()
+            os.chdir(folder_name)
+            try:
+                filename = get_tempfile_name(suffix='.py')
+
+                result_args = self.e.get_arguments(filename)
+
+                os.chdir(cwd)
+            except BaseException as e:
+                os.chdir(cwd)
+
+                raise e
+
+        self.assertSequenceEqual(['utf-8', 'replace'], result_args)
+
+    def test_search_sys_argv_assign_line_from_sys_import_argv(self):
+        input_txt = (
+            'from sys import argv\n'
+            'script = argv\n'
+        )
+
+        match = self.e.search_sys_argv_assign_line(input_txt)
+
+        self.assertTrue(match)
+
+        expected = 'script'
+
+        self.assertEqual(expected, match.group(1))
+
+    def test_search_sys_argv_assign_line_from_sys_import_argv_1(self):
+        input_txt = (
+            'from sys import argv\n'
+            'script, a = argv\n'
+        )
+
+        match = self.e.search_sys_argv_assign_line(input_txt)
+
+        self.assertTrue(match)
+
+        expected = 'script, a'
+
+        self.assertEqual(expected, match.group(1))
+
+    def test_search_sys_argv_assign_line_from_sys_import_argv_2(self):
+        input_txt = (
+            'from sys import argv\n'
+            'script, a, b = argv\n'
+        )
+
+        match = self.e.search_sys_argv_assign_line(input_txt)
+
+        self.assertTrue(match)
+
+        expected = 'script, a, b'
+
+        self.assertEqual(expected, match.group(1))
+
+    def test_search_sys_argv_assign_line_import_sys_1(self):
+        input_txt = (
+            'import sys\n'
+            'script, a = sys.argv\n'
+        )
+
+        match = self.e.search_sys_argv_assign_line(input_txt)
+
+        self.assertTrue(match)
+
+        expected = 'script, a'
+
+        self.assertEqual(expected, match.group(1))
+
+    def test_search_sys_argv_assign_line_import_sys_2(self):
+        input_txt = (
+            'import sys\n'
+            'script, a, b = sys.argv\n'
+        )
+
+        match = self.e.search_sys_argv_assign_line(input_txt)
+
+        self.assertTrue(match)
+
+        expected = 'script, a, b'
+
+        self.assertEqual(expected, match.group(1))
+
+    def test_get_arguments_two_args(self):
+        cwd = os.getcwd()
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+
+            os.chdir(temp_dir)
+
+            try:
+
+                filename = get_tempfile_name(suffix='.py')
+
+                with open(filename, mode='w+t', encoding='utf-8') as script_file:
+
+                    script_file.write(
+                        'import sys\n'
+                        'script, a, b = sys.argv\n'
+                    )
+
+                result = self.e.get_arguments(filename)
+
+                os.chdir(cwd)
+            except BaseException as e:
+
+                os.chdir(cwd)
+
+                raise e
+
+        expected = ['1', '2']
+
+        self.assertSequenceEqual(expected, result)
+
 
 class TestRepoEvalRunEachSkipSome(TestRepoEvalRunEachBase):
 
@@ -426,7 +545,9 @@ class TestRepoEvalRunEachSkipSomeLastCommit(TestRepoEvalRunEachBase):
             self.config['operation']['python_path'])
 
     def test_eval_file_base(self):
-        file_path = __file__
+        folder_name = os.path.split(__file__)[0]
+        file_path = os.path.join(folder_name, 'unique_list.py')
+
         result_dict = self.e.eval_file_base(filename=file_path)
         self.assertIn('sha', result_dict)
 
@@ -710,12 +831,248 @@ class TestSysArgv(unittest.TestCase):
 
         self.assertTrue(result)
 
-    def test_get_argn(self):
+    def test_get_argn_import_sys_no_inline_comment(self):
+        _, filename = tempfile.mkstemp(suffix='.py', text=True)
 
-        result = progress.get_argn(os.path.join(
-            os.path.split(__file__)[0], 'sys_argv_example_00.py'))
+        with open(filename, mode='wt', encoding='utf-8') as argv_file:
+            argv_file.write(
+                "# comment a\n"
+                "# comment b\n"
+                "# commnet c\n"
+                "\n"
+                "import sys\n"
+                "\n"
+                "a, b, c = sys.argv\n"
+                "\n"
+                "print('a =', a)\n"
+                "print('b =', b)\n"
+                "print('c =', c)\n"
+                "\n"
+            )
+
+        result = progress.get_argn(argv_file.name)
+
+        os.remove(filename)
 
         expected = 3
+
+        self.assertEqual(expected, result)
+
+    def test_get_argn_import_sys_with_inline_comment(self):
+        _, filename = tempfile.mkstemp(suffix='.py', text=True)
+
+        with open(filename, mode='wt', encoding='utf-8') as argv_file:
+            argv_file.write(
+                "# comment a\n"
+                "# comment b\n"
+                "# commnet c\n"
+                "\n"
+                "import sys\n"
+                "\n"
+                "a, b, c = sys.argv # inline comment\n"
+                "\n"
+                "print('a =', a)\n"
+                "print('b =', b)\n"
+                "print('c =', c)\n"
+                "\n"
+            )
+
+        result = progress.get_argn(argv_file.name)
+
+        os.remove(filename)
+
+        expected = 3
+
+        self.assertEqual(expected, result)
+
+    def test_get_argn_import_sys_comment(self):
+        _, filename = tempfile.mkstemp(suffix='.py', text=True)
+
+        with open(filename, mode='wt', encoding='utf-8') as argv_file:
+            argv_file.write(
+                "# comment a\n"
+                "# comment b\n"
+                "# commnet c\n"
+                "\n"
+                "import sys\n"
+                "\n"
+                "# a, b, c = sys.argv # comment\n"
+                "a, b, c = 1, 2, 3 # comment\n"
+                "\n"
+                "print('a =', a)\n"
+                "print('b =', b)\n"
+                "print('c =', c)\n"
+                "\n"
+            )
+
+        result = progress.get_argn(argv_file.name)
+
+        os.remove(filename)
+
+        expected = 0
+
+        self.assertEqual(expected, result)
+
+    def test_get_argn_import_sys_with_inline_comment_trailing_comma(self):
+        _, filename = tempfile.mkstemp(suffix='.py', text=True)
+
+        with open(filename, mode='wt', encoding='utf-8') as argv_file:
+            argv_file.write(
+                "# comment a\n"
+                "# comment b\n"
+                "# commnet c\n"
+                "\n"
+                "import sys\n"
+                "\n"
+                "a, b, c, = sys.argv # inline comment\n"
+                "\n"
+                "print('a =', a)\n"
+                "print('b =', b)\n"
+                "print('c =', c)\n"
+                "\n"
+            )
+
+        result = progress.get_argn(argv_file.name)
+
+        os.remove(filename)
+
+        expected = 3
+
+        self.assertEqual(expected, result)
+
+    def test_get_argn_from_sys_import_argv_no_inline_comment(self):
+        _, filename = tempfile.mkstemp(suffix='.py', text=True)
+
+        with open(filename, mode='wt', encoding='utf-8') as argv_file:
+            argv_file.write(
+                "# comment a\n"
+                "# comment b\n"
+                "# commnet c\n"
+                "\n"
+                "from sys import argv\n"
+                "\n"
+                "a, b, c = argv\n"
+                "\n"
+                "print('a =', a)\n"
+                "print('b =', b)\n"
+                "print('c =', c)\n"
+                "\n"
+            )
+
+        result = progress.get_argn(argv_file.name)
+
+        os.remove(filename)
+
+        expected = 3
+
+        self.assertEqual(expected, result)
+
+    def test_get_argn_from_sys_import_argv_with_inline_comment(self):
+        _, filename = tempfile.mkstemp(suffix='.py', text=True)
+
+        with open(filename, mode='wt', encoding='utf-8') as argv_file:
+            argv_file.write(
+                "# comment a\n"
+                "# comment b\n"
+                "# commnet c\n"
+                "\n"
+                "from sys import argv\n"
+                "\n"
+                "a, b, c = argv # inline comment\n"
+                "\n"
+                "print('a =', a)\n"
+                "print('b =', b)\n"
+                "print('c =', c)\n"
+                "\n"
+            )
+
+        result = progress.get_argn(argv_file.name)
+
+        os.remove(filename)
+
+        expected = 3
+
+        self.assertEqual(expected, result)
+
+    def test_get_argn_from_sys_import_argv_with_inline_comment_trailing_comma(self):
+        _, filename = tempfile.mkstemp(suffix='.py', text=True)
+
+        with open(filename, mode='wt', encoding='utf-8') as argv_file:
+            argv_file.write(
+                "# comment a\n"
+                "# comment b\n"
+                "# commnet c\n"
+                "\n"
+                "from sys import argv\n"
+                "\n"
+                "a, b, c, = argv # inline comment\n"
+                "\n"
+                "print('a =', a)\n"
+                "print('b =', b)\n"
+                "print('c =', c)\n"
+                "\n"
+            )
+
+        result = progress.get_argn(argv_file.name)
+
+        os.remove(filename)
+
+        expected = 3
+
+        self.assertEqual(expected, result)
+
+    def test_get_argn_from_sys_import_argv_comment(self):
+        _, filename = tempfile.mkstemp(suffix='.py', text=True)
+
+        with open(filename, mode='wt', encoding='utf-8') as argv_file:
+            argv_file.write(
+                "# comment a\n"
+                "# comment b\n"
+                "# commnet c\n"
+                "\n"
+                "from sys import argv\n"
+                "\n"
+                "# a, b, c = argv # comment\n"
+                "a, b, c = 1, 2, 3 # comment\n"
+                "\n"
+                "print('a =', a)\n"
+                "print('b =', b)\n"
+                "print('c =', c)\n"
+                "\n"
+            )
+
+        result = progress.get_argn(argv_file.name)
+
+        os.remove(filename)
+
+        expected = 0
+
+        self.assertEqual(expected, result)
+
+    def test_get_argn_from_sys_import_argv_with_equal_in_inline_comment(self):
+        _, filename = tempfile.mkstemp(suffix='.py', text=True)
+
+        with open(filename, mode='wt', encoding='utf-8') as argv_file:
+            argv_file.write(
+                "# comment a\n"
+                "# comment b\n"
+                "# commnet c\n"
+                "\n"
+                "from sys import argv\n"
+                "\n"
+                "스크립트, 파일_이름 = argv #argv = 실행할때 사용자에게 입력 받음, 파일 이름은 경로까지!\n"
+                "\n"
+                "print('a =', a)\n"
+                "print('b =', b)\n"
+                "print('c =', c)\n"
+                "\n"
+            )
+
+        result = progress.get_argn(argv_file.name)
+
+        os.remove(filename)
+
+        expected = 2
 
         self.assertEqual(expected, result)
 
@@ -813,6 +1170,11 @@ class TestRepoEvalCountOneCommitLogTimeSetting(unittest.TestCase):
                     commit_datetime, self.after_date_datetime, msg=msg)
                 self.assertLess(commit_datetime,
                                 self.before_date_datetime, msg=msg)
+
+
+def get_tempfile_name(suffix=None,):
+    _, filename = tempfile.mkstemp(suffix=None, text=True)
+    return filename
 
 
 if "__main__" == __name__:

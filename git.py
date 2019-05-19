@@ -94,48 +94,39 @@ def run_command(cmd, b_verbose=True, in_txt=None, b_show_cmd=False):
     # https://docs.python.org/3/library/subprocess.html#using-the-subprocess-module
 
     if b_show_cmd:
-        print('run_command({cmd!r})'.format(cmd=cmd))
+        print(f'run_command({repr(cmd)})')
 
-    p = subprocess.Popen(cmd, stdin=subprocess.PIPE,
-                         stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    if in_txt is None:
-        fi, fo, fe = p.stdin, p.stdout, p.stderr
+    # ideasman42, How to set sys.stdout encoding in Python 3?, Stackoverflow, 2011 10 23, https://stackoverflow.com/a/7865013
+    env = os.environ.copy()
+    env['PYTHONIOENCODING'] = 'utf-8'
 
-        msgo = fo.read()
-        msge = fe.read()
+    assert isinstance(cmd, (tuple, list, str)), type(cmd)
+    if isinstance(cmd, (tuple, list)):
+        for cmd_element in cmd:
+            assert isinstance(cmd_element, str), cmd
 
-        fi.close()
-        fo.close()
-        fe.close()
+    p = subprocess.Popen(
+        cmd,
+        stdin=subprocess.PIPE,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        encoding='utf-8',
+        env=env,
+    )
 
-        del fi, fo, fe
-    else:
-        # https://stackoverflow.com/questions/163542/python-how-do-i-pass-a-string-into-subprocess-popen-using-the-stdin-argument
-        msgo, msge = p.communicate(input=in_txt)
-
-    # some output messages need decoding
-    if isinstance(msgo, bytes):
-        try:
-            msgo_decoded = msgo.decode('utf-8')
-        except UnicodeDecodeError:
-            msgo_decoded = msgo.decode('cp949')
-
-    if isinstance(msge, bytes):
-        try:
-            msge_decoded = msge.decode('utf-8')
-        except UnicodeDecodeError:
-            msge_decoded = msge.decode('cp949')
+    # https://stackoverflow.com/questions/163542/python-how-do-i-pass-a-string-into-subprocess-popen-using-the-stdin-argument
+    msgo, msge = p.communicate(input=in_txt)
 
     if b_verbose:
-        if msgo_decoded:
-            print(msgo_decoded)
-        if msge_decoded:
-            print(msge_decoded)
+        if msgo:
+            print(msgo)
+        if msge:
+            print(msge)
 
     # to save memory
-    del msgo, msge, p
+    del p
 
-    return msgo_decoded, msge_decoded
+    return msgo, msge
 
 
 def git_common(cmd, b_verbose=True):
