@@ -1544,15 +1544,11 @@ class RepoEvalRunEach(RepoEval):
             arguments = ['utf-8', 'replace']
         else :
             arguments = []
-            n_argv = 0
 
             script_file.seek(0)
             txt = script_file.read()
 
-            match = self.search_sys_argv_assign_line(txt)
-            if match:
-                argv_list = match.group(1).split(',')
-                n_argv = len(argv_list) - 1
+            n_argv = self.count_nargv(txt)
 
             if 0 < n_argv:
                 arguments = list(str(i) for i in range(1, n_argv + 1))
@@ -1569,6 +1565,18 @@ class RepoEvalRunEach(RepoEval):
                     arguments.insert(0, other_file_list[0])
 
         return arguments
+
+    def count_nargv(self, txt):
+
+        n_argv = 0
+
+        match = self.search_sys_argv_assign_line(txt)
+
+        if match:
+            argv_list = match.group(1).split(',')
+            n_argv = len(argv_list) - 1
+
+        return n_argv
 
     def search_sys_argv_assign_line(self, txt):
             return re.search(r'^(.+?)\s*=\s*(?:(?:sys.argv)|(?:argv))\s*$', txt, re.M)
