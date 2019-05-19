@@ -1849,61 +1849,44 @@ def get_argn(filename):
     # initial value
     result = 0
 
+    token_list = []
+
+    last_new_line = 0
+    equals_of_this_line = []
+    # initial -> equal ->
+
     with open(filename, 'r', encoding='utf-8') as f:
         try:
             # token loop
             # https://docs.python.org/3/library/tokenize.html#tokenize.tokenize
-            for toktype, tok, _, _, line in tokenize.generate_tokens(f.readline):
-                # find line with argv
-                if (toktype == tokenize.NAME) and ('argv' == tok) and ('=' in line):
-                    # would need to look into the left side of '=' in this line
-                    left__right = line.strip().split('=')
 
-                    n_equal = line.count('=')
+            token_list = list(tokenize.generate_tokens(f.readline))
 
-                    # only one '=' in the line
-                    if 1 == n_equal:
-                        left = left__right[0]
-                        # try to find number of variables on the left side
-                        # TODO : what if ( a, b, c ) = argv?
-                        # TODO : what if (a, b, c) = argv?
-                        # TODO : what if a, b, c            = argv?
-                        # TODO : what if a, b, c, = argv?
-                        # TODO : what if # a, b, c, = argv?
-                        # TODO : repeat above for sys.argv case
-                        # TODO : repeat above for import sys as ?? case
-                        argv_list = list(
-                            filter(
-                                lambda symbol: symbol.strip(), 
-                                left.strip().split(',')
-                            )
-                        )
+            # https://docs.python.org/3.6/library/tokenize.html#examples
+            for k, toktype__tok__start__end__line in enumerate(token_list):
+                toktype, tok, start, end, line = toktype__tok__start__end__line
 
-                        # count the number of arguments
-                        len_argv_now = len(argv_list)
+                if (toktype == tokenize.NEWLINE):
+                    last_new_line = k
+                    equals_of_this_line = []
 
+                elif (toktype == tokenize.OP) and ('=' == tok):
+                    equals_of_this_line.append(k)
+
+                elif (toktype == tokenize.NAME) and ('argv' == tok):
+
+                    if 1 == len(equals_of_this_line):
+                        left_list = token_list[(last_new_line + 1):equals_of_this_line[-1]]
+
+                        # count the number of names
+                        result = 0
+                        for item in left_list:
+                            if (tokenize.NAME == item[0]):
+                                result += 1
+                        break
                     # if two or more '='s
-                    elif 2 <= n_equal:
-                        # `script = sys, user_name = argv` is equivalent to
-                        # script = sys = argv1, user_name = argv2
-
-                        # remove the left most element
-                        left__right.pop()
-
-                        # reassemble the left side
-                        left_side = '='.join(left__right).split(',')
-
-                        # number of arguments = number of commas plus one
-                        len_argv_now = left_side.count(',') + 1
-
-                        # indicate the file
-                        print("get_argn() : more than one '='s in {filename} of {path}".format(
-                            filename=filename, path=os.getcwd()
-                        ))
-
-                    # find maximum
-                    if len_argv_now > result:
-                        result = len_argv_now
+                    elif 2 <= len(equals_of_this_line):
+                        raise NotImplementedError
 
         except tokenize.TokenError:
             print('*** tokenize.TokenError ***')
