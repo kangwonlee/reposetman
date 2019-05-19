@@ -30,14 +30,14 @@ class TestCollectChapters(unittest.TestCase):
         )
 
         sections_dict = {
-            'section_a':{
-                'urls':url_a_list[:3],
-                'user_ids':user_id_list[:3],
-                },
-            'section_b':{
-                'urls':url_b_list[1:],
-                'user_ids':user_id_list[1:],
-                },
+            'section_a': {
+                'urls': url_a_list[:3],
+                'user_ids': user_id_list[:3],
+            },
+            'section_b': {
+                'urls': url_b_list[1:],
+                'user_ids': user_id_list[1:],
+            },
         }
 
         result_dict = col.transpose_dict(sections_dict)
@@ -46,7 +46,7 @@ class TestCollectChapters(unittest.TestCase):
         self.assertSetEqual(
             set(user_id_list),
             set(result_dict.keys()),
-            )
+        )
 
         for user in result_dict:
             self.assertIsInstance(result_dict[user], dict)
@@ -55,5 +55,6 @@ class TestCollectChapters(unittest.TestCase):
                 self.assertIn(section, sections_dict.keys())
 
                 url = result_dict[user][section]
-                in_list = list(map(lambda x : x in url, url_a_list + url_b_list))
+                in_list = list(
+                    map(lambda x: x in url, url_a_list + url_b_list))
                 self.assertTrue(any(in_list))

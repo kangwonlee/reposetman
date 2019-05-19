@@ -29,9 +29,9 @@ class TestUpdate(unittest.TestCase):
     def test_get_proj_info(self):
         # function under test
         proj_info_dict = ret.get_proj_info(__file__)
-        
+
         # print("proj_info_dict =", proj_info_dict)
-        
+
         expected_dict = {
             "18pfa_lpthw-abc": {'id_number': "2082652342", 'name': "가나다", 'github_id': "abc", 'domain': "github.com", },
             "18pfa_lpthw-def": {'id_number': "2018007194", 'name': "라마바", 'github_id': "def", 'domain': "github.com", },
@@ -43,17 +43,20 @@ class TestUpdate(unittest.TestCase):
             # just checking some of the keys and values
             for key in expected_dict[expected_repo_name]:
                 self.assertIn(key, proj_info_dict[expected_repo_name])
-                self.assertEqual(expected_dict[expected_repo_name][key], proj_info_dict[expected_repo_name][key])
+                self.assertEqual(
+                    expected_dict[expected_repo_name][key], proj_info_dict[expected_repo_name][key])
 
     def test_get_proj_id(self):
         # function under test
-        result = ret.get_proj_id('2082652342 가나다  https://abc@github.com/CPF18A/18pfa_lpthw-abc.git')
+        result = ret.get_proj_id(
+            '2082652342 가나다  https://abc@github.com/CPF18A/18pfa_lpthw-abc.git')
         expected = '18pfa_lpthw-abc'
         self.assertIn(expected, result)
 
     def test_get_proj_info_line(self):
         # function under test
-        result = ret.get_proj_info_line('2082652342 가나다  https://abc@github.com/CPF18A/18pfa_lpthw-abc.git')
+        result = ret.get_proj_info_line(
+            '2082652342 가나다  https://abc@github.com/CPF18A/18pfa_lpthw-abc.git')
         expected = [{'id_number': '2082652342',
                      'name': '가나다',
                      'github_id': 'abc',
@@ -62,7 +65,8 @@ class TestUpdate(unittest.TestCase):
                      'repo_name': '18pfa_lpthw-abc'}]
 
         self.maxDiff = None
-        self.assertDictEqual(expected[0], result[0], msg='result = %r' % result)
+        self.assertDictEqual(
+            expected[0], result[0], msg='result = %r' % result)
 
 
 if "__main__" == __name__:

@@ -61,7 +61,7 @@ def find_git_in_path():
         for path in os.environ[PATH].split(os.pathsep):
             if os.path.exists(path):
                 if 'git' in os.listdir(path):
-                    print (f"{path} has git")
+                    print(f"{path} has git")
                     result.append(path)
             else:
                 print(f"{path} does not exist")
@@ -94,47 +94,39 @@ def run_command(cmd, b_verbose=True, in_txt=None, b_show_cmd=False):
     # https://docs.python.org/3/library/subprocess.html#using-the-subprocess-module
 
     if b_show_cmd:
-        print('run_command({cmd!r})'.format(cmd=cmd))
+        print(f'run_command({repr(cmd)})')
 
-    p = subprocess.Popen(cmd, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    if in_txt is None:
-        fi, fo, fe = p.stdin, p.stdout, p.stderr
+    # ideasman42, How to set sys.stdout encoding in Python 3?, Stackoverflow, 2011 10 23, https://stackoverflow.com/a/7865013
+    env = os.environ.copy()
+    env['PYTHONIOENCODING'] = 'utf-8'
 
-        msgo = fo.read()
-        msge = fe.read()
+    assert isinstance(cmd, (tuple, list, str)), type(cmd)
+    if isinstance(cmd, (tuple, list)):
+        for cmd_element in cmd:
+            assert isinstance(cmd_element, str), cmd
 
-        fi.close()
-        fo.close()
-        fe.close()
+    p = subprocess.Popen(
+        cmd,
+        stdin=subprocess.PIPE,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        encoding='utf-8',
+        env=env,
+    )
 
-        del fi, fo, fe
-    else:
-        # https://stackoverflow.com/questions/163542/python-how-do-i-pass-a-string-into-subprocess-popen-using-the-stdin-argument
-        msgo, msge = p.communicate(input=in_txt)
-
-    # some output messages need decoding
-    if isinstance(msgo, bytes):
-        try:
-            msgo_decoded = msgo.decode('utf-8')
-        except UnicodeDecodeError:
-            msgo_decoded = msgo.decode('cp949')
-
-    if isinstance(msge, bytes):
-        try:
-            msge_decoded = msge.decode('utf-8')
-        except UnicodeDecodeError:
-            msge_decoded = msge.decode('cp949')
+    # https://stackoverflow.com/questions/163542/python-how-do-i-pass-a-string-into-subprocess-popen-using-the-stdin-argument
+    msgo, msge = p.communicate(input=in_txt)
 
     if b_verbose:
-        if msgo_decoded:
-            print(msgo_decoded)
-        if msge_decoded:
-            print(msge_decoded)
+        if msgo:
+            print(msgo)
+        if msge:
+            print(msge)
 
     # to save memory
-    del msgo, msge, p
+    del p
 
-    return msgo_decoded, msge_decoded
+    return msgo, msge
 
 
 def git_common(cmd, b_verbose=True):
@@ -151,7 +143,7 @@ def git_common(cmd, b_verbose=True):
     return run_command((git_exe_path,) + tuple(cmd), b_verbose)
 
 
-def git(cmd, bVerbose = True):
+def git(cmd, bVerbose=True):
     """
     execute git command & print
 
@@ -163,7 +155,7 @@ def git(cmd, bVerbose = True):
     """
 
     msgo, msge = git_common(cmd, bVerbose)
-    
+
     if msgo:
         if not msge:
             msg = msgo
@@ -172,7 +164,7 @@ def git(cmd, bVerbose = True):
 ''' + msge
     else:
         msg = msge
-    
+
     del msgo, msge
     return msg
 
@@ -185,8 +177,8 @@ def checkout(commit=False, repo_path=False, b_verbose=False):
 
     # checkout specific commit
     checkout_cmd_list = [git_exe_path,
-        'checkout',
-    ]
+                         'checkout',
+                         ]
 
     if commit:
         checkout_cmd_list.append(commit)
@@ -201,15 +193,17 @@ def checkout(commit=False, repo_path=False, b_verbose=False):
 
         b_stderr_already_on = stderr.startswith('Already on ')
         b_stderr_detached_head = "You are in 'detached HEAD' state." in stderr
-        b_switch_success = "Switched to branch '{branch}'".format(branch=commit) in stderr
-        b_previous_now = (stderr.startswith('Previous HEAD position was')) and ('HEAD is now at' in stderr)
+        b_switch_success = "Switched to branch '{branch}'".format(
+            branch=commit) in stderr
+        b_previous_now = (stderr.startswith('Previous HEAD position was')) and (
+            'HEAD is now at' in stderr)
 
         if all([not b_stderr_already_on, not b_stderr_detached_head, not b_switch_success, not b_previous_now]):
             print(os.getcwd())
             print(stderr)
 
     else:
-        if b_verbose: 
+        if b_verbose:
             print(stdout)
 
     if repo_path:
@@ -224,29 +218,34 @@ def log_last_commit():
         (git_exe_path, 'log', '-1'),
         b_verbose=False
     )
-    
+
     # output error check
     if msgo and not msge:
         msgo_split = msgo.split()
         result = msgo_split[0]
     else:
         result = 'N/A'
-    
+
     return result
 
 
-def get_last_sha(b_full=False, path=''):
+def get_last_sha(b_full=False, path='', branch=''):
     # sometimes full SHA is necessary
     if b_full:
         format_string = '%H'
     else:
         format_string = '%h'
 
-    command_list = [git_exe_path, 'log', '--pretty=format:{h}'.format(h=format_string), '-1']
+    command_list = [git_exe_path, 'log',
+                    '--pretty=format:{h}'.format(h=format_string), '-1']
 
-    if path: 
+    if branch and path:
+        command_list += [branch, '--', path]
+    elif path:
         command_list.append(path)
-        
+    elif branch:
+        command_list.append(branch)
+
     # get the last sha from git log of the latest commit
     msgo, msge = run_command(
         tuple(command_list),
@@ -259,7 +258,7 @@ def get_last_sha(b_full=False, path=''):
         result = msgo_split[0]
     else:
         result = 'N/A'
-    
+
     return result
 
 
@@ -276,7 +275,8 @@ def tag(tag_string, revision=''):
     )
 
     if msgo or msge:
-        print('tag({tag}) failed.\nmsgo:\n{msgo}\nmsge:\n{msge}'.format(tag=tag_string, msgo=msgo, msge=msge))
+        print('tag({tag}) failed.\nmsgo:\n{msgo}\nmsge:\n{msge}'.format(
+            tag=tag_string, msgo=msgo, msge=msge))
 
     return not (msgo or msge)
 
@@ -301,7 +301,7 @@ def get_tags():
         b_verbose=False,
     )
 
-    return [tag.strip() for tag in msgo.splitlines()] 
+    return [tag.strip() for tag in msgo.splitlines()]
 
 
 def get_refs_tag_deref():
@@ -319,17 +319,17 @@ def get_refs_tag_deref():
         b_verbose=False,
     )
 
-    if msge :
+    if msge:
         raise SystemError(msge)
 
     # Obtain SHA's from the log
     stdout_log, stderr_log = run_command(
-        (git_exe_path, 'log', '--pretty=%H'), 
+        (git_exe_path, 'log', '--pretty=%H'),
         b_verbose=False,
     )
-    if stderr_log :
+    if stderr_log:
         raise SystemError(stderr_log)
-    
+
     sha_tuple = tuple(stdout_log.splitlines())
 
     # collect tags and sha's from the dereference
@@ -382,7 +382,7 @@ def ls_remote_tag(remote='origin', b_verbose=False):
             sha, ref = line.split()
             tag = ref.replace('^{}', '').replace('refs/tags/', '')
             result_list.append((sha, tag))
-    
+
     return result_list
 
 
@@ -402,7 +402,7 @@ def has_a_tag(commit=None):
 
 
 def clean_xdf(b_verbose=False):
-    if b_verbose: 
+    if b_verbose:
         print('clean_xdf(): cwd =', os.getcwd())
 
     run_command((git_exe_path, 'clean', '-x', '-d', '-f'), b_verbose=b_verbose)
@@ -417,7 +417,8 @@ def get_remote_branch_list(b_verbose=False):
     """
     Get a list of remote branches of current repository
     """
-    stdout, _ = run_command((git_exe_path, 'branch', '--remote'), b_verbose=b_verbose)
+    stdout, _ = run_command(
+        (git_exe_path, 'branch', '--remote'), b_verbose=b_verbose)
 
     result = []
 
@@ -471,7 +472,8 @@ def set_id_to_url(url, id):
         i = p.netloc.index('@')
         netloc = id + p.netloc[i:]
     # make the new url
-    new_url = up.urlunparse((p.scheme, netloc, p.path, p.params, p.query, p.fragment))
+    new_url = up.urlunparse(
+        (p.scheme, netloc, p.path, p.params, p.query, p.fragment))
 
     return new_url
 

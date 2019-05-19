@@ -33,14 +33,14 @@ class ReferenceBuilder(object):
             config_filename = config_filename
         else:
             config_filename = 'reference.cfg'
-        
+
         if os.path.exists(config_filename):
             self.config.read(config_filename)
         else:
             raise IOError("Can't find config file %s" % config_filename)
 
         # folder
-        self.folder = os.path.abspath(self.config['operation']['folder']) 
+        self.folder = os.path.abspath(self.config['operation']['folder'])
         print(self.folder)
 
         # comments
@@ -66,7 +66,8 @@ class ReferenceBuilder(object):
         for k, url in enumerate(self.config['urls']):
             self.process_section(k, url)
 
-        if b_verbose: print(self.comments)
+        if b_verbose:
+            print(self.comments)
 
         with open(self.config['operation']['comment_output_file'], 'wt', encoding='utf-8') as f_out:
             for line in self.comments:
@@ -78,16 +79,17 @@ class ReferenceBuilder(object):
     def process_section(self, k, section):
         # github url to browse commit of a repository
         print('{sec} {url}/tree/{commit}'.format(
-            sec=section, url=self.config['urls'][section], commit=self.get_commit(section),
+            sec=section, url=self.config['urls'][section], commit=self.get_commit(
+                section),
         ))
 
         # clone or update the repository
-        repo = ret.clone_or_pull_repo_cd(k, 
-            self.config['urls'][section], 
-            self.folder, 
-            b_update_repo='True'==self.config['operation']['folder'],
-            b_tag_after_update=False,
-        )
+        repo = ret.clone_or_pull_repo_cd(k,
+                                         self.config['urls'][section],
+                                         self.folder,
+                                         b_update_repo='True' == self.config['operation']['folder'],
+                                         b_tag_after_update=False,
+                                         )
 
         # abs path to the repository
         repo_path = os.path.join(self.folder, repo['name'])
@@ -109,11 +111,14 @@ def collect_comments_recursively(path, comments=unique_list.unique_list(), b_ver
                     for line in read_python.get_comments_list_from_filename(full_path):
                         comments.add(line)
 
-                    if b_verbose: print('len(comments) =', len(comments))
+                    if b_verbose:
+                        print('len(comments) =', len(comments))
                 else:
-                    if b_verbose: print('ignore file %s' % file_name)
+                    if b_verbose:
+                        print('ignore file %s' % file_name)
         else:
-            if b_verbose: print('ignore path %s' % root_path)
+            if b_verbose:
+                print('ignore path %s' % root_path)
 
     return comments
 
