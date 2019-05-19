@@ -942,5 +942,10 @@ class TestRepoEvalCountOneCommitLogTimeSetting(unittest.TestCase):
                                 self.before_date_datetime, msg=msg)
 
 
+def get_tempfile_name(suffix=None,):
+    _, filename = tempfile.mkstemp(suffix=None, text=True)
+    return filename
+
+
 if "__main__" == __name__:
     unittest.main()
