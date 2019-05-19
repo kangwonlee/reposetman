@@ -323,7 +323,8 @@ class TestRepoEvalRunEach(TestRepoEvalRunEachBase):
         input_args = []
         copy_input_args = list(input_args)
 
-        result_args = self.e.update_args(filename='', arguments=input_args)
+        with tempfile.TemporaryFile('a+t', encoding='utf-8') as temp_file:
+            result_args = self.e.update_args(script_file=temp_file, arguments=input_args)
 
         os.chdir(cwd)
         shutil.rmtree(folder_name)
