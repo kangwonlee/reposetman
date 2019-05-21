@@ -17,7 +17,7 @@ def get_local_repo_path(repo_name):
 def get_repo_name_from_url(repo_url):
     # repo_url.strip('/') : without this strip() call, if a url ends with '/', this function would return '' as repostiory name
     p = up.urlparse(repo_url.strip('/'))
-    return os.path.splitext(os.path.split(p.path)[-1])[0]
+    return os.path.splitext(os.path.basename(p.path))[0]
 
 
 def cd_proj_repo(proj_id):
