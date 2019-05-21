@@ -65,7 +65,7 @@ class BaseTestTableWriterTable(unittest.TestCase):
 
         self.section = 'test_section'
         self.file_prefix = 'test_output'
-        self.path = os.path.split(__file__)[0]
+        self.path = os.path.dirname(__file__)
 
     def get_row_column_item(self, row, column):
         # decide an element for table[row][column]
