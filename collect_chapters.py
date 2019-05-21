@@ -77,7 +77,7 @@ def main(argv):
             for path in pl_file.readlines():
                 participant_folder_list.append(
                     {
-                        'name': os.path.split(path)[-1],
+                        'name': os.path.basename(path),
                         'path': path.strip(),
                     }
                 )
@@ -173,9 +173,9 @@ def get_sections_dict(config):
         for parse in url_parse_dict[section]:
             sections_dict[section]['user_ids'].append(
                 os.path.splitext(
-                    os.path.split(
+                    os.path.basename(
                         parse.path.strip('/')
-                    )[-1]  # last part of the path
+                    )  # last part of the path
                 )[0][id_starts_here:]   # extract id
             )
 
