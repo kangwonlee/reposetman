@@ -95,7 +95,7 @@ def process_repository(repository_full_path):
 
     if os.path.isdir(repository_full_path) and not ignore.is_ignore_path(repository_full_path):
 
-        _, repository = os.path.split(repository_full_path)
+        repository = os.path.basename(repository_full_path)
 
         # process repository
         cwd_backup = os.getcwd()
