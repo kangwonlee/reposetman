@@ -1158,6 +1158,8 @@ class RepoEvalCountOneCommitLog(RepoEval):
             # reset storage for 'files in commit'
             temporary_file_list = unique_list.unique_list()
 
+            line = 'could be a merge commit'
+
             # process file list
             for line in git_log_lines[1:]:
                 # lines below the new commit
