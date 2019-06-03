@@ -11,26 +11,22 @@ import timeit
 import unique_list
 
 
-cfg_filename = 'regex_test.cfg'
+cfg_filename = "regex_test.cfg"
 
 
 def init_regex_test_cfg():
-    list_filename = 'test_list.txt'
-    repo_path = 'sample'
+    list_filename = "test_list.txt"
+    repo_path = "sample"
     if not os.path.exists(cfg_filename):
         config = configparser.ConfigParser()
-        config['repository'] = {
-            'listFile': list_filename,
-            'path': repo_path,
-        }
-        config['Admin'] = {
-            'id': 'please configure github id'
-        }
+        config["repository"] = {"listFile": list_filename, "path": repo_path}
+        config["Admin"] = {"id": "please configure github id"}
 
-        with open(cfg_filename, 'w') as cfg_file:
+        with open(cfg_filename, "w") as cfg_file:
             config.write(cfg_file)
         raise FileNotFoundError(
-            f'Please configure github id in {cfg_filename} and restart')
+            f"Please configure github id in {cfg_filename} and restart"
+        )
 
 
 config = configparser.ConfigParser()
@@ -41,7 +37,7 @@ if not os.path.exists(cfg_filename):
 config.read(cfg_filename)
 
 
-def get_proj_id_list(filename=config['repository']['listFile']):
+def get_proj_id_list(filename=config["repository"]["listFile"]):
     """
 
     :param str filename:
@@ -80,12 +76,13 @@ def get_proj_info_line(txt):
 
     # pattern to find most of the fields
     pattern = r"^(?P<id_number>\w+?){sep}(?P<name>\w+?){sep}https://(?P<domain>.+)/(?P<group>.+)/(?P<repo_name>.+).git\s*?$".format(
-        sep=possible_separators)
+        sep=possible_separators
+    )
 
     r = re.compile(pattern, re.M)
 
     # pattern to identify github id
-    r_id = re.compile(r'(?P<github_id>\w+?)@(?P<domain>.+)')
+    r_id = re.compile(r"(?P<github_id>\w+?)@(?P<domain>.+)")
 
     # https://stackoverflow.com/questions/11103856/re-findall-which-returns-a-dict-of-named-capturing-groups
     proj_info_list = []
@@ -98,9 +95,9 @@ def get_proj_info_line(txt):
         proj_info_list.append(new_dict)
 
         # if github id in the domain
-        if '@' in new_dict['domain']:
+        if "@" in new_dict["domain"]:
             # try to find id and domain
-            found_list = r_id.match(new_dict['domain']).groupdict()
+            found_list = r_id.match(new_dict["domain"]).groupdict()
             # debug message
             # print('found_list =', found_list)
 
@@ -111,29 +108,29 @@ def get_proj_info_line(txt):
 
 
 def get_proj_info(txt_fname):
-    '''
+    """
     get list of project info including project id
 
     string of interest :
     2082652342 가나다  https://abc@github.com/CPF18A/18pfa_lpthw-abc.git
 
-    '''
+    """
     txt = read_txt(txt_fname)
     # regular expression
 
     proj_info_list = get_proj_info_line(txt)
 
-    '''
+    """
     expected_dict = {
                          project_id : (section ,student_id,student_name, domain_id, domain,),
                          project_id : (section ,student_id,student_name, domain_id, domain,),
                         }    
-    '''
+    """
 
     proj_info_dict = {}
 
     for one_dict in proj_info_list:
-        proj_info_dict[one_dict['repo_name']] = one_dict
+        proj_info_dict[one_dict["repo_name"]] = one_dict
 
     # delete objects after use
     del proj_info_list[:]
@@ -145,9 +142,9 @@ def get_proj_info(txt_fname):
 @timeit.timeit
 def clone_or_pull_repo_list(
     repo_url_list,
-    section_folder=os.path.abspath(config['repository']['path']),
+    section_folder=os.path.abspath(config["repository"]["path"]),
     b_update_repo=True,
-    b_multiprocessing=True
+    b_multiprocessing=True,
 ):
     """
     process repository list
@@ -174,25 +171,30 @@ def clone_or_pull_repo_list(
     if b_multiprocessing:
         p = mp.Pool()
 
-        repo_list = tuple(p.starmap(clone_or_pull_repo_cd,
-                                    gen_update_arg(repo_url_list)))
+        repo_list = tuple(
+            p.starmap(clone_or_pull_repo_cd, gen_update_arg(repo_url_list))
+        )
 
         # multiprocessing cleanup
         p.close()
         p.join()
     else:
-        repo_list = tuple(itertools.starmap(
-            clone_or_pull_repo_cd, gen_update_arg(repo_url_list)))
+        repo_list = tuple(
+            itertools.starmap(clone_or_pull_repo_cd, gen_update_arg(repo_url_list))
+        )
 
     return repo_list
 
 
-def clone_or_pull_repo_cd(k, repo_url, abs_section_folder, b_update_repo, b_tag_after_update=True):
+def clone_or_pull_repo_cd(
+    k, repo_url, abs_section_folder, b_update_repo, b_tag_after_update=True
+):
     # cloning should create local repository under this folder
     org_path = repo_path.cd(abs_section_folder)
 
     result = clone_or_pull_repo(
-        k, repo_url, b_update_repo, b_tag_after_update=b_tag_after_update)
+        k, repo_url, b_update_repo, b_tag_after_update=b_tag_after_update
+    )
 
     os.chdir(org_path)
 
@@ -202,14 +204,14 @@ def clone_or_pull_repo_cd(k, repo_url, abs_section_folder, b_update_repo, b_tag_
 def clone_or_pull_repo(k, repo_url, b_updte_repo, b_tag_after_update=True):
     # initialize repository info
     repo = {
-        'url': repo_url,
-        'name': repo_path.get_repo_name_from_url(repo_url),  # repository name
+        "url": repo_url,
+        "name": repo_path.get_repo_name_from_url(repo_url),  # repository name
     }
 
     # get project path
-    repo_path_in_section = repo_path.get_local_repo_path(repo['name'])
+    repo_path_in_section = repo_path.get_local_repo_path(repo["name"])
 
-    repo['path'] = os.path.abspath(repo_path_in_section)
+    repo["path"] = os.path.abspath(repo_path_in_section)
 
     # just in case
     dir_backup = os.getcwd()
@@ -217,16 +219,17 @@ def clone_or_pull_repo(k, repo_url, b_updte_repo, b_tag_after_update=True):
     # even if b_updte_repo is False,
     # if not cloned yet, do it now.
     if not os.path.exists(repo_path_in_section):
-        print('clone_or_pull_repo(%2d) : clone %s' % (k, repo['url']))
-        git.clone(repo['url'], id=config['Admin']['id'])
+        print("clone_or_pull_repo(%2d) : clone %s" % (k, repo["url"]))
+        git.clone(repo["url"], id=config["Admin"]["id"])
     else:
         if b_updte_repo:
-            print('clone_or_pull_repo(%2d) : pull %s' % (k, repo['url']))
+            print("clone_or_pull_repo(%2d) : pull %s" % (k, repo["url"]))
             fetch_and_reset(repo_path_in_section)
 
     # tag with time stamp after clone or pull
     tag_all_remote_branches(
-        b_tag_after_update, os.path.abspath(repo_path_in_section), repo)
+        b_tag_after_update, os.path.abspath(repo_path_in_section), repo
+    )
 
     # just in case
     os.chdir(dir_backup)
@@ -235,10 +238,10 @@ def clone_or_pull_repo(k, repo_url, b_updte_repo, b_tag_after_update=True):
 
 
 def get_timestamp_str():
-    return time.strftime('%a_%b_%d_%H_%M_%S_%Y')
+    return time.strftime("%a_%b_%d_%H_%M_%S_%Y")
 
 
-def tag_stamp(b_tag_after_update, repo_path_in_section, repo, branch='', commit=''):
+def tag_stamp(b_tag_after_update, repo_path_in_section, repo, branch="", commit=""):
     """
     Tag with time stamp after clone or pull
     """
@@ -254,20 +257,23 @@ def tag_stamp(b_tag_after_update, repo_path_in_section, repo, branch='', commit=
 
         # decide tag string
         if branch:
-            if '/' in branch:
-                branch = branch[(branch.index('/')+1):]
+            if "/" in branch:
+                branch = branch[(branch.index("/") + 1) :]
 
             # add branch name
-            tag_string = f'{get_timestamp_str()}__{branch}__{last_sha}'
+            tag_string = f"{get_timestamp_str()}__{branch}__{last_sha}"
         else:
             # just time stamp
-            tag_string = f'{get_timestamp_str()}__{last_sha}'
+            tag_string = f"{get_timestamp_str()}__{last_sha}"
 
         # Tag if the latest commit does not already have a tag
         if not git.has_a_tag(commit=commit):
             if not git.tag(tag_string, revision=commit):
-                raise IOError('Unable to tag {name} {tag}'.format(
-                    tag=tag_string, name=repo['name']))
+                raise IOError(
+                    "Unable to tag {name} {tag}".format(
+                        tag=tag_string, name=repo["name"]
+                    )
+                )
 
         # return to the stored path
         os.chdir(cwd)
@@ -292,13 +298,22 @@ def tag_all_remote_branches(b_tag_after_update, repo_abs_path, repo):
         # branch name loop
         for repo_branch in git.get_remote_branch_list():
             # A remote branch would be like : remote_name/branch_name/##
-            tag_stamp(b_tag_after_update, repo_abs_path, repo, branch=repo_branch, commit=repo_branch)
+            tag_stamp(
+                b_tag_after_update,
+                repo_abs_path,
+                repo,
+                branch=repo_branch,
+                commit=repo_branch,
+            )
 
         # restore repository branch
         git.checkout(current_repo_branch)
-        if 'master' != git.get_current_branch().strip():
-            print("branch = {branch}, repo path = {path}".format(
-                branch=git.get_current_branch(), path=repo_abs_path))
+        if "master" != git.get_current_branch().strip():
+            print(
+                "branch = {branch}, repo path = {path}".format(
+                    branch=git.get_current_branch(), path=repo_abs_path
+                )
+            )
 
     # return to section path
     os.chdir(section_path)
@@ -306,25 +321,25 @@ def tag_all_remote_branches(b_tag_after_update, repo_abs_path, repo):
 
 
 def get_git_naver_anon(proj_id):
-    '''
+    """
     argument : proj_id : project id
     return : git repository address using the project id
 
     >>> get_git_naver_anon("aaa")
     https://nobody:nobody@dev.naver.com/git/aaa.git
-    '''
+    """
     return "https://nobody:nobody@dev.naver.com/git/%s.git" % proj_id
 
 
-def read_txt(fname, encoding='utf-8'):
+def read_txt(fname, encoding="utf-8"):
     """
     Read a file with encoding
     """
     try:
-        with open(fname, 'r', encoding='utf-8') as f:
+        with open(fname, "r", encoding="utf-8") as f:
             txt = f.read()
     except UnicodeDecodeError as e:
-        print(f'read_txt({fname}, {encoding})')
+        print(f"read_txt({fname}, {encoding})")
         raise e
 
     return txt
@@ -335,32 +350,32 @@ def read_utf_or_cp(filename):
     Try to read a file first with utf and then cp encodings
     """
     try:
-        txt = read_txt(filename, encoding='utf-8')
+        txt = read_txt(filename, encoding="utf-8")
     except UnicodeError:
-        print(f'retrying file {filename} with cp949')
-        txt = read_txt(filename, encoding='cp949')
+        print(f"retrying file {filename} with cp949")
+        txt = read_txt(filename, encoding="cp949")
 
     return txt
 
 
 def clone_naver_to(proj_id, path=""):
-    '''
+    """
     git clone project (to a path if given)
     >>> clone_naver_to ("aaa", 'a')
-    '''
+    """
     full_anon_path_naver = get_git_naver_anon(proj_id)
     cmd = "clone %s %s" % (full_anon_path_naver, path)
     git.git(cmd)
 
 
 def submodule_naver_to(proj_id, path=""):
-    '''
+    """
     git submodule add project (to a path if given)
     >>> submodule_naver_to ("aaa", 'a')
-    '''
+    """
     full_anon_path_naver = get_git_naver_anon(proj_id)
 
-    path_replaced = path.replace('\\', '/')
+    path_replaced = path.replace("\\", "/")
 
     # A/student_repository/tool
     cmd = "submodule add -f %s %s" % (full_anon_path_naver, path_replaced)
@@ -368,9 +383,9 @@ def submodule_naver_to(proj_id, path=""):
 
 
 def paths_under_data(repository_local_path):
-    '''
+    """
     return all subfolders under data/ folder
-    '''
+    """
     raw = os.listdir(repository_local_path)
     result_list = [path_item for path_item in raw if os.path.isdir(path_item)]
     del raw
@@ -386,54 +401,52 @@ def pull_path(repository_path, b_verbose=False):
 
     org_path = repo_path.cd(repository_path)
 
-    clean_repo_before_update(b_verbose=b_verbose, caller_name='pull_path')
+    clean_repo_before_update(b_verbose=b_verbose, caller_name="pull_path")
 
-    git.checkout('master', b_verbose=False)
+    git.checkout("master", b_verbose=False)
     stdout, stderr = git.pull(b_verbose=False)
 
     # if there was an error during pull
-    clean_repo_after_error(stdout, stderr, 'pull_path', b_verbose=False,)
+    clean_repo_after_error(stdout, stderr, "pull_path", b_verbose=False)
 
     os.chdir(org_path)
 
 
-def clean_repo_before_update(b_verbose=False, caller_name='',):
+def clean_repo_before_update(b_verbose=False, caller_name=""):
     if b_verbose:
         print(f"{caller_name}() : reset --hard HEAD")
     git.reset_hard_head()
 
     if b_verbose:
-        print(f'{caller_name}() : clean -x -d -f')
+        print(f"{caller_name}() : clean -x -d -f")
     git.clean_xdf(b_verbose=False)
 
 
-def clean_repo_after_error(stdout, stderr, caller_name, b_verbose=False,):
+def clean_repo_after_error(stdout, stderr, caller_name, b_verbose=False):
 
     # if there was an error during fetch
-    if any((
-        (stdout.startswith('CONFLICT')),
-        ('fatal' in stderr),
-        ('error' in stderr),
-    )):
+    if any(((stdout.startswith("CONFLICT")), ("fatal" in stderr), ("error" in stderr))):
         # present error message
-        print(f'{caller_name}() : Possible error while updating')
+        print(f"{caller_name}() : Possible error while updating")
         print(os.getcwd())
-        print(f'{caller_name}() : stdout :')
+        print(f"{caller_name}() : stdout :")
         print(stdout)
-        print(f'{caller_name}() : stderr :')
+        print(f"{caller_name}() : stderr :")
         print(stderr)
 
         # cleanup
-        print(f'{caller_name}() : clean -x -d -f')
+        print(f"{caller_name}() : clean -x -d -f")
         git.clean_xdf(b_verbose=True)
         # revert
         print(f"{caller_name}() : reset --hard HEAD")
         git.reset_hard_head()
     if b_verbose:
-        print(f'{caller_name}() :', stdout)
+        print(f"{caller_name}() :", stdout)
 
 
-def fetch_and_reset(repository_path, b_verbose=False, revision='origin/master', remote='origin'):
+def fetch_and_reset(
+    repository_path, b_verbose=False, revision="origin/master", remote="origin"
+):
     """
     cd to repository_path
     git fetch
@@ -443,26 +456,27 @@ def fetch_and_reset(repository_path, b_verbose=False, revision='origin/master', 
 
     org_path = repo_path.cd(repository_path)
 
-    clean_repo_before_update(
-        b_verbose=b_verbose, caller_name='fetch_and_reset')
+    clean_repo_before_update(b_verbose=b_verbose, caller_name="fetch_and_reset")
 
-    git.checkout('master', b_verbose=b_verbose)
+    git.checkout("master", b_verbose=b_verbose)
 
     stdout, stderr = git.fetch(remote)
 
     clean_repo_after_error(
-        stdout, stderr, 'fetch_and_reset__fetch', b_verbose=b_verbose,)
+        stdout, stderr, "fetch_and_reset__fetch", b_verbose=b_verbose
+    )
 
     stdout, stderr = git.reset_hard_revision(revision)
 
     clean_repo_after_error(
-        stdout, stderr, 'fetch_and_reset__reset', b_verbose=b_verbose,)
+        stdout, stderr, "fetch_and_reset__reset", b_verbose=b_verbose
+    )
 
     os.chdir(org_path)
 
 
 if "__main__" == __name__:
     # read file
-    found = get_proj_id_list(config['repository']['listFile'])
+    found = get_proj_id_list(config["repository"]["listFile"])
     print(("len(found) =", len(found)))
     clone_or_pull_repo_list(found)

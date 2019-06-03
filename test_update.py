@@ -3,7 +3,7 @@ import unittest
 import regex_test as ret
 
 # test case for project id related functions
-'''
+"""
 가나다(2082652342) (03.11 오후 02:33)
 
 2082652342 가나다  https://abc@github.com/CPF18A/18pfa_lpthw-abc.git
@@ -15,7 +15,7 @@ import regex_test as ret
 사아자(2017958076) (03.11 오후 02:33)
 
 2017958076 사아자 https://ghi@github.com/CPF18A/18pfa_lpthw-ghi.git
-'''
+"""
 
 
 class TestUpdate(unittest.TestCase):
@@ -33,9 +33,24 @@ class TestUpdate(unittest.TestCase):
         # print("proj_info_dict =", proj_info_dict)
 
         expected_dict = {
-            "18pfa_lpthw-abc": {'id_number': "2082652342", 'name': "가나다", 'github_id': "abc", 'domain': "github.com", },
-            "18pfa_lpthw-def": {'id_number': "2018007194", 'name': "라마바", 'github_id': "def", 'domain': "github.com", },
-            "18pfa_lpthw-ghi": {'id_number': "2017958076", 'name': "사아자", 'github_id': "ghi", 'domain': "github.com", },
+            "18pfa_lpthw-abc": {
+                "id_number": "2082652342",
+                "name": "가나다",
+                "github_id": "abc",
+                "domain": "github.com",
+            },
+            "18pfa_lpthw-def": {
+                "id_number": "2018007194",
+                "name": "라마바",
+                "github_id": "def",
+                "domain": "github.com",
+            },
+            "18pfa_lpthw-ghi": {
+                "id_number": "2017958076",
+                "name": "사아자",
+                "github_id": "ghi",
+                "domain": "github.com",
+            },
         }
 
         for expected_repo_name in expected_dict:
@@ -44,29 +59,36 @@ class TestUpdate(unittest.TestCase):
             for key in expected_dict[expected_repo_name]:
                 self.assertIn(key, proj_info_dict[expected_repo_name])
                 self.assertEqual(
-                    expected_dict[expected_repo_name][key], proj_info_dict[expected_repo_name][key])
+                    expected_dict[expected_repo_name][key],
+                    proj_info_dict[expected_repo_name][key],
+                )
 
     def test_get_proj_id(self):
         # function under test
         result = ret.get_proj_id(
-            '2082652342 가나다  https://abc@github.com/CPF18A/18pfa_lpthw-abc.git')
-        expected = '18pfa_lpthw-abc'
+            "2082652342 가나다  https://abc@github.com/CPF18A/18pfa_lpthw-abc.git"
+        )
+        expected = "18pfa_lpthw-abc"
         self.assertIn(expected, result)
 
     def test_get_proj_info_line(self):
         # function under test
         result = ret.get_proj_info_line(
-            '2082652342 가나다  https://abc@github.com/CPF18A/18pfa_lpthw-abc.git')
-        expected = [{'id_number': '2082652342',
-                     'name': '가나다',
-                     'github_id': 'abc',
-                     'domain': 'github.com',
-                     'group': 'CPF18A',
-                     'repo_name': '18pfa_lpthw-abc'}]
+            "2082652342 가나다  https://abc@github.com/CPF18A/18pfa_lpthw-abc.git"
+        )
+        expected = [
+            {
+                "id_number": "2082652342",
+                "name": "가나다",
+                "github_id": "abc",
+                "domain": "github.com",
+                "group": "CPF18A",
+                "repo_name": "18pfa_lpthw-abc",
+            }
+        ]
 
         self.maxDiff = None
-        self.assertDictEqual(
-            expected[0], result[0], msg='result = %r' % result)
+        self.assertDictEqual(expected[0], result[0], msg="result = %r" % result)
 
 
 if "__main__" == __name__:

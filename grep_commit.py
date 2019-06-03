@@ -20,15 +20,15 @@ def main(argv):
         string_to_find = argv[1]
 
     else:
-        path_to_section = os.path.join('data')
-        string_to_find = 'ex01'
+        path_to_section = os.path.join("data")
+        string_to_find = "ex01"
 
     for full_path in gen_repo(path_to_section):
         if os.path.isdir(full_path):
             cwd = os.getcwd()
             os.chdir(full_path)
 
-            result = git.git_common_list(['log'], b_verbose=False)
+            result = git.git_common_list(["log"], b_verbose=False)
             if string_to_find in result[0]:
                 print(full_path)
 
@@ -44,5 +44,5 @@ def gen_repo(root):
                 yield full_path2
 
 
-if '__main__' == __name__:
+if "__main__" == __name__:
     main(sys.argv[1:])

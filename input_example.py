@@ -1,3 +1,3 @@
 a = input()
 
-b = input('b=?')
+b = input("b=?")

@@ -55,22 +55,28 @@ class TestGit(unittest.TestCase):
         result = git.get_last_sha()
 
         # get git log of the last commit
-        p = subprocess.Popen(('git', 'log', '-1'),
-                             stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        msgo, msge = str(
-            p.stdout.read(), encoding='utf-8'), str(p.stderr.read(), encoding='utf-8')
+        p = subprocess.Popen(
+            ("git", "log", "-1"), stdout=subprocess.PIPE, stderr=subprocess.PIPE
+        )
+        msgo, msge = (
+            str(p.stdout.read(), encoding="utf-8"),
+            str(p.stderr.read(), encoding="utf-8"),
+        )
 
         p.stdout.close()
         p.stderr.close()
 
         if msgo:
-            self.assertTrue(result in msgo, msg='\nresult = {result}\nlog = {log}'.format(
-                result=result,
-                log=msgo,
-            ))
+            self.assertTrue(
+                result in msgo,
+                msg="\nresult = {result}\nlog = {log}".format(result=result, log=msgo),
+            )
         else:
-            raise IOError('Unable to obtain git log\nmsgo = {log!r}\nmsge = {err!r}'.format(
-                log=msgo, err=msge))
+            raise IOError(
+                "Unable to obtain git log\nmsgo = {log!r}\nmsge = {err!r}".format(
+                    log=msgo, err=msge
+                )
+            )
 
     def test_git_last_sha_file(self):
         filepath = os.path.abspath(__file__)
@@ -78,22 +84,30 @@ class TestGit(unittest.TestCase):
         result = git.get_last_sha(path=filepath)
 
         # get git log of the last commit
-        p = subprocess.Popen(('git', 'log', '-1', filepath),
-                             stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        msgo, msge = str(
-            p.stdout.read(), encoding='utf-8'), str(p.stderr.read(), encoding='utf-8')
+        p = subprocess.Popen(
+            ("git", "log", "-1", filepath),
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+        )
+        msgo, msge = (
+            str(p.stdout.read(), encoding="utf-8"),
+            str(p.stderr.read(), encoding="utf-8"),
+        )
 
         p.stdout.close()
         p.stderr.close()
 
         if msgo:
-            self.assertTrue(result in msgo, msg='\nresult = {result}\nlog = {log}'.format(
-                result=result,
-                log=msgo,
-            ))
+            self.assertTrue(
+                result in msgo,
+                msg="\nresult = {result}\nlog = {log}".format(result=result, log=msgo),
+            )
         else:
-            raise IOError('Unable to obtain git log\nmsgo = {log!r}\nmsge = {err!r}'.format(
-                log=msgo, err=msge))
+            raise IOError(
+                "Unable to obtain git log\nmsgo = {log!r}\nmsge = {err!r}".format(
+                    log=msgo, err=msge
+                )
+            )
 
     def test_get_refs_tag_deref(self):
         # function under test
@@ -112,20 +126,23 @@ class TestGit(unittest.TestCase):
             result_dict[sha].append(tag)
 
         # start preparing for the expected dictionary
-        token1 = '@@@'
-        token2 = '###'
+        token1 = "@@@"
+        token2 = "###"
 
         # run command
         p = subprocess.Popen(
-            ['git', 'log',
-                '--pretty="{t1}%H{t1}{t2}%d{t2}"'.format(t1=token1, t2=token2)],
+            [
+                "git",
+                "log",
+                '--pretty="{t1}%H{t1}{t2}%d{t2}"'.format(t1=token1, t2=token2),
+            ],
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
         )
 
         # result of the command
-        msgo = str(p.stdout.read(), encoding='utf-8')
-        msge = str(p.stderr.read(), encoding='utf-8')
+        msgo = str(p.stdout.read(), encoding="utf-8")
+        msge = str(p.stderr.read(), encoding="utf-8")
 
         p.stdout.close()
         p.stderr.close()
@@ -135,15 +152,20 @@ class TestGit(unittest.TestCase):
         # from the result, prepare expected dictionary
         expected_dict = {}
 
-        for match in re.finditer(r'{t1}(?P<sha>.+?){t1}{t2}\s+\((?P<ref>.+?)\){t2}'.format(t1=token1, t2=token2), msgo, re.M):
+        for match in re.finditer(
+            r"{t1}(?P<sha>.+?){t1}{t2}\s+\((?P<ref>.+?)\){t2}".format(
+                t1=token1, t2=token2
+            ),
+            msgo,
+            re.M,
+        ):
             d = match.groupdict()
-            if 'tag:' in d['ref']:
-                tag_list = d['ref'].replace('tag: ', '').split(', ')
+            if "tag:" in d["ref"]:
+                tag_list = d["ref"].replace("tag: ", "").split(", ")
 
-                expected_dict[d['sha']] = tag_list
+                expected_dict[d["sha"]] = tag_list
 
-        result_in_expected = [
-            result_sha in expected_dict for result_sha in result_dict]
+        result_in_expected = [result_sha in expected_dict for result_sha in result_dict]
         self.assertTrue(any(result_in_expected))
 
     def test_ls_remote_tag(self):
@@ -155,14 +177,14 @@ class TestGit(unittest.TestCase):
         # prepare for the expected set
         # run command
         p = subprocess.Popen(
-            ['git', 'show-ref', '--tags', '--dereference'],
+            ["git", "show-ref", "--tags", "--dereference"],
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
         )
 
         # result of the command
-        msgo = str(p.stdout.read(), encoding='utf-8')
-        msge = str(p.stderr.read(), encoding='utf-8')
+        msgo = str(p.stdout.read(), encoding="utf-8")
+        msge = str(p.stderr.read(), encoding="utf-8")
 
         p.stdout.close()
         p.stderr.close()
@@ -172,9 +194,9 @@ class TestGit(unittest.TestCase):
         expected_set = set()
 
         for line in msgo.splitlines():
-            if line.endswith('^{}'):
+            if line.endswith("^{}"):
                 sha, ref = line.split()
-                tag = ref.replace('^{}', '').replace('refs/tags/', '')
+                tag = ref.replace("^{}", "").replace("refs/tags/", "")
                 expected_set.add((sha, tag))
 
         self.assertTrue(expected_set.intersection, result_set)
@@ -184,14 +206,14 @@ class TestGit(unittest.TestCase):
         # prepare for the expected set
         # run command
         p = subprocess.Popen(
-            ['git', 'show-ref', '--tags', '--dereference'],
+            ["git", "show-ref", "--tags", "--dereference"],
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
         )
 
         # result of the command
-        msgo = str(p.stdout.read(), encoding='utf-8')
-        msge = str(p.stderr.read(), encoding='utf-8')
+        msgo = str(p.stdout.read(), encoding="utf-8")
+        msge = str(p.stderr.read(), encoding="utf-8")
 
         p.stdout.close()
         p.stderr.close()
@@ -201,9 +223,9 @@ class TestGit(unittest.TestCase):
         expected_set = set()
 
         for line in msgo.splitlines():
-            if line.endswith('^{}'):
+            if line.endswith("^{}"):
                 sha, ref = line.split()
-                _ = ref.replace('^{}', '').replace('refs/tags/', '')
+                _ = ref.replace("^{}", "").replace("refs/tags/", "")
                 expected_set.add(sha)
 
         # function under test
@@ -216,9 +238,7 @@ class TestGit(unittest.TestCase):
         # is sequence?
         self.assertLessEqual(0, len(result))
 
-        self.assertTrue(all(
-            [' -> ' for branch in result]
-        ))
+        self.assertTrue(all([" -> " for branch in result]))
 
     def test_which_git(self):
         result = git.which_git()
@@ -227,16 +247,16 @@ class TestGit(unittest.TestCase):
 
 class TestRet(unittest.TestCase):
     def test_set_id_to_url_00(self):
-        input_url = 'https://github.com/abc/def.git'
-        result = git.set_id_to_url(input_url, 'xyz')
-        expected = 'https://xyz@github.com/abc/def.git'
+        input_url = "https://github.com/abc/def.git"
+        result = git.set_id_to_url(input_url, "xyz")
+        expected = "https://xyz@github.com/abc/def.git"
 
         self.assertEqual(expected, result)
 
     def test_set_id_to_url_01(self):
-        input_url = 'https://def@github.com/abc/def.git'
-        result = git.set_id_to_url(input_url, 'xyz')
-        expected = 'https://xyz@github.com/abc/def.git'
+        input_url = "https://def@github.com/abc/def.git"
+        result = git.set_id_to_url(input_url, "xyz")
+        expected = "https://xyz@github.com/abc/def.git"
 
         self.assertEqual(expected, result)
 
