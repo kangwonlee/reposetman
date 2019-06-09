@@ -1541,7 +1541,7 @@ class RepoEvalRunEach(RepoEval):
 
     def get_arguments(self, filename):
         # more adaptive arguments
-        if os.path.split(os.getcwd())[-1].startswith('ex23'):
+        if os.path.basename(os.getcwd()).startswith('ex23'):
             arguments = ['utf-8', 'replace']
         else :
             arguments = []

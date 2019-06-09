@@ -289,7 +289,7 @@ class TestRepoEvalRunEach(TestRepoEvalRunEachBase):
     def test_run_script_input(self):
         # function under test
         msgo, msge = self.e.run_script_input([self.config['operation']['python_path'], os.path.join(
-            os.path.split(__file__)[0], 'input_example.py')])
+            os.path.dirname(__file__), 'input_example.py')])
         self.assertFalse(msge, msg='\nstderr : %s' % msge)
         self.assertTrue(msgo, msg='\nstderr : %s' % msge)
 
@@ -545,7 +545,7 @@ class TestRepoEvalRunEachSkipSomeLastCommit(TestRepoEvalRunEachBase):
             self.config['operation']['python_path'])
 
     def test_eval_file_base(self):
-        folder_name = os.path.split(__file__)[0]
+        folder_name = os.path.dirname(__file__)
         file_path = os.path.join(folder_name, 'unique_list.py')
 
         result_dict = self.e.eval_file_base(filename=file_path)
@@ -1097,8 +1097,10 @@ class TestFromSysImportArgv(unittest.TestCase):
 
     def test_get_argn(self):
 
-        result = progress.get_argn(os.path.join(os.path.split(__file__)[
-                                   0], 'from_sys_argv_example_00.py'))
+        result = progress.get_argn(
+            os.path.join(os.path.dirname(__file__),
+            'from_sys_argv_example_00.py')
+        )
 
         expected = 2
 
