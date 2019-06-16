@@ -1174,6 +1174,30 @@ class TestRepoEvalCountOneCommitLogTimeSetting(unittest.TestCase):
                                 self.before_date_datetime, msg=msg)
 
 
+class TestGettingConfigFilename(unittest.TestCase):
+    def test_get_cfg_filename_from_argv_yes(self):
+        input_list = ['this']
+
+        # function under test
+        result = progress.get_cfg_filename_from_argv(input_list)
+
+        self.assertIsInstance(result, str)
+
+        expected = input_list[0]
+        self.assertEqual(expected, result)
+
+    def test_get_cfg_filename_from_argv_none(self):
+        input_list = []
+
+        # function under test
+        result = progress.get_cfg_filename_from_argv(input_list)
+
+        self.assertIsInstance(result, str)
+
+        expected = 'progress.cfg'
+        self.assertEqual(expected, result)
+
+
 def get_tempfile_name(suffix=None,):
     _, filename = tempfile.mkstemp(suffix=None, text=True)
     return filename
