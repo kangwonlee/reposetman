@@ -194,6 +194,15 @@ def get_config_from_argv(argv):
     return config
 
 
+def get_cfg_filename_from_argv(argv):
+    if argv:
+        config_filename = argv[0]
+    else:
+        config_filename = 'progress.cfg'
+
+    return config_filename
+
+
 def get_config_from_filename(config_filename=False):
     # https://docs.python.org/3/library/configparser.html
     config = configparser.ConfigParser()
