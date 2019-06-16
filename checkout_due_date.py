@@ -6,8 +6,10 @@ import progress
 
 
 def main(argv):
+
     parser = argparse.ArgumentParser()
     parser.add_argument('--date', help='checkout date')
+    parser.add_argument('--config', help='config file')
 
     if argv[1:]:
 
