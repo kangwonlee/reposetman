@@ -1218,6 +1218,14 @@ class TestGettingConfig(unittest.TestCase):
         self.assertIn('config', result)
         self.assertIn('sample', result['config'])
 
+    def test_get_config_from_argv(self):
+        input_list = [self.config_filename, 'a', 'b', 'c']
+        result = progress.get_config_from_argv(input_list)
+
+        self.assertIsInstance(result, configparser.ConfigParser)
+        self.assertIn('config', result)
+        self.assertIn('sample', result['config'])
+        
 
 def get_tempfile_name(suffix=None,):
     _, filename = tempfile.mkstemp(suffix=None, text=True)
