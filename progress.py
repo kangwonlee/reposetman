@@ -181,17 +181,8 @@ def main(argv=False):
 
 
 def get_config_from_argv(argv):
-    # https://docs.python.org/3/library/configparser.html
-    config = configparser.ConfigParser()
 
-    if argv:
-        config_filename = argv[0]
-    else:
-        config_filename = 'progress.cfg'
-
-    config.read(config_filename)
-
-    return config
+    return get_config_from_filename(get_cfg_filename_from_argv(argv))
 
 
 def get_cfg_filename_from_argv(argv):
