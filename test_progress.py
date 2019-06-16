@@ -1198,6 +1198,27 @@ class TestGettingConfigFilename(unittest.TestCase):
         self.assertEqual(expected, result)
 
 
+class TestGettingConfig(unittest.TestCase):
+    def setUp(self):
+        self.config_filename = get_tempfile_name('.cfg')
+        with open(self.config_filename, 'w', encoding='utf-8') as f:
+            f.write(
+                '[config]\n'
+                'sample=sample\n'
+            )
+
+    def tearDown(self):
+        if os.path.exists(self.config_filename):
+            os.remove(self.config_filename)
+
+    def test_get_config_from_filename(self):
+        result = progress.get_config_from_filename(self.config_filename)
+
+        self.assertIsInstance(result, configparser.ConfigParser)
+        self.assertIn('config', result)
+        self.assertIn('sample', result['config'])
+
+
 def get_tempfile_name(suffix=None,):
     _, filename = tempfile.mkstemp(suffix=None, text=True)
     return filename
