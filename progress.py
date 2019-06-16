@@ -144,12 +144,7 @@ def main(argv=False):
 
     """
     # https://docs.python.org/3/library/configparser.html
-    config = configparser.ConfigParser()
-    if argv:
-        config_filename = argv[0]
-    else:
-        config_filename = 'progress.cfg'
-    config.read(config_filename)
+    config = get_config_from_argv(argv)
 
     '''
     project id loop : for all project id's
@@ -188,6 +183,20 @@ def main(argv=False):
             gen_arg_process_section(get_section_list(config))
         )
     )
+
+
+def get_config_from_argv(argv):
+    # https://docs.python.org/3/library/configparser.html
+    config = configparser.ConfigParser()
+
+    if argv:
+        config_filename = argv[0]
+    else:
+        config_filename = 'progress.cfg'
+
+    config.read(config_filename)
+
+    return config
 
 
 def get_section_list(config):
