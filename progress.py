@@ -59,12 +59,7 @@ class ProgressReportBuilder(object):
     """
 
     def __init__(self, config_filename=False):
-        self.config = configparser.ConfigParser()
-
-        if not config_filename:
-            config_filename = 'progress.cfg'
-
-        self.config.read(config_filename)
+        self.config = get_config_from_filename(config_filename)
 
         # compile regex here not to repeat later
         self.re_git_log = RepoEvalCountCommit.get_regex_parse_git_log()
@@ -192,6 +187,18 @@ def get_config_from_argv(argv):
     if argv:
         config_filename = argv[0]
     else:
+        config_filename = 'progress.cfg'
+
+    config.read(config_filename)
+
+    return config
+
+
+def get_config_from_filename(config_filename=False):
+    # https://docs.python.org/3/library/configparser.html
+    config = configparser.ConfigParser()
+
+    if not config_filename:
         config_filename = 'progress.cfg'
 
     config.read(config_filename)
