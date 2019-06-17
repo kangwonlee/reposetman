@@ -1,7 +1,9 @@
 import os
 import re
+import shutil
 import subprocess
 import sys
+import tempfile
 import unittest
 
 sys.path.insert(0,
@@ -249,6 +251,45 @@ class TestRet(unittest.TestCase):
         expected = 'https://xyz@github.com/abc/def.git'
 
         self.assertEqual(expected, result)
+
+
+class TestGitCheckout(unittest.TestCase):
+    def setUp(self):
+        self.temp_folder = tempfile.TemporaryDirectory()
+        subprocess.run(['git', 'init'], cwd=self.temp_folder.name)
+        subprocess.run(['git', 'config', 'user.name', 'temp'], cwd=self.temp_folder.name)
+        subprocess.run(['git', 'config', 'user.email', 'temp@temp.net'], cwd=self.temp_folder.name)
+
+        tempfile_full_path = os.path.join(self.temp_folder.name, 'temp')
+
+        with open(tempfile_full_path, 'w') as f:
+            f.write('tempfile\n')
+
+        subprocess.run(['git', 'add', tempfile_full_path], cwd=self.temp_folder.name)
+        subprocess.run(['git', 'commit', '-m', 'first commit'], cwd=self.temp_folder.name)
+
+        subprocess.run(['git', 'checkout', '-b', 'branch'], cwd=self.temp_folder.name)
+
+        with open(tempfile_full_path, 'a') as f:
+            f.write('modified\n')
+
+        subprocess.run(['git', 'add', tempfile_full_path], cwd=self.temp_folder.name)
+        subprocess.run(['git', 'commit', '-m', 'second commit'], cwd=self.temp_folder.name)
+
+        subprocess.run(['git', 'checkout', 'master'], cwd=self.temp_folder.name)
+
+        self.cwd = os.getcwd()
+
+        os.chdir(self.temp_folder.name)
+
+    def tearDown(self):
+        os.chdir(self.cwd)
+        del self.temp_folder
+
+    def test_starts_with_already_on(self):
+        _, stderr = git.checkout('master')
+
+        self.assertTrue(git.starts_with_already_on(stderr), msg=f'\nstderr = \n{stderr}')
 
 
 if "__main__" == __name__:
