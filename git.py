@@ -191,7 +191,7 @@ def checkout(commit=False, repo_path=False, b_verbose=False):
     # even if b_verbose is false, print stderr
     if stderr:
 
-        b_stderr_already_on = stderr.startswith('Already on ')
+        b_stderr_already_on = starts_with_already_on(stderr)
         b_stderr_detached_head = "You are in 'detached HEAD' state." in stderr
         b_switch_success = "Switched to branch '{branch}'".format(
             branch=commit) in stderr
@@ -211,6 +211,11 @@ def checkout(commit=False, repo_path=False, b_verbose=False):
         os.chdir(cwd_backup)
 
     return stdout, stderr
+
+
+def starts_with_already_on(stderr):
+    b_stderr_already_on = stderr.startswith('Already on ')
+    return b_stderr_already_on
 
 
 def log_last_commit():
