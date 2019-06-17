@@ -317,6 +317,27 @@ class TestGitCheckout(unittest.TestCase):
             )
         )
 
+    def test_is_prev_now(self):
+        r0 = subprocess.run(["git", "show", "--summary", "--oneline"], cwd=self.temp_folder.name, capture_output=True, encoding='utf-8')
+
+        rev_sha_0 = r0.stdout.strip().split()[0]
+
+        r1 = subprocess.run(["git", "show", self.branch_name, "--summary", "--oneline"], cwd=self.temp_folder.name, capture_output=True, encoding='utf-8')
+
+        rev_sha_1 = r1.stdout.strip().split()[0]
+
+        r2 = subprocess.run(["git", "checkout", rev_sha_0], cwd=self.temp_folder.name, capture_output=True, encoding='utf-8')
+        r3 = subprocess.run(["git", "checkout", rev_sha_1], cwd=self.temp_folder.name, capture_output=True, encoding='utf-8')
+
+        r_list = [r0, r1, r2, r3]
+
+        self.assertTrue(git.is_prev_now(r_list[-1].stderr), msg=(
+               f"\nstderr :\n{r_list[-1].stderr}\n"
+                "stdout :\n"
+               f"{r_list[-1].stdout}"
+            )
+        )
+
 
 if "__main__" == __name__:
     unittest.main()
