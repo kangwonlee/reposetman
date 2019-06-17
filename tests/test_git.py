@@ -268,7 +268,9 @@ class TestGitCheckout(unittest.TestCase):
         subprocess.run(['git', 'add', tempfile_full_path], cwd=self.temp_folder.name)
         subprocess.run(['git', 'commit', '-m', 'first commit'], cwd=self.temp_folder.name)
 
-        subprocess.run(['git', 'checkout', '-b', 'branch'], cwd=self.temp_folder.name)
+        self.branch_name = 'branch'
+
+        subprocess.run(['git', 'checkout', '-b', self.branch_name], cwd=self.temp_folder.name)
 
         with open(tempfile_full_path, 'a') as f:
             f.write('modified\n')
