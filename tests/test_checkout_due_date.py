@@ -28,6 +28,13 @@ class TestGetArgParser(unittest.TestCase):
         self.assertEqual('config_filename.cfg', namespace.config)
         self.assertFalse(namespace.date)
 
+    def test_get_arg_parser_date(self):
+        namespace = self.p.parse_args(['--date', '2019-06-08'])
+
+        self.assertIn('date', namespace)
+        self.assertEqual(namespace.date, '2019-06-08')
+        self.assertEqual(namespace.time, '00:00:00')
+
 
 if "__main__" == __name__:
     unittest.main()
