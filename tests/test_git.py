@@ -291,6 +291,20 @@ class TestGitCheckout(unittest.TestCase):
 
         self.assertTrue(git.starts_with_already_on(stderr), msg=f'\nstderr = \n{stderr}')
 
+    def test_is_head_detached(self):
+        r = subprocess.run(["git", "show", "--summary", "--oneline"], cwd=self.temp_folder.name, capture_output=True, encoding='utf-8')
+
+        last_rev_sha = r.stdout.strip().split()[0]
+
+        r2 = subprocess.run(["git", "checkout", last_rev_sha], cwd=self.temp_folder.name, capture_output=True, encoding='utf-8')
+
+        self.assertTrue(git.is_head_detached(r2.stderr), msg=(
+               f"\nstderr :\n{r2.stderr}\n"
+                "git show:\n"
+               f"{r.stdout}"
+            )
+        )
+
 
 if "__main__" == __name__:
     unittest.main()
