@@ -191,12 +191,7 @@ def checkout(commit=False, repo_path=False, b_verbose=False):
     # even if b_verbose is false, print stderr
     if stderr:
 
-        b_stderr_already_on = starts_with_already_on(stderr)
-        b_stderr_detached_head = is_head_detached(stderr)
-        b_switch_success = switched_to_intended_branch(commit, stderr)
-        b_previous_now = is_prev_now(stderr)
-
-        if all([not b_stderr_already_on, not b_stderr_detached_head, not b_switch_success, not b_previous_now]):
+        if not ignore_stderr(stderr, commit):
             print(os.getcwd())
             print(stderr)
 
@@ -209,6 +204,15 @@ def checkout(commit=False, repo_path=False, b_verbose=False):
         os.chdir(cwd_backup)
 
     return stdout, stderr
+
+
+def ignore_stderr(stderr, commit):
+    b_stderr_already_on = starts_with_already_on(stderr)
+    b_stderr_detached_head = is_head_detached(stderr)
+    b_switch_success = switched_to_intended_branch(commit, stderr)
+    b_previous_now = is_prev_now(stderr)
+
+    return any([b_stderr_already_on, b_stderr_detached_head, b_switch_success, b_previous_now])
 
 
 def is_prev_now(stderr):
