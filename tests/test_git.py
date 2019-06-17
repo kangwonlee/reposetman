@@ -307,6 +307,16 @@ class TestGitCheckout(unittest.TestCase):
             )
         )
 
+    def test_switched_to_intended_branch(self):
+        r = subprocess.run(["git", "checkout", self.branch_name], cwd=self.temp_folder.name, capture_output=True, encoding='utf-8')
+
+        self.assertTrue(git.switched_to_intended_branch(self.branch_name, r.stderr), msg=(
+               f"\nstderr :\n{r.stderr}\n"
+                "stdout :\n"
+               f"{r.stdout}"
+            )
+        )
+
 
 if "__main__" == __name__:
     unittest.main()
