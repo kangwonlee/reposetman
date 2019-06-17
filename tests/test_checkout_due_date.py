@@ -35,6 +35,14 @@ class TestGetArgParser(unittest.TestCase):
         self.assertEqual(namespace.date, '2019-06-08')
         self.assertEqual(namespace.time, '00:00:00')
 
+    def test_get_arg_parser_date_time(self):
+        namespace = self.p.parse_args(['--date', '2019-06-08', '--time', "01:23:45"])
+
+        self.assertIn('date', namespace)
+        self.assertEqual(namespace.date, '2019-06-08')
+        self.assertIn('time', namespace)
+        self.assertEqual(namespace.time, '01:23:45')
+
 
 if "__main__" == __name__:
     unittest.main()
