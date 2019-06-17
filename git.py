@@ -193,8 +193,7 @@ def checkout(commit=False, repo_path=False, b_verbose=False):
 
         b_stderr_already_on = starts_with_already_on(stderr)
         b_stderr_detached_head = is_head_detached(stderr)
-        b_switch_success = "Switched to branch '{branch}'".format(
-            branch=commit) in stderr
+        b_switch_success = switched_to_intended_branch(commit, stderr)
         b_previous_now = (stderr.startswith('Previous HEAD position was')) and (
             'HEAD is now at' in stderr)
 
@@ -211,6 +210,11 @@ def checkout(commit=False, repo_path=False, b_verbose=False):
         os.chdir(cwd_backup)
 
     return stdout, stderr
+
+
+def switched_to_intended_branch(branch, stderr):
+    b_switch_success = "Switched to branch '{branch}'".format(branch=branch) in stderr
+    return b_switch_success
 
 
 def is_head_detached(stderr):
