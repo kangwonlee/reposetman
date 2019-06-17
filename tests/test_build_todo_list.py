@@ -2,9 +2,19 @@ import ast
 import configparser
 import os
 import shutil
+import sys
 import tempfile
 import time
 import unittest
+
+sys.path.insert(0,
+    os.path.abspath(
+        os.path.join(
+            os.path.dirname(__file__),
+            os.pardir
+        )
+    )
+)
 
 import progress
 

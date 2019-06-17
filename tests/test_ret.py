@@ -1,8 +1,18 @@
 import os
 import shutil
 import subprocess
+import sys
 import tempfile
 import unittest
+
+sys.path.insert(0,
+    os.path.abspath(
+        os.path.join(
+            os.path.dirname(__file__),
+            os.pardir
+        )
+    )
+)
 
 import regex_test as ret
 
@@ -103,3 +113,7 @@ class TestFetchAndReset(unittest.TestCase):
         expected_sha = '2a3ac03f077d739b6cc115788703431bb5beefc8'
 
         self.assertEqual(expected_sha, result_sha)
+
+
+if "__main__" == __name__:
+    unittest.main()

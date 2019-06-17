@@ -5,9 +5,20 @@ import glob
 import os
 import shutil
 import subprocess
+import sys
 import tempfile
 import time
 import unittest
+
+
+sys.path.insert(0,
+    os.path.abspath(
+        os.path.join(
+            os.path.dirname(__file__),
+            os.pardir
+        )
+    )
+)
 
 import progress
 
@@ -545,7 +556,7 @@ class TestRepoEvalRunEachSkipSomeLastCommit(TestRepoEvalRunEachBase):
             self.config['operation']['python_path'])
 
     def test_eval_file_base(self):
-        folder_name = os.path.dirname(__file__)
+        folder_name = os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir))
         file_path = os.path.join(folder_name, 'unique_list.py')
 
         result_dict = self.e.eval_file_base(filename=file_path)
