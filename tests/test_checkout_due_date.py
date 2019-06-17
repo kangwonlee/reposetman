@@ -15,10 +15,14 @@ import checkout_due_date as cdd
 
 
 class TestGetArgParser(unittest.TestCase):
-    def test_get_arg_parser_config_filename(self):
-        p = cdd.get_arg_parser()
+    def setUp(self):
+        self.p = cdd.get_arg_parser()
 
-        namespace = p.parse_args(['--config', 'config_filename.cfg'])
+    def tearDown(self):
+        del self.p
+
+    def test_get_arg_parser_config_filename(self):
+        namespace = self.p.parse_args(['--config', 'config_filename.cfg'])
 
         self.assertIn('config', namespace)
         self.assertEqual('config_filename.cfg', namespace.config)
