@@ -48,13 +48,13 @@ class TestGetArgParser(unittest.TestCase):
 
 class TestGenRepoPath(unittest.TestCase):
     def setUp(self):
-        self.list_file = tempfile.NamedTemporaryFile(
+        self.list_file_a = tempfile.NamedTemporaryFile(
             suffix='.txt',
             mode='wt',
             encoding='utf-8',
             )
 
-        self.list_file.write(
+        self.list_file_a.write(
             "가나다(2082652342) (03.11 오후 02:33)\n"
             "\n"
             "2082652342 가나다  https://github.com/CPF18A/18pfa_lpthw-abc.git\n"
@@ -74,7 +74,7 @@ class TestGenRepoPath(unittest.TestCase):
             '18pfa_lpthw-ghi',
         ]
 
-        self.list_file.seek(0)
+        self.list_file_a.seek(0)
 
         self.config = configparser.ConfigParser()
         self.config['operation'] = {
@@ -86,11 +86,11 @@ class TestGenRepoPath(unittest.TestCase):
         self.config['a'] = {
             'before': 'due date',
             'folder': self.rel_path,
-            'list': self.list_file.name,
+            'list': self.list_file_a.name,
         }
 
     def tearDown(self):
-        del self.list_file
+        del self.list_file_a
         del self.config
 
     def test_gen_arg_parser(self):
