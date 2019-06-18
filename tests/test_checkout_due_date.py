@@ -140,7 +140,7 @@ class TestGenRepoPath(unittest.TestCase):
             for proj in self.expected_list_b
         ]
 
-        for path, due in cdd.gen_repo_path(self.config):
+        for path, due in cdd.gen_repo_path(self.config, b_assert=False):
             self.assertIn(path, expected_full_path_list)
             self.assertTrue(due, msg=due)
 
