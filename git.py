@@ -205,6 +205,10 @@ def checkout(commit=False, repo_path=False, b_verbose=False):
     return stdout, stderr
 
 
+def checkout_date(date, branch='master', b_verbose=False):
+    return checkout(f"{branch}@{{{date}}}", b_verbose=b_verbose)
+
+
 def show_stderr(stderr, commit):
     result = False
 
