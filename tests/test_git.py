@@ -341,6 +341,16 @@ class TestGitCheckout(unittest.TestCase):
             )
         )
 
+    def test_show_stderr_prev_now(self):
+        r_list, commit = self.checkout_sha_sha()
+
+        self.assertFalse(git.show_stderr(r_list[-1].stderr, commit), msg=(
+               f"\nstderr :\n{r_list[-1].stderr}\n"
+                "stdout:\n"
+               f"{r_list[-1].stdout}"
+            )
+        )
+
 
 if "__main__" == __name__:
     unittest.main()
