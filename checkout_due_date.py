@@ -22,6 +22,37 @@ def main(argv):
         parser.parse_args(['--help'])
 
 
+def get_config_from_argv(argv):
+    parser = get_arg_parser()
+
+    if argv[1:]:
+        namespace = parser.parse_args(argv[1:])
+    else:
+        parser.parse_args(['--help'])
+        sys.exit(0)
+
+    if namespace.config:
+
+        assert os.path.exists(namespace.config)
+
+        config = configparser.ConfigParser()
+        config.read(namespace.config)
+
+    if namespace.date and namespace.time:
+        date_time = namespace.date + ' ' + namespace.time
+
+        for section in gen_section(config):
+            config[section]['before'] = date_time
+
+    elif namespace.date and (not namespace.time):
+        date_time = namespace.date + ' ' + '23:59:59'
+
+        for section in gen_section(config):
+            config[section]['before'] = date_time
+
+    return config
+
+
 def gen_section(config):
     sections_list = ast.literal_eval(config['operation']['sections'])
 
