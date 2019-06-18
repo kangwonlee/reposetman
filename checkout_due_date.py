@@ -30,9 +30,8 @@ def gen_section(config):
 
 
 def gen_repo_path(config):
-    sections_list = ast.literal_eval(config['operation']['sections'])
 
-    for section in sections_list:
+    for section in gen_section(config):
         due_date = config[section]['before']
         repo_path_rel = config[section]['folder']
         list_filename = config[section]['list']
