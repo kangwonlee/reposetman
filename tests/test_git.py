@@ -307,13 +307,18 @@ class TestGitCheckout(unittest.TestCase):
             )
         )
 
-    def test_switched_to_intended_branch(self):
+    def switch_to_the_branch(self):
         r = subprocess.run(["git", "checkout", self.branch_name], cwd=self.temp_folder.name, capture_output=True, encoding='utf-8')
 
-        self.assertTrue(git.switched_to_intended_branch(self.branch_name, r.stderr), msg=(
-               f"\nstderr :\n{r.stderr}\n"
+        return [r], self.branch_name
+
+    def test_switched_to_intended_branch(self):
+        r_list, commit = self.switch_to_the_branch()
+
+        self.assertTrue(git.switched_to_intended_branch(commit, r_list[-1].stderr), msg=(
+               f"\nstderr :\n{r_list[-1].stderr}\n"
                 "stdout :\n"
-               f"{r.stdout}"
+               f"{r_list[-1].stdout}"
             )
         )
 
