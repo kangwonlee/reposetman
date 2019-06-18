@@ -63,15 +63,15 @@ class TestGenRepoPath(unittest.TestCase):
         self.list_file_a.write(
             "가나다(2082652342) (03.11 오후 02:33)\n"
             "\n"
-            "2082652342 가나다  https://github.com/CPF18A/18pfa_lpthw-abc.git\n"
+            "2082652342 가나다  https://github.com/CPF18A/18pfa_lpthw-abc\n"
             "\n"
             "라마바(2018007194) (03.11 오후 02:33)\n"
             "\n"
-            "2018007194 라마바 https://def@github.com/CPF18A/18pfa_lpthw-def.git\n"
+            "2018007194 라마바 https://def@github.com/CPF18A/18pfa_lpthw-def\n"
             "\n"
             "사아자(2017958076) (03.11 오후 02:33)\n"
             "\n"
-            "2017958076 사아자 라마바 https://github.com/CPF18A/18pfa_lpthw-ghi.git\n"
+            "2017958076 사아자 라마바 https://github.com/CPF18A/18pfa_lpthw-ghi\n"
         )
 
         self.expected_list_a = [
