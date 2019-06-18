@@ -1,3 +1,4 @@
+import ast
 import configparser
 import os
 import sys
@@ -142,6 +143,9 @@ class TestGenRepoPath(unittest.TestCase):
         for path, due in cdd.gen_repo_path(self.config):
             self.assertIn(path, expected_full_path_list)
             self.assertTrue(due, msg=due)
+
+    def test_gen_section(self):
+        self.assertSequenceEqual(list(cdd.gen_section(self.config)), ast.literal_eval(self.config['operation']['sections']),)
 
 
 if "__main__" == __name__:

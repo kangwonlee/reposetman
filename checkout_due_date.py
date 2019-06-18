@@ -1,5 +1,6 @@
 import argparse
 import ast
+import configparser
 import os
 import sys
 
@@ -19,6 +20,13 @@ def main(argv):
     else:
 
         parser.parse_args(['--help'])
+
+
+def gen_section(config):
+    sections_list = ast.literal_eval(config['operation']['sections'])
+
+    for section in sections_list:
+        yield section
 
 
 def gen_repo_path(config):
