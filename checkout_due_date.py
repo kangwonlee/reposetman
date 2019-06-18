@@ -1,3 +1,11 @@
+"""
+Checkout repositories to a date
+
+Usage : 
+$ python checkout_due_date.py --config [.cfg file] --force --date yyyy-mm-dd --time hh:mm:ss
+
+"""
+
 import argparse
 import ast
 import configparser
@@ -26,9 +34,11 @@ def get_config_from_argv(argv):
     if argv[1:]:
         namespace = parser.parse_args(argv[1:])
     else:
+        # show help and exit
         parser.parse_args(['--help'])
         sys.exit(0)
 
+    # init config
     if namespace.config:
 
         assert os.path.exists(namespace.config)
@@ -36,12 +46,14 @@ def get_config_from_argv(argv):
         config = configparser.ConfigParser()
         config.read(namespace.config)
 
+    # --date --time override
     if namespace.date and namespace.time:
         date_time = namespace.date + ' ' + namespace.time
 
         for section in gen_section(config):
             config[section]['before'] = date_time
 
+    # --date override
     elif namespace.date and (not namespace.time):
         date_time = namespace.date + ' ' + '23:59:59'
 
