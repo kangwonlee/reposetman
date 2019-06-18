@@ -11,15 +11,10 @@ import regex_test
 
 def main(argv):
 
-    parser = get_arg_parser()
+    config = get_config_from_argv(argv)
 
-    if argv[1:]:
-
-        namespace = parser.parse_args(argv[1:])
-
-    else:
-
-        parser.parse_args(['--help'])
+    for full_path_to_repo, due_date in gen_repo_path(config):
+        git.checkout_date(due_date, full_path_to_repo)
 
 
 def get_config_from_argv(argv):
