@@ -59,12 +59,7 @@ class ProgressReportBuilder(object):
     """
 
     def __init__(self, config_filename=False):
-        self.config = configparser.ConfigParser()
-
-        if not config_filename:
-            config_filename = 'progress.cfg'
-
-        self.config.read(config_filename)
+        self.config = get_config_from_filename(config_filename)
 
         # compile regex here not to repeat later
         self.re_git_log = RepoEvalCountCommit.get_regex_parse_git_log()
@@ -144,12 +139,7 @@ def main(argv=False):
 
     """
     # https://docs.python.org/3/library/configparser.html
-    config = configparser.ConfigParser()
-    if argv:
-        config_filename = argv[0]
-    else:
-        config_filename = 'progress.cfg'
-    config.read(config_filename)
+    config = get_config_from_argv(argv)
 
     '''
     project id loop : for all project id's
@@ -188,6 +178,32 @@ def main(argv=False):
             gen_arg_process_section(get_section_list(config))
         )
     )
+
+
+def get_config_from_argv(argv):
+
+    return get_config_from_filename(get_cfg_filename_from_argv(argv))
+
+
+def get_cfg_filename_from_argv(argv):
+    if argv:
+        config_filename = argv[0]
+    else:
+        config_filename = 'progress.cfg'
+
+    return config_filename
+
+
+def get_config_from_filename(config_filename=False):
+    # https://docs.python.org/3/library/configparser.html
+    config = configparser.ConfigParser()
+
+    if not config_filename:
+        config_filename = 'progress.cfg'
+
+    config.read(config_filename)
+
+    return config
 
 
 def get_section_list(config):

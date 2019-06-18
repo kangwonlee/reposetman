@@ -1,7 +1,19 @@
 import os
 import re
+import shutil
 import subprocess
+import sys
+import tempfile
 import unittest
+
+sys.path.insert(0,
+    os.path.abspath(
+        os.path.join(
+            os.path.dirname(__file__),
+            os.pardir
+        )
+    )
+)
 
 import git
 
@@ -239,6 +251,191 @@ class TestRet(unittest.TestCase):
         expected = 'https://xyz@github.com/abc/def.git'
 
         self.assertEqual(expected, result)
+
+
+class TestGitCheckout(unittest.TestCase):
+    def setUp(self):
+        self.temp_folder = tempfile.TemporaryDirectory()
+        subprocess.run(['git', 'init'], cwd=self.temp_folder.name)
+        subprocess.run(['git', 'config', 'user.name', 'temp'], cwd=self.temp_folder.name)
+        subprocess.run(['git', 'config', 'user.email', 'temp@temp.net'], cwd=self.temp_folder.name)
+
+        tempfile_full_path = os.path.join(self.temp_folder.name, 'temp')
+
+        with open(tempfile_full_path, 'w') as f:
+            f.write('tempfile\n')
+
+        subprocess.run(['git', 'add', tempfile_full_path], cwd=self.temp_folder.name)
+        subprocess.run(['git', 'commit', '-m', 'first commit'], cwd=self.temp_folder.name)
+
+        self.branch_name = 'branch'
+
+        subprocess.run(['git', 'checkout', '-b', self.branch_name], cwd=self.temp_folder.name)
+
+        with open(tempfile_full_path, 'a') as f:
+            f.write('modified\n')
+
+        subprocess.run(['git', 'add', tempfile_full_path], cwd=self.temp_folder.name)
+        subprocess.run(['git', 'commit', '-m', 'second commit'], cwd=self.temp_folder.name)
+
+        self.current_branch_name = 'master'
+
+        subprocess.run(['git', 'checkout', self.current_branch_name], cwd=self.temp_folder.name)
+
+        self.cwd = os.getcwd()
+
+        os.chdir(self.temp_folder.name)
+
+    def tearDown(self):
+        os.chdir(self.cwd)
+        del self.temp_folder
+
+    def test_starts_with_already_on(self):
+        _, stderr = git.checkout(self.current_branch_name)
+
+        self.assertTrue(git.starts_with_already_on(stderr), msg=f'\nstderr = \n{stderr}')
+
+    def detach_head(self):
+        r = subprocess.run(["git", "show", "--summary", "--oneline"], cwd=self.temp_folder.name, capture_output=True, encoding='utf-8')
+
+        last_rev_sha = r.stdout.strip().split()[0]
+
+        r2 = subprocess.run(["git", "checkout", last_rev_sha], cwd=self.temp_folder.name, capture_output=True, encoding='utf-8')
+
+        return [r, r2], last_rev_sha
+
+    def test_is_head_detached(self):
+        r_list, _ = self.detach_head()
+
+        self.assertTrue(git.is_head_detached(r_list[-1].stderr), msg=(
+               f"\nstderr :\n{r_list[-1].stderr}\n"
+                "git show:\n"
+               f"{r_list[0].stdout}"
+            )
+        )
+
+    def switch_to_the_branch(self):
+        r = subprocess.run(["git", "checkout", self.branch_name], cwd=self.temp_folder.name, capture_output=True, encoding='utf-8')
+
+        return [r], self.branch_name
+
+    def test_switched_to_intended_branch(self):
+        r_list, commit = self.switch_to_the_branch()
+
+        self.assertTrue(git.switched_to_intended_branch(commit, r_list[-1].stderr), msg=(
+               f"\nstderr :\n{r_list[-1].stderr}\n"
+                "stdout :\n"
+               f"{r_list[-1].stdout}"
+            )
+        )
+
+    def checkout_sha_sha(self):
+        r0 = subprocess.run(["git", "show", "--summary", "--oneline"], cwd=self.temp_folder.name, capture_output=True, encoding='utf-8')
+
+        rev_sha_0 = r0.stdout.strip().split()[0]
+
+        r1 = subprocess.run(["git", "show", self.branch_name, "--summary", "--oneline"], cwd=self.temp_folder.name, capture_output=True, encoding='utf-8')
+
+        rev_sha_1 = r1.stdout.strip().split()[0]
+
+        r2 = subprocess.run(["git", "checkout", rev_sha_0], cwd=self.temp_folder.name, capture_output=True, encoding='utf-8')
+        r3 = subprocess.run(["git", "checkout", rev_sha_1], cwd=self.temp_folder.name, capture_output=True, encoding='utf-8')
+
+        return [r0, r1, r2, r3], rev_sha_1
+
+    def test_is_prev_now(self):
+        r_list, _ = self.checkout_sha_sha()
+
+        self.assertTrue(git.is_prev_now(r_list[-1].stderr), msg=(
+               f"\nstderr :\n{r_list[-1].stderr}\n"
+                "stdout :\n"
+               f"{r_list[-1].stdout}"
+            )
+        )
+
+    def test_show_stderr_prev_now(self):
+        r_list, commit = self.checkout_sha_sha()
+
+        self.assertFalse(git.show_stderr(r_list[-1].stderr, commit), msg=(
+               f"\nstderr :\n{r_list[-1].stderr}\n"
+                "stdout:\n"
+               f"{r_list[-1].stdout}"
+            )
+        )
+
+    def test_show_stderr_switch_to_the_branch(self):
+        r_list, commit = self.switch_to_the_branch()
+
+        self.assertFalse(git.show_stderr(r_list[-1].stderr, commit), msg=(
+               f"\nstderr :\n{r_list[-1].stderr}\n"
+                "stdout:\n"
+               f"{r_list[-1].stdout}"
+            )
+        )
+
+    def test_show_stderr_detach_head(self):
+        r_list, commit = self.detach_head()
+
+        self.assertFalse(git.show_stderr(r_list[-1].stderr, commit), msg=(
+               f"\nstderr :\n{r_list[-1].stderr}\n"
+                "git show:\n"
+               f"{r_list[0].stdout}"
+            )
+        )
+
+    def test_show_stderr_already_on(self):
+        stdout, stderr = git.checkout(self.current_branch_name)
+
+        self.assertFalse(git.show_stderr(stderr, self.current_branch_name), msg=(
+               f"\nstderr :\n{stderr}\n"
+                "stdout :\n"
+               f"{stdout}"
+            )
+        )
+
+
+class TestGitCheckoutDate(unittest.TestCase):
+    def setUp(self):
+        self.temp_folder = tempfile.TemporaryDirectory()
+        subprocess.run(['git', 'init'], cwd=self.temp_folder.name)
+        subprocess.run(['git', 'config', 'user.name', 'temp'], cwd=self.temp_folder.name)
+        subprocess.run(['git', 'config', 'user.email', 'temp@temp.net'], cwd=self.temp_folder.name)
+
+        tempfile_full_path = os.path.join(self.temp_folder.name, 'temp')
+
+        with open(tempfile_full_path, 'w') as f:
+            f.write('tempfile\n')
+
+        self.date_0 = '2008-01-01 12:00:00'
+
+        subprocess.run(['git', 'add', tempfile_full_path], cwd=self.temp_folder.name)
+        subprocess.run(['git', 'commit', '-m', 'first commit', '--date', self.date_0], cwd=self.temp_folder.name)
+
+        self.branch_name = 'branch'
+
+        subprocess.run(['git', 'checkout', '-b', self.branch_name], cwd=self.temp_folder.name)
+
+        with open(tempfile_full_path, 'a') as f:
+            f.write('modified\n')
+
+        subprocess.run(['git', 'add', tempfile_full_path], cwd=self.temp_folder.name)
+        subprocess.run(['git', 'commit', '-m', 'second commit'], cwd=self.temp_folder.name)
+
+        self.current_branch_name = 'master'
+
+        subprocess.run(['git', 'checkout', self.current_branch_name], cwd=self.temp_folder.name)
+
+    def tearDown(self):
+        del self.temp_folder
+
+    def test_checkout_date(self):
+        stdout, stderr = git.checkout_date(self.date_0, repo_path=self.temp_folder.name)
+
+        r = subprocess.run(["git", "log", "-1", '''--format=medium''', '--date=iso'], cwd=self.temp_folder.name, capture_output=True, encoding='utf-8')
+
+        result = ' '.join(r.stdout.splitlines()[2].split()[1:3])
+
+        self.assertEqual(result, self.date_0, msg=f"stdout:\n{r.stdout}\nstderr:\n{r.stderr}")
 
 
 if "__main__" == __name__:
