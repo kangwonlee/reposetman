@@ -1,4 +1,5 @@
 import argparse
+import ast
 import os
 import sys
 
@@ -21,11 +22,14 @@ def main(argv):
 
 
 def gen_repo_path(config):
-    for section in config['operation']['sections']:
+    sections_list = ast.literal_eval(config['operation']['sections'])
+
+    for section in sections_list:
         due_date = config[section]['before']
         repo_path_rel = config[section]['folder']
         list_filename = config[section]['list']
         proj_id_list = regex_test.get_proj_id_list(list_filename)
+
         for proj_id in proj_id_list:
             full_path_to_repo = os.path.abspath(
                 os.path.join(repo_path_rel, proj_id)
