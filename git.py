@@ -169,7 +169,7 @@ def git(cmd, bVerbose=True):
     return msg
 
 
-def checkout(commit=False, repo_path=False, b_verbose=False):
+def checkout(commit=False, repo_path=False, b_force=False, b_verbose=False):
     """
     git checkout <commit>
 
@@ -188,6 +188,9 @@ def checkout(commit=False, repo_path=False, b_verbose=False):
         checkout_cmd_list.append(commit)
     else:
         checkout_cmd_list.append('HEAD')
+
+    if b_force:
+        checkout_cmd_list.append('--force')
 
     # run git command
     r = subprocess.run(checkout_cmd_list, cwd=repo_path, capture_output=True, encoding='utf-8')
