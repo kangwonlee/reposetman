@@ -1,8 +1,10 @@
 import argparse
+import os
 import sys
 
 import git
 import progress
+import regex_test
 
 
 def main(argv):
@@ -16,6 +18,20 @@ def main(argv):
     else:
 
         parser.parse_args(['--help'])
+
+
+def gen_repo_path(config):
+    for section in config['operation']['sections']:
+        due_date = config[section]['before']
+        repo_path_rel = config[section]['folder']
+        list_filename = config[section]['list']
+        proj_id_list = regex_test.get_proj_id_list(list_filename)
+        for proj_id in proj_id_list:
+            full_path_to_repo = os.path.abspath(
+                os.path.join(repo_path_rel, proj_id)
+            )
+
+            yield full_path_to_repo, due_date
 
 
 def get_arg_parser():
