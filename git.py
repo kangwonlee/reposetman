@@ -206,6 +206,15 @@ def checkout(commit=False, repo_path=False, b_verbose=False):
     return stdout, stderr
 
 
+def show_stderr(stderr, commit):
+    result = False
+
+    if stderr:
+        result = not ignore_stderr(stderr, commit)
+
+    return result
+
+
 def ignore_stderr(stderr, commit):
     b_stderr_already_on = starts_with_already_on(stderr)
     b_stderr_detached_head = is_head_detached(stderr)
