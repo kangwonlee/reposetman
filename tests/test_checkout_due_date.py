@@ -32,14 +32,14 @@ class TestGetArgParser(unittest.TestCase):
         self.assertFalse(namespace.date)
 
     def test_get_arg_parser_date(self):
-        namespace = self.p.parse_args(['--date', '2019-06-08'])
+        namespace = self.p.parse_args(['--date', '2019-06-08', '--config', 'config_filename.cfg'])
 
         self.assertIn('date', namespace)
         self.assertEqual(namespace.date, '2019-06-08')
         self.assertEqual(namespace.time, '00:00:00')
 
     def test_get_arg_parser_date_time(self):
-        namespace = self.p.parse_args(['--date', '2019-06-08', '--time', "01:23:45"])
+        namespace = self.p.parse_args(['--date', '2019-06-08', '--time', "01:23:45", '--config', 'config_filename.cfg'])
 
         self.assertIn('date', namespace)
         self.assertEqual(namespace.date, '2019-06-08')
