@@ -189,11 +189,9 @@ def checkout(commit=False, repo_path=False, b_verbose=False):
     stdout, stderr = run_command(checkout_cmd_list, b_verbose=b_verbose)
 
     # even if b_verbose is false, print stderr
-    if stderr:
-
-        if not ignore_stderr(stderr, commit):
-            print(os.getcwd())
-            print(stderr)
+    if show_stderr(stderr, commit):
+        print(os.getcwd())
+        print(stderr)
 
     else:
         if b_verbose:
