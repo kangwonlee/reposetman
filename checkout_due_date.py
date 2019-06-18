@@ -3,10 +3,12 @@ import ast
 import configparser
 import os
 import sys
+import urllib.parse as up
 
 import git
 import progress
 import regex_test
+import repo_path
 
 
 def main(argv):
@@ -55,18 +57,23 @@ def gen_section(config):
         yield section
 
 
-def gen_repo_path(config):
+def gen_repo_path(config, b_assert=True):
 
     for section in gen_section(config):
         due_date = config[section]['before']
         repo_path_rel = config[section]['folder']
         list_filename = config[section]['list']
-        proj_id_list = regex_test.get_proj_id_list(list_filename)
+        github_url_list = regex_test.get_github_url_list(list_filename)
 
-        for proj_id in proj_id_list:
+        for url in github_url_list:
+            proj_id = repo_path.get_repo_name_from_url(url)
+
             full_path_to_repo = os.path.abspath(
                 os.path.join(repo_path_rel, proj_id)
             )
+
+            if b_assert:
+                assert os.path.exists(full_path_to_repo), full_path_to_repo
 
             yield full_path_to_repo, due_date
 
