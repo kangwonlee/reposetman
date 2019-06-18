@@ -170,10 +170,14 @@ def git(cmd, bVerbose=True):
 
 
 def checkout(commit=False, repo_path=False, b_verbose=False):
-    if repo_path:
-        # change working folder
-        cwd_backup = os.getcwd()
-        os.chdir(repo_path)
+    """
+    git checkout <commit>
+
+    change folder to <repo_path>
+    """
+
+    if not repo_path:
+        repo_path = os.getcwd()
 
     # checkout specific commit
     checkout_cmd_list = [git_exe_path,
@@ -186,7 +190,8 @@ def checkout(commit=False, repo_path=False, b_verbose=False):
         checkout_cmd_list.append('HEAD')
 
     # run git command
-    stdout, stderr = run_command(checkout_cmd_list, b_verbose=b_verbose)
+    r = subprocess.run(checkout_cmd_list, cwd=repo_path, capture_output=True, encoding='utf-8')
+    stdout, stderr = r.stdout, r.stderr
 
     # even if b_verbose is false, print stderr
     if show_stderr(stderr, commit):
@@ -196,10 +201,6 @@ def checkout(commit=False, repo_path=False, b_verbose=False):
     else:
         if b_verbose:
             print(stdout)
-
-    if repo_path:
-        # return to original path
-        os.chdir(cwd_backup)
 
     return stdout, stderr
 
