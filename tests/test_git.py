@@ -394,5 +394,54 @@ class TestGitCheckout(unittest.TestCase):
         )
 
 
+class TestGitCheckoutDate(unittest.TestCase):
+    def setUp(self):
+        self.temp_folder = tempfile.TemporaryDirectory()
+        subprocess.run(['git', 'init'], cwd=self.temp_folder.name)
+        subprocess.run(['git', 'config', 'user.name', 'temp'], cwd=self.temp_folder.name)
+        subprocess.run(['git', 'config', 'user.email', 'temp@temp.net'], cwd=self.temp_folder.name)
+
+        tempfile_full_path = os.path.join(self.temp_folder.name, 'temp')
+
+        with open(tempfile_full_path, 'w') as f:
+            f.write('tempfile\n')
+
+        self.date_0 = '2008-01-01 12:00:00'
+
+        subprocess.run(['git', 'add', tempfile_full_path], cwd=self.temp_folder.name)
+        subprocess.run(['git', 'commit', '-m', 'first commit', '--date', self.date_0], cwd=self.temp_folder.name)
+
+        self.branch_name = 'branch'
+
+        subprocess.run(['git', 'checkout', '-b', self.branch_name], cwd=self.temp_folder.name)
+
+        with open(tempfile_full_path, 'a') as f:
+            f.write('modified\n')
+
+        subprocess.run(['git', 'add', tempfile_full_path], cwd=self.temp_folder.name)
+        subprocess.run(['git', 'commit', '-m', 'second commit'], cwd=self.temp_folder.name)
+
+        self.current_branch_name = 'master'
+
+        subprocess.run(['git', 'checkout', self.current_branch_name], cwd=self.temp_folder.name)
+
+        self.cwd = os.getcwd()
+
+        os.chdir(self.temp_folder.name)
+
+    def tearDown(self):
+        os.chdir(self.cwd)
+        del self.temp_folder
+
+    def test_checkout_date(self):
+        stdout, stderr = git.checkout_date(self.date_0)
+
+        r = subprocess.run(["git", "log", "-1", '''--format=medium''', '--date=iso'], cwd=self.temp_folder.name, capture_output=True, encoding='utf-8')
+
+        result = ' '.join(r.stdout.splitlines()[2].split()[1:3])
+
+        self.assertEqual(result, self.date_0, msg=f"stdout:\n{r.stdout}\nstderr:\n{r.stderr}")
+
+
 if "__main__" == __name__:
     unittest.main()
