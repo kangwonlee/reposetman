@@ -48,6 +48,11 @@ class TestGetArgParser(unittest.TestCase):
 
 class TestGenRepoPath(unittest.TestCase):
     def setUp(self):
+        self.config = configparser.ConfigParser()
+        self.config['operation'] = {
+            'sections':['a', 'b']
+        }
+
         self.list_file_a = tempfile.NamedTemporaryFile(
             suffix='.txt',
             mode='wt',
@@ -68,7 +73,7 @@ class TestGenRepoPath(unittest.TestCase):
             "2017958076 사아자 라마바 https://github.com/CPF18A/18pfa_lpthw-ghi.git\n"
         )
 
-        self.expected_list = [
+        self.expected_list_a = [
             '18pfa_lpthw-abc',
             '18pfa_lpthw-def',
             '18pfa_lpthw-ghi',
@@ -76,32 +81,67 @@ class TestGenRepoPath(unittest.TestCase):
 
         self.list_file_a.seek(0)
 
-        self.config = configparser.ConfigParser()
-        self.config['operation'] = {
-            'sections':['a']
-        }
-
-        self.rel_path = 'rel_path'
+        self.rel_path_a = 'rel_path_a'
 
         self.config['a'] = {
             'before': 'due date',
-            'folder': self.rel_path,
+            'folder': self.rel_path_a,
             'list': self.list_file_a.name,
+        }
+
+        self.list_file_b = tempfile.NamedTemporaryFile(
+            suffix='.txt',
+            mode='wt',
+            encoding='utf-8',
+            )
+
+        self.list_file_b.write(
+            "jkl(2082652342) (03.11 오후 02:33)\n"
+            "\n"
+            "2082652342 jkl  https://github.com/CPF18B/18pfb_lpthw-jkl.git\n"
+            "\n"
+            "mno(2018007194) (03.11 오후 02:33)\n"
+            "\n"
+            "2018007194 mno https://mno@github.com/CPF18B/18pfb_lpthw-mno.git\n"
+            "\n"
+            "pqr(2017958076) (03.11 오후 02:33)\n"
+            "\n"
+            "2017958076 pqr stu https://github.com/CPF18B/18pfb_lpthw-pqr.git\n"
+        )
+
+        self.expected_list_b = [
+            '18pfb_lpthw-jkl',
+            '18pfb_lpthw-mno',
+            '18pfb_lpthw-pqr',
+        ]
+
+        self.list_file_b.seek(0)
+
+        self.rel_path_b = 'rel_path_b'
+
+        self.config['b'] = {
+            'before': 'due date b',
+            'folder': self.rel_path_b,
+            'list': self.list_file_b.name,
         }
 
     def tearDown(self):
         del self.list_file_a
+        del self.list_file_b
         del self.config
 
     def test_gen_arg_parser(self):
         expected_full_path_list = [
-            os.path.join(os.getcwd(), self.rel_path, proj)
-            for proj in self.expected_list
+            os.path.join(os.getcwd(), self.rel_path_a, proj)
+            for proj in self.expected_list_a
+        ] + [
+            os.path.join(os.getcwd(), self.rel_path_b, proj)
+            for proj in self.expected_list_b
         ]
 
         for path, due in cdd.gen_repo_path(self.config):
             self.assertIn(path, expected_full_path_list)
-            self.assertEqual(due, self.config['a']['before'], msg=due)
+            self.assertTrue(due, msg=due)
 
 
 if "__main__" == __name__:
