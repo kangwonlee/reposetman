@@ -383,6 +383,16 @@ class TestGitCheckout(unittest.TestCase):
             )
         )
 
+    def test_show_stderr_already_on(self):
+        stdout, stderr = git.checkout(self.current_branch_name)
+
+        self.assertFalse(git.show_stderr(stderr, self.current_branch_name), msg=(
+               f"\nstderr :\n{stderr}\n"
+                "stdout :\n"
+               f"{stdout}"
+            )
+        )
+
 
 if "__main__" == __name__:
     unittest.main()
