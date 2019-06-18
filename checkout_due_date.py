@@ -83,7 +83,7 @@ def get_arg_parser():
     parser = argparse.ArgumentParser()
     parser.add_argument('--date', help='checkout date in yyyy-mm-dd')
     parser.add_argument('--time', help='checkout time in hh:mm:ss', default='00:00:00')
-    parser.add_argument('--force', help='force checkout')
+    parser.add_argument('--force', help='force checkout', action='store_true')
     parser.add_argument('--config', help='config file', required=True)
     return parser
 
