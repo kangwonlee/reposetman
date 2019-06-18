@@ -425,16 +425,11 @@ class TestGitCheckoutDate(unittest.TestCase):
 
         subprocess.run(['git', 'checkout', self.current_branch_name], cwd=self.temp_folder.name)
 
-        self.cwd = os.getcwd()
-
-        os.chdir(self.temp_folder.name)
-
     def tearDown(self):
-        os.chdir(self.cwd)
         del self.temp_folder
 
     def test_checkout_date(self):
-        stdout, stderr = git.checkout_date(self.date_0)
+        stdout, stderr = git.checkout_date(self.date_0, repo_path=self.temp_folder.name)
 
         r = subprocess.run(["git", "log", "-1", '''--format=medium''', '--date=iso'], cwd=self.temp_folder.name, capture_output=True, encoding='utf-8')
 
