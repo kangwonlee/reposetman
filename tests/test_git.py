@@ -278,7 +278,9 @@ class TestGitCheckout(unittest.TestCase):
         subprocess.run(['git', 'add', tempfile_full_path], cwd=self.temp_folder.name)
         subprocess.run(['git', 'commit', '-m', 'second commit'], cwd=self.temp_folder.name)
 
-        subprocess.run(['git', 'checkout', 'master'], cwd=self.temp_folder.name)
+        self.current_branch_name = 'master'
+
+        subprocess.run(['git', 'checkout', self.current_branch_name], cwd=self.temp_folder.name)
 
         self.cwd = os.getcwd()
 
@@ -289,7 +291,7 @@ class TestGitCheckout(unittest.TestCase):
         del self.temp_folder
 
     def test_starts_with_already_on(self):
-        _, stderr = git.checkout('master')
+        _, stderr = git.checkout(self.current_branch_name)
 
         self.assertTrue(git.starts_with_already_on(stderr), msg=f'\nstderr = \n{stderr}')
 
