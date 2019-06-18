@@ -356,6 +356,16 @@ class TestGitCheckout(unittest.TestCase):
             )
         )
 
+    def test_show_stderr_switch_to_the_branch(self):
+        r_list, commit = self.switch_to_the_branch()
+
+        self.assertFalse(git.show_stderr(r_list[-1].stderr, commit), msg=(
+               f"\nstderr :\n{r_list[-1].stderr}\n"
+                "stdout:\n"
+               f"{r_list[-1].stdout}"
+            )
+        )
+
 
 if "__main__" == __name__:
     unittest.main()
