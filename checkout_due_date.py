@@ -77,6 +77,9 @@ def get_config_from_argv(argv):
         config = configparser.ConfigParser()
         config.read(namespace.config)
 
+    # --force
+    config['operation']['force'] = namespace.force
+
     # --date --time override
     if namespace.date and namespace.time:
         date_time = namespace.date + ' ' + namespace.time
