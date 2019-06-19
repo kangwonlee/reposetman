@@ -193,7 +193,8 @@ def checkout(commit=False, repo_path=False, b_force=False, b_verbose=False):
         checkout_cmd_list.append('--force')
 
     # run git command
-    r = subprocess.run(checkout_cmd_list, cwd=repo_path, capture_output=True, encoding='utf-8')
+    r = subprocess.run(checkout_cmd_list, cwd=repo_path,
+                       capture_output=True, encoding='utf-8')
     stdout, stderr = r.stdout, r.stderr
 
     # even if b_verbose is false, print stderr
@@ -237,7 +238,8 @@ def is_prev_now(stderr):
 
 
 def switched_to_intended_branch(branch, stderr):
-    b_switch_success = "Switched to branch '{branch}'".format(branch=branch) in stderr
+    b_switch_success = "Switched to branch '{branch}'".format(
+        branch=branch) in stderr
     return b_switch_success
 
 

@@ -1,3 +1,4 @@
+import regex_test as ret
 import os
 import shutil
 import subprocess
@@ -6,15 +7,13 @@ import tempfile
 import unittest
 
 sys.path.insert(0,
-    os.path.abspath(
-        os.path.join(
-            os.path.dirname(__file__),
-            os.pardir
-        )
-    )
-)
-
-import regex_test as ret
+                os.path.abspath(
+                    os.path.join(
+                        os.path.dirname(__file__),
+                        os.pardir
+                    )
+                )
+                )
 
 
 def onerror(func, path, exc_info):

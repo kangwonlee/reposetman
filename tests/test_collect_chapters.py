@@ -1,3 +1,4 @@
+import collect_chapters as col
 import configparser
 import os
 import pprint
@@ -5,15 +6,13 @@ import sys
 import unittest
 
 sys.path.insert(0,
-    os.path.abspath(
-        os.path.join(
-            os.path.dirname(__file__),
-            os.pardir
-        )
-    )
-)
-
-import collect_chapters as col
+                os.path.abspath(
+                    os.path.join(
+                        os.path.dirname(__file__),
+                        os.pardir
+                    )
+                )
+                )
 
 
 class TestCollectChapters(unittest.TestCase):

@@ -1,3 +1,4 @@
+import progress
 import ast
 import configparser
 import datetime
@@ -12,15 +13,13 @@ import unittest
 
 
 sys.path.insert(0,
-    os.path.abspath(
-        os.path.join(
-            os.path.dirname(__file__),
-            os.pardir
-        )
-    )
-)
-
-import progress
+                os.path.abspath(
+                    os.path.join(
+                        os.path.dirname(__file__),
+                        os.pardir
+                    )
+                )
+                )
 
 
 class TestProgress(unittest.TestCase):
@@ -556,7 +555,8 @@ class TestRepoEvalRunEachSkipSomeLastCommit(TestRepoEvalRunEachBase):
             self.config['operation']['python_path'])
 
     def test_eval_file_base(self):
-        folder_name = os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir))
+        folder_name = os.path.abspath(os.path.join(
+            os.path.dirname(__file__), os.pardir))
         file_path = os.path.join(folder_name, 'unique_list.py')
 
         result_dict = self.e.eval_file_base(filename=file_path)
@@ -1110,7 +1110,7 @@ class TestFromSysImportArgv(unittest.TestCase):
 
         result = progress.get_argn(
             os.path.join(os.path.dirname(__file__),
-            'from_sys_argv_example_00.py')
+                         'from_sys_argv_example_00.py')
         )
 
         expected = 2
@@ -1236,7 +1236,7 @@ class TestGettingConfig(unittest.TestCase):
         self.assertIsInstance(result, configparser.ConfigParser)
         self.assertIn('config', result)
         self.assertIn('sample', result['config'])
-        
+
 
 def get_tempfile_name(suffix=None,):
     _, filename = tempfile.mkstemp(suffix=None, text=True)

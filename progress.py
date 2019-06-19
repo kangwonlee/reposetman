@@ -275,15 +275,17 @@ def postprocess(config, section, results):
     if is_too_frequent(last_sent_gmtime_sec, comment_period_days):
         print("Message may be too frequent?")
     else:
-        message_list_builder_grammar = MessageListBuilderGrammar(config, section, results['run_all']['table'], message_list=[])
+        message_list_builder_grammar = MessageListBuilderGrammar(
+            config, section, results['run_all']['table'], message_list=[])
         message_list = message_list_builder_grammar.build_message_list()
 
         if (
-                ('True' == config[section]['count_commits']) 
-                and ('True' == config[section]['pound_count']) 
-                and ('True' == config[section]['run_all'])
-            ):
-            message_list_builder_pound = MessageListBuilderPound(config, section, results, message_list=message_list)
+            ('True' == config[section]['count_commits'])
+            and ('True' == config[section]['pound_count'])
+            and ('True' == config[section]['run_all'])
+        ):
+            message_list_builder_pound = MessageListBuilderPound(
+                config, section, results, message_list=message_list)
             message_list = message_list_builder_pound.build_message_list()
 
         write_message_files(
@@ -466,10 +468,8 @@ class MessageListBuilderBase(object):
     def get_section_name(self):
         return self.config[self.section]['organization']
 
-
     def get_last_sent_filename(self):
         return self.config[self.section]['last_sent_file']
-
 
     def get_message_filename(self):
         return self.config[self.section]['todo_list_file']
@@ -545,7 +545,8 @@ class MessageListBuilderGrammar(MessageListBuilderBase):
 
 class MessageListBuilderPound(MessageListBuilderBase):
     def __init__(self, config, section, result_dict, b_verbose=False, message_list=[]):
-        super().__init__(config, section, result_dict['run_all']['table'], b_verbose, message_list)
+        super().__init__(config, section,
+                         result_dict['run_all']['table'], b_verbose, message_list)
 
         self.run_all = result_dict['run_all']['table']
         self.commit_count = result_dict['count_commits']['table']
@@ -1559,7 +1560,7 @@ class RepoEvalRunEach(RepoEval):
         # more adaptive arguments
         if os.path.basename(os.getcwd()).startswith('ex23'):
             arguments = ['utf-8', 'replace']
-        else :
+        else:
             arguments = []
 
             n_argv = get_argn(filename)
@@ -1569,7 +1570,8 @@ class RepoEvalRunEach(RepoEval):
 
                 other_file_list = list(
                     filter(
-                        lambda fname : os.path.isfile(fname) and (not fname.endswith('.py')),
+                        lambda fname: os.path.isfile(fname) and (
+                            not fname.endswith('.py')),
                         os.listdir()
                     )
                 )
@@ -1593,7 +1595,7 @@ class RepoEvalRunEach(RepoEval):
         return n_argv
 
     def search_sys_argv_assign_line(self, txt):
-            return re.search(r'^(.+?)\s*=\s*(?:(?:sys.argv)|(?:argv))\s*$', txt, re.M)
+        return re.search(r'^(.+?)\s*=\s*(?:(?:sys.argv)|(?:argv))\s*$', txt, re.M)
 
     def get_total(self, repo_name, b_verbose=False):
         """
@@ -1894,7 +1896,8 @@ def get_argn(filename):
                 elif (toktype == tokenize.NAME) and ('argv' == tok):
 
                     if 1 == len(equals_of_this_line):
-                        left_list = token_list[(last_new_line + 1):equals_of_this_line[-1]]
+                        left_list = token_list[(
+                            last_new_line + 1):equals_of_this_line[-1]]
 
                         # count the number of names
                         result = 0
