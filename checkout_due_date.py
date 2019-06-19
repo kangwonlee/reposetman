@@ -4,6 +4,39 @@ Checkout repositories to a date
 Usage : 
 $ python checkout_due_date.py --config [.cfg file] --force --date yyyy-mm-dd --time hh:mm:ss
 
+--date and --time would override config file 'before=<due date>'
+
+==== begin config file example ====
+[operation]
+...
+sections=['a', 'b', 'c']
+...
+
+[section_0]
+...
+list=<repo url list file>
+folder=<relative path to a folder to contain local repositories>
+...
+before=<due date>
+...
+==== end config file example ====
+
+
+==== begin url list file ====
+abc(1234567890) (03.11 02:33 pm)
+
+1234567890 abc  https://github.com/CPF18A/18pfa_lpthw-abc
+
+def(1234567891) (03.11 02:33 pm)
+
+1234567891 def https://github.com/CPF18A/18pfa_lpthw-def
+
+ghi(1234567892) (03.11 02:33 pm)
+
+1234567892 ghi jkl https://github.com/CPF18A/18pfa_lpthw-ghi
+
+==== end url list file ===
+
 """
 import argparse
 import ast
@@ -65,12 +98,8 @@ def gen_section(config):
     """
     Iterate over sections of the config file:
 
-    [operation]
-    ...
-    sections=['a', 'b', 'c']
-    ...
-
     """
+
     sections_list = ast.literal_eval(config['operation']['sections'])
 
     for section in sections_list:
@@ -81,35 +110,6 @@ def gen_repo_path(config, b_assert=True):
     """
     Iterate over full paths to each local repository
 
-    Each section's list from config
-
-    ==== begin config file example ====
-    ...
-
-    [section_0]
-    ...
-    list=<repo url list file>
-    folder=<relative path to a folder to contain local repositories>
-    ...
-    before=<due date>
-    ...
-    ==== end config file example ====
-
-
-    ==== begin url list file ====
-    abc(1234567890) (03.11 02:33 pm)
-
-    1234567890 abc  https://github.com/CPF18A/18pfa_lpthw-abc
-
-    def(1234567891) (03.11 02:33 pm)
-
-    1234567891 def https://github.com/CPF18A/18pfa_lpthw-def
-
-    ghi(1234567892) (03.11 02:33 pm)
-
-    1234567892 ghi jkl https://github.com/CPF18A/18pfa_lpthw-ghi
-
-    ==== end url list file ====
     """
 
     for section in gen_section(config):
@@ -134,7 +134,9 @@ def gen_repo_path(config, b_assert=True):
 def get_arg_parser():
     """
     prepare argument parser
+
     """
+
     parser = argparse.ArgumentParser()
     parser.add_argument('--date', help='checkout date in yyyy-mm-dd')
     parser.add_argument(
