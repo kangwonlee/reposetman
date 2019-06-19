@@ -62,7 +62,13 @@ def get_config_from_argv(argv):
 
 def gen_section(config):
     """
-    Iterate over sections of the config file
+    Iterate over sections of the config file:
+
+    [operation]
+    ...
+    sections=['a', 'b', 'c']
+    ...
+
     """
     sections_list = ast.literal_eval(config['operation']['sections'])
 
