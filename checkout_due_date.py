@@ -5,16 +5,13 @@ Usage :
 $ python checkout_due_date.py --config [.cfg file] --force --date yyyy-mm-dd --time hh:mm:ss
 
 """
-
 import argparse
 import ast
 import configparser
 import os
 import sys
-import urllib.parse as up
 
 import git
-import progress
 import regex_test
 import repo_path
 
