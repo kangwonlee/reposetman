@@ -1,9 +1,18 @@
+import progress
 import os
+import sys
 import unittest
 
 import bs4
 
-import progress
+sys.path.insert(0,
+                os.path.abspath(
+                    os.path.join(
+                        os.path.dirname(__file__),
+                        os.pardir
+                    )
+                )
+                )
 
 
 class BaseTestTableWriterRepoLinks(unittest.TestCase):

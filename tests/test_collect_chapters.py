@@ -1,8 +1,18 @@
+import collect_chapters as col
 import configparser
+import os
 import pprint
+import sys
 import unittest
 
-import collect_chapters as col
+sys.path.insert(0,
+                os.path.abspath(
+                    os.path.join(
+                        os.path.dirname(__file__),
+                        os.pardir
+                    )
+                )
+                )
 
 
 class TestCollectChapters(unittest.TestCase):
@@ -58,3 +68,7 @@ class TestCollectChapters(unittest.TestCase):
                 in_list = list(
                     map(lambda x: x in url, url_a_list + url_b_list))
                 self.assertTrue(any(in_list))
+
+
+if "__main__" == __name__:
+    unittest.main()

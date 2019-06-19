@@ -169,11 +169,15 @@ def git(cmd, bVerbose=True):
     return msg
 
 
-def checkout(commit=False, repo_path=False, b_verbose=False):
-    if repo_path:
-        # change working folder
-        cwd_backup = os.getcwd()
-        os.chdir(repo_path)
+def checkout(commit=False, repo_path=False, b_force=False, b_verbose=False):
+    """
+    git checkout <commit>
+
+    change folder to <repo_path>
+    """
+
+    if not repo_path:
+        repo_path = os.getcwd()
 
     # checkout specific commit
     checkout_cmd_list = [git_exe_path,
@@ -185,32 +189,68 @@ def checkout(commit=False, repo_path=False, b_verbose=False):
     else:
         checkout_cmd_list.append('HEAD')
 
+    if b_force:
+        checkout_cmd_list.append('--force')
+
     # run git command
-    stdout, stderr = run_command(checkout_cmd_list, b_verbose=b_verbose)
+    r = subprocess.run(checkout_cmd_list, cwd=repo_path,
+                       capture_output=True, encoding='utf-8')
+    stdout, stderr = r.stdout, r.stderr
 
     # even if b_verbose is false, print stderr
-    if stderr:
-
-        b_stderr_already_on = stderr.startswith('Already on ')
-        b_stderr_detached_head = "You are in 'detached HEAD' state." in stderr
-        b_switch_success = "Switched to branch '{branch}'".format(
-            branch=commit) in stderr
-        b_previous_now = (stderr.startswith('Previous HEAD position was')) and (
-            'HEAD is now at' in stderr)
-
-        if all([not b_stderr_already_on, not b_stderr_detached_head, not b_switch_success, not b_previous_now]):
-            print(os.getcwd())
-            print(stderr)
+    if show_stderr(stderr, commit):
+        print(os.getcwd())
+        print(stderr)
 
     else:
         if b_verbose:
             print(stdout)
 
-    if repo_path:
-        # return to original path
-        os.chdir(cwd_backup)
-
     return stdout, stderr
+
+
+def checkout_date(date, repo_path=False, branch='master', b_force=False, b_verbose=False):
+    return checkout(f"{branch}@{{{date}}}", repo_path=repo_path, b_force=b_force, b_verbose=b_verbose)
+
+
+def show_stderr(stderr, commit):
+    result = False
+
+    if stderr:
+        result = not ignore_stderr(stderr, commit)
+
+    return result
+
+
+def ignore_stderr(stderr, commit):
+    b_stderr_already_on = starts_with_already_on(stderr)
+    b_stderr_detached_head = is_head_detached(stderr)
+    b_switch_success = switched_to_intended_branch(commit, stderr)
+    b_previous_now = is_prev_now(stderr)
+
+    return any([b_stderr_already_on, b_stderr_detached_head, b_switch_success, b_previous_now])
+
+
+def is_prev_now(stderr):
+    b_previous_now = (stderr.startswith('Previous HEAD position was')) and (
+        'HEAD is now at' in stderr)
+    return b_previous_now
+
+
+def switched_to_intended_branch(branch, stderr):
+    b_switch_success = "Switched to branch '{branch}'".format(
+        branch=branch) in stderr
+    return b_switch_success
+
+
+def is_head_detached(stderr):
+    b_stderr_detached_head = "You are in 'detached HEAD' state." in stderr
+    return b_stderr_detached_head
+
+
+def starts_with_already_on(stderr):
+    b_stderr_already_on = stderr.startswith('Already on ')
+    return b_stderr_already_on
 
 
 def log_last_commit():

@@ -1,3 +1,4 @@
+import progress
 import ast
 import configparser
 import datetime
@@ -5,11 +6,20 @@ import glob
 import os
 import shutil
 import subprocess
+import sys
 import tempfile
 import time
 import unittest
 
-import progress
+
+sys.path.insert(0,
+                os.path.abspath(
+                    os.path.join(
+                        os.path.dirname(__file__),
+                        os.pardir
+                    )
+                )
+                )
 
 
 class TestProgress(unittest.TestCase):
@@ -545,7 +555,8 @@ class TestRepoEvalRunEachSkipSomeLastCommit(TestRepoEvalRunEachBase):
             self.config['operation']['python_path'])
 
     def test_eval_file_base(self):
-        folder_name = os.path.dirname(__file__)
+        folder_name = os.path.abspath(os.path.join(
+            os.path.dirname(__file__), os.pardir))
         file_path = os.path.join(folder_name, 'unique_list.py')
 
         result_dict = self.e.eval_file_base(filename=file_path)
@@ -1099,7 +1110,7 @@ class TestFromSysImportArgv(unittest.TestCase):
 
         result = progress.get_argn(
             os.path.join(os.path.dirname(__file__),
-            'from_sys_argv_example_00.py')
+                         'from_sys_argv_example_00.py')
         )
 
         expected = 2
@@ -1172,6 +1183,59 @@ class TestRepoEvalCountOneCommitLogTimeSetting(unittest.TestCase):
                     commit_datetime, self.after_date_datetime, msg=msg)
                 self.assertLess(commit_datetime,
                                 self.before_date_datetime, msg=msg)
+
+
+class TestGettingConfigFilename(unittest.TestCase):
+    def test_get_cfg_filename_from_argv_yes(self):
+        input_list = ['this']
+
+        # function under test
+        result = progress.get_cfg_filename_from_argv(input_list)
+
+        self.assertIsInstance(result, str)
+
+        expected = input_list[0]
+        self.assertEqual(expected, result)
+
+    def test_get_cfg_filename_from_argv_none(self):
+        input_list = []
+
+        # function under test
+        result = progress.get_cfg_filename_from_argv(input_list)
+
+        self.assertIsInstance(result, str)
+
+        expected = 'progress.cfg'
+        self.assertEqual(expected, result)
+
+
+class TestGettingConfig(unittest.TestCase):
+    def setUp(self):
+        self.config_filename = get_tempfile_name('.cfg')
+        with open(self.config_filename, 'w', encoding='utf-8') as f:
+            f.write(
+                '[config]\n'
+                'sample=sample\n'
+            )
+
+    def tearDown(self):
+        if os.path.exists(self.config_filename):
+            os.remove(self.config_filename)
+
+    def test_get_config_from_filename(self):
+        result = progress.get_config_from_filename(self.config_filename)
+
+        self.assertIsInstance(result, configparser.ConfigParser)
+        self.assertIn('config', result)
+        self.assertIn('sample', result['config'])
+
+    def test_get_config_from_argv(self):
+        input_list = [self.config_filename, 'a', 'b', 'c']
+        result = progress.get_config_from_argv(input_list)
+
+        self.assertIsInstance(result, configparser.ConfigParser)
+        self.assertIn('config', result)
+        self.assertIn('sample', result['config'])
 
 
 def get_tempfile_name(suffix=None,):
