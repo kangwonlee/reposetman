@@ -84,9 +84,14 @@ def gen_repo_path(config, b_assert=True):
     Each section's list from config
 
     ==== begin config file example ====
+    ...
+
     [section_0]
     ...
     list=<repo url list file>
+    folder=<relative path to a folder to contain local repositories>
+    ...
+    before=<due date>
     ...
     ==== end config file example ====
 
