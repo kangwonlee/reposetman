@@ -132,6 +132,9 @@ def gen_repo_path(config, b_assert=True):
 
 
 def get_arg_parser():
+    """
+    prepare argument parser
+    """
     parser = argparse.ArgumentParser()
     parser.add_argument('--date', help='checkout date in yyyy-mm-dd')
     parser.add_argument(
