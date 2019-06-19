@@ -1,3 +1,4 @@
+import checkout_due_date as cdd
 import ast
 import configparser
 import os
@@ -6,15 +7,13 @@ import tempfile
 import unittest
 
 sys.path.insert(0,
-    os.path.abspath(
-        os.path.join(
-            os.path.dirname(__file__),
-            os.pardir
-        )
-    )
-)
-
-import checkout_due_date as cdd
+                os.path.abspath(
+                    os.path.join(
+                        os.path.dirname(__file__),
+                        os.pardir
+                    )
+                )
+                )
 
 
 class TestGetArgParser(unittest.TestCase):
@@ -32,14 +31,16 @@ class TestGetArgParser(unittest.TestCase):
         self.assertFalse(namespace.date)
 
     def test_get_arg_parser_date(self):
-        namespace = self.p.parse_args(['--date', '2019-06-08', '--config', 'config_filename.cfg'])
+        namespace = self.p.parse_args(
+            ['--date', '2019-06-08', '--config', 'config_filename.cfg'])
 
         self.assertIn('date', namespace)
         self.assertEqual(namespace.date, '2019-06-08')
         self.assertEqual(namespace.time, '00:00:00')
 
     def test_get_arg_parser_date_time(self):
-        namespace = self.p.parse_args(['--date', '2019-06-08', '--time', "01:23:45", '--config', 'config_filename.cfg'])
+        namespace = self.p.parse_args(
+            ['--date', '2019-06-08', '--time', "01:23:45", '--config', 'config_filename.cfg'])
 
         self.assertIn('date', namespace)
         self.assertEqual(namespace.date, '2019-06-08')
@@ -51,14 +52,14 @@ class TestGenRepoPath(unittest.TestCase):
     def setUp(self):
         self.config = configparser.ConfigParser()
         self.config['operation'] = {
-            'sections':['a', 'b']
+            'sections': ['a', 'b']
         }
 
         self.list_file_a = tempfile.NamedTemporaryFile(
             suffix='.txt',
             mode='wt',
             encoding='utf-8',
-            )
+        )
 
         self.list_file_a.write(
             "가나다(2082652342) (03.11 오후 02:33)\n"
@@ -94,7 +95,7 @@ class TestGenRepoPath(unittest.TestCase):
             suffix='.txt',
             mode='wt',
             encoding='utf-8',
-            )
+        )
 
         self.list_file_b.write(
             "jkl(2082652342) (03.11 오후 02:33)\n"
@@ -145,7 +146,8 @@ class TestGenRepoPath(unittest.TestCase):
             self.assertTrue(due, msg=due)
 
     def test_gen_section(self):
-        self.assertSequenceEqual(list(cdd.gen_section(self.config)), ast.literal_eval(self.config['operation']['sections']),)
+        self.assertSequenceEqual(list(cdd.gen_section(self.config)), ast.literal_eval(
+            self.config['operation']['sections']),)
 
 
 if "__main__" == __name__:

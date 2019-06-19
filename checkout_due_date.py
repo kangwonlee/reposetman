@@ -22,7 +22,8 @@ def main(argv):
 
     for full_path_to_repo, due_date in gen_repo_path(config):
         print(f"{os.path.split(full_path_to_repo)[-1]} ".ljust(60, '='))
-        git.checkout_date(due_date, full_path_to_repo, b_force=True, b_verbose=True)
+        git.checkout_date(due_date, full_path_to_repo,
+                          b_force=True, b_verbose=True)
 
 
 def get_config_from_argv(argv):
@@ -92,17 +93,17 @@ def gen_repo_path(config, b_assert=True):
 
     ==== begin url list file ====
     abc(1234567890) (03.11 02:33 pm)
-    
+
     1234567890 abc  https://github.com/CPF18A/18pfa_lpthw-abc
-    
+
     def(1234567891) (03.11 02:33 pm)
-    
+
     1234567891 def https://github.com/CPF18A/18pfa_lpthw-def
-    
+
     ghi(1234567892) (03.11 02:33 pm)
-    
+
     1234567892 ghi jkl https://github.com/CPF18A/18pfa_lpthw-ghi
-    
+
     ==== end url list file ====
     """
 
@@ -128,7 +129,8 @@ def gen_repo_path(config, b_assert=True):
 def get_arg_parser():
     parser = argparse.ArgumentParser()
     parser.add_argument('--date', help='checkout date in yyyy-mm-dd')
-    parser.add_argument('--time', help='checkout time in hh:mm:ss', default='00:00:00')
+    parser.add_argument(
+        '--time', help='checkout time in hh:mm:ss', default='00:00:00')
     parser.add_argument('--force', help='force checkout', action='store_true')
     parser.add_argument('--config', help='config file', required=True)
     return parser

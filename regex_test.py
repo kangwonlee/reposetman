@@ -292,7 +292,8 @@ def tag_all_remote_branches(b_tag_after_update, repo_abs_path, repo):
         # branch name loop
         for repo_branch in git.get_remote_branch_list():
             # A remote branch would be like : remote_name/branch_name/##
-            tag_stamp(b_tag_after_update, repo_abs_path, repo, branch=repo_branch, commit=repo_branch)
+            tag_stamp(b_tag_after_update, repo_abs_path, repo,
+                      branch=repo_branch, commit=repo_branch)
 
         # restore repository branch
         git.checkout(current_repo_branch)

@@ -1,17 +1,16 @@
+import regex_test as ret
 import os
 import sys
 import unittest
 
 sys.path.insert(0,
-    os.path.abspath(
-        os.path.join(
-            os.path.dirname(__file__),
-            os.pardir
-        )
-    )
-)
-
-import regex_test as ret
+                os.path.abspath(
+                    os.path.join(
+                        os.path.dirname(__file__),
+                        os.pardir
+                    )
+                )
+                )
 
 
 # test case for project id related functions
