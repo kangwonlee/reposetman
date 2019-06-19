@@ -77,6 +77,34 @@ def gen_section(config):
 
 
 def gen_repo_path(config, b_assert=True):
+    """
+    Iterate over full paths to each local repository
+
+    Each section's list from config
+
+    ==== begin config file example ====
+    [section_0]
+    ...
+    list=<repo url list file>
+    ...
+    ==== end config file example ====
+
+
+    ==== begin url list file ====
+    abc(1234567890) (03.11 02:33 pm)
+    
+    1234567890 abc  https://github.com/CPF18A/18pfa_lpthw-abc
+    
+    def(1234567891) (03.11 02:33 pm)
+    
+    1234567891 def https://github.com/CPF18A/18pfa_lpthw-def
+    
+    ghi(1234567892) (03.11 02:33 pm)
+    
+    1234567892 ghi jkl https://github.com/CPF18A/18pfa_lpthw-ghi
+    
+    ==== end url list file ====
+    """
 
     for section in gen_section(config):
         due_date = config[section]['before']
