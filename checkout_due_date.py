@@ -56,7 +56,7 @@ def main(argv):
     for full_path_to_repo, due_date in gen_repo_path(config):
         print(f"{os.path.split(full_path_to_repo)[-1]} ".ljust(60, '='))
         git.checkout_date(due_date, full_path_to_repo,
-                          b_force=True, b_verbose=True)
+                          b_force=config['operation']['force'], b_verbose=True)
 
 
 def get_config_from_argv(argv):
