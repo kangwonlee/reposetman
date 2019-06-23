@@ -323,7 +323,7 @@ class TestIterRepoPath(unittest.TestCase):
             for proj in self.expected_list_b
         ]
 
-        for path, due in iter_repo.iter_repo_path(self.config, b_assert=False):
+        for path, due in iter_repo.iter_repo_path_with_due(self.config, b_assert=False):
             self.assertIn(path, expected_full_path_list)
             self.assertTrue(due, msg=due)
 

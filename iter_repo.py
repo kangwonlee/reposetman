@@ -49,7 +49,7 @@ def iter_github_urls_in_file(filename):
         yield url
 
 
-def iter_repo_path(config, b_assert=True):
+def iter_repo_path_with_due(config, b_assert=True):
     """
     Iterate over full paths to each local repository
 
