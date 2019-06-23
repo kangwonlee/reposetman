@@ -32,3 +32,8 @@ def read_b_decode(filename):
 
 def get_github_urls(txt):
     return re.findall(r"(https://[\w+?@]*github.com/\S+?/\S+?)[\"\s]", txt)
+
+
+def iter_github_urls(txt):
+    for p in re.finditer(r"(https://[\w+?@]*github.com/\S+?/\S+?)[\"\s]", txt):
+        yield p[0].strip()
