@@ -31,12 +31,16 @@ def read_b_decode(filename):
     return txt
 
 
+def compile_re_github_urls():
+    return re.compile(r"(https://[\w+?@]*github.com/\S+?/\S+?)[\"\s]")
+
+
 def get_github_urls(txt):
-    return re.findall(r"(https://[\w+?@]*github.com/\S+?/\S+?)[\"\s]", txt)
+    return compile_re_github_urls().findall(txt)
 
 
 def iter_github_urls(txt):
-    for p in re.finditer(r"(https://[\w+?@]*github.com/\S+?/\S+?)[\"\s]", txt):
+    for p in compile_re_github_urls().finditer(txt):
         yield p[0].strip()
 
 
