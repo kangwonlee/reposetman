@@ -70,7 +70,7 @@ def iter_repo_path_with_due(config, b_assert=True):
 
 def iter_repo_path(config, b_assert=True):
     """
-    Iterate over full paths to each local repository
+    Iterate over full paths to each local repository in all sections
 
     """
 
