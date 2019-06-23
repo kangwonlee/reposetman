@@ -207,24 +207,8 @@ def get_config_from_filename(config_filename=False):
 
 
 def get_section_list(config):
-    op_key = 'operation'
-    if op_key in config:
-        if 'sections' not in config[op_key]:
-            if 'section' not in config[op_key]:
-                raise IOError(
-                    'Unable to find section list from the config file')
-            else:
-                sections_txt = config[op_key]['section']
-        else:
-            sections_txt = config[op_key]['sections']
-
-    else:
-        raise ValueError(
-            f"key 'operation' missing\nAvailable keys : {list(config.keys())}")
-
-    # to obtain the list from text
     # https://stackoverflow.com/questions/335695/lists-in-configparser
-    return ast.literal_eval(sections_txt)
+    return ast.literal_eval(config['operation']['sections'])
 
 
 @timeit.timeit
