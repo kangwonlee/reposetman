@@ -37,3 +37,8 @@ def get_github_urls(txt):
 def iter_github_urls(txt):
     for p in re.finditer(r"(https://[\w+?@]*github.com/\S+?/\S+?)[\"\s]", txt):
         yield p[0].strip()
+
+
+def iter_github_urls_in_file(filename):
+    for url in iter_github_urls(read_b_decode(filename)):
+        yield url
