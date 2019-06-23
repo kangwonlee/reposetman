@@ -327,6 +327,16 @@ class TestIterRepoPath(unittest.TestCase):
             self.assertIn(path, expected_full_path_list)
             self.assertTrue(due, msg=due)
 
+    def test_iter_repo_path_in_section(self):
+        expected_full_path_list = [
+            os.path.join(os.getcwd(), self.rel_path_a, proj)
+            for proj in self.expected_list_a
+        ]
+
+        self.assertSequenceEqual([full_path for full_path in iter_repo.iter_repo_path_in_section(self.config, self.sections[0], b_assert=False)],
+            expected_full_path_list
+        )
+
 
 if "__main__" == __name__:
     unittest.main()
