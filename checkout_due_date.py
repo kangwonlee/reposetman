@@ -45,6 +45,7 @@ import os
 import sys
 
 import git
+import iter_repo
 import regex_test
 import repo_path
 
@@ -103,9 +104,7 @@ def gen_section(config):
 
     """
 
-    sections_list = ast.literal_eval(config['operation']['sections'])
-
-    for section in sections_list:
+    for section in iter_repo.get_section_list(config):
         yield section
 
 
