@@ -183,5 +183,49 @@ class TestGetGithubUrls(unittest.TestCase):
         ))
 
 
+class TestIterGithubUrlsInFile(unittest.TestCase):
+    def setUp(self):
+        self.txt = '''
+가나다(2082652342) (03.11 오후 02:33)
+
+2082652342 가나다  https://github.com/CPF18B/18pfb_lpthw-jkl
+
+라마바(2018007194) (03.11 오후 02:33)
+
+2018007194 라마바 https://github.com/CPF18A/18pfa_lpthw-def.git
+
+사아자(2017958076) (03.11 오후 02:33)
+
+2017958076 사아자 https://ghi@github.com/CPF18A/18pfa_lpthw-ghi
+
+가나다(2082652342) (03.11 오후 02:33)
+
+2082652342 가나다  https://github.com/CPF 18B/18pfb_lpthw-jkl
+'''
+
+        self.expected_url_list = [
+            "https://github.com/CPF18B/18pfb_lpthw-jkl",
+            "https://github.com/CPF18A/18pfa_lpthw-def.git",
+            "https://ghi@github.com/CPF18A/18pfa_lpthw-ghi",
+        ]
+
+        self.input_file = tempfile.NamedTemporaryFile(suffix='.txt', mode='wt', encoding='utf-8')
+
+        self.input_file.write(self.txt)
+        self.input_file.seek(0)
+
+    def tearDown(self):
+        del self.txt
+        del self.input_file
+
+    def test_iter_github_urls_in_file(self):
+        result_list = list(iter_repo.iter_github_urls_in_file(self.input_file.name))
+
+        self.assertSequenceEqual(result_list, self.expected_url_list, msg=(
+            f"expected = \n{pprint.pformat(self.expected_url_list)}\n"
+            f"result = \n{pprint.pformat(result_list)}"
+        ))
+
+
 if "__main__" == __name__:
     unittest.main()
