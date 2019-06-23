@@ -1,4 +1,3 @@
-import progress
 import ast
 import configparser
 import datetime
@@ -21,6 +20,7 @@ sys.path.insert(0,
                 )
                 )
 
+import progress
 
 class TestProgress(unittest.TestCase):
     def setUp(self):
