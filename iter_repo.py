@@ -70,3 +70,19 @@ def iter_repo_path(config, b_assert=True):
                 assert os.path.exists(full_path_to_repo), full_path_to_repo
 
             yield full_path_to_repo, due_date
+
+
+def iter_repo_path_in_section(config, section, b_assert=True):
+    repo_path_rel = config[section]['folder']
+
+    for url in iter_github_urls_in_file(config[section]['list']):
+        proj_id = repo_path.get_repo_name_from_url(url)
+
+        full_path_to_repo = os.path.abspath(
+            os.path.join(repo_path_rel, proj_id)
+        )
+
+        if b_assert:
+            assert os.path.exists(full_path_to_repo), full_path_to_repo
+
+        yield full_path_to_repo
