@@ -914,7 +914,7 @@ class RepoEval(object):
 
     def is_readable(self, filename):
         try:
-            result = ret.read_utf_or_cp(filename)
+            result = iter_repo.read_b_decode(filename)
         except UnicodeDecodeError:
             print('%s : unable to read %s' %
                   (self.get_class_name(), os.path.join(os.getcwd(), filename)))
