@@ -229,9 +229,12 @@ class TestIterGithubUrlsInFile(unittest.TestCase):
 
 class TestIterRepoPath(unittest.TestCase):
     def setUp(self):
+
+        self.sections = ['a', 'b']
+
         self.config = configparser.ConfigParser()
         self.config['operation'] = {
-            'sections': ['a', 'b']
+            'sections': self.sections
         }
 
         self.list_file_a = tempfile.NamedTemporaryFile(
@@ -264,7 +267,7 @@ class TestIterRepoPath(unittest.TestCase):
 
         self.rel_path_a = 'rel_path_a'
 
-        self.config['a'] = {
+        self.config[self.sections[0]] = {
             'before': 'due date',
             'folder': self.rel_path_a,
             'list': self.list_file_a.name,
@@ -300,7 +303,7 @@ class TestIterRepoPath(unittest.TestCase):
 
         self.rel_path_b = 'rel_path_b'
 
-        self.config['b'] = {
+        self.config[self.sections[1]] = {
             'before': 'due date b',
             'folder': self.rel_path_b,
             'list': self.list_file_b.name,
