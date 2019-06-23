@@ -314,7 +314,7 @@ class TestIterRepoPath(unittest.TestCase):
         del self.list_file_b
         del self.config
 
-    def test_iter_repo_path(self):
+    def test_iter_repo_path_with_due(self):
         expected_full_path_list = [
             os.path.join(os.getcwd(), self.rel_path_a, proj)
             for proj in self.expected_list_a
