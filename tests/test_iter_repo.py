@@ -127,6 +127,14 @@ class TestReadByteDecode(unittest.TestCase):
         del self.cp9_file
         del self.txt
 
+    def test_read_b_decode_utf8(self):
+        result = iter_repo.read_b_decode(self.utf_file.name)
+        self.assertEqual(result, self.txt)
+
+    def test_read_b_decode_cp949(self):
+        result = iter_repo.read_b_decode(self.cp9_file.name)
+        self.assertEqual(result, self.txt)
+
 
 if "__main__" == __name__:
     unittest.main()
