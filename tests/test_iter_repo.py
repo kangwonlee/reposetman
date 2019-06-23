@@ -1,6 +1,7 @@
 import ast
 import configparser
 import os
+import pprint
 import sys
 import tempfile
 import unittest
@@ -134,6 +135,44 @@ class TestReadByteDecode(unittest.TestCase):
     def test_read_b_decode_cp949(self):
         result = iter_repo.read_b_decode(self.cp9_file.name)
         self.assertEqual(result, self.txt)
+
+
+class TestGetGithubUrls(unittest.TestCase):
+    def setUp(self):
+        self.txt = '''
+가나다(2082652342) (03.11 오후 02:33)
+
+2082652342 가나다  https://github.com/CPF18B/18pfb_lpthw-jkl
+
+라마바(2018007194) (03.11 오후 02:33)
+
+2018007194 라마바 https://github.com/CPF18A/18pfa_lpthw-def.git
+
+사아자(2017958076) (03.11 오후 02:33)
+
+2017958076 사아자 https://ghi@github.com/CPF18A/18pfa_lpthw-ghi
+
+가나다(2082652342) (03.11 오후 02:33)
+
+2082652342 가나다  https://github.com/CPF 18B/18pfb_lpthw-jkl
+'''
+
+        self.expected_url_list = [
+            "https://github.com/CPF18B/18pfb_lpthw-jkl",
+            "https://github.com/CPF18A/18pfa_lpthw-def.git",
+            "https://ghi@github.com/CPF18A/18pfa_lpthw-ghi",
+        ]
+
+    def tearDown(self):
+        del self.txt
+
+    def test_get_github_urls(self):
+        result_list = iter_repo.get_github_urls(self.txt)
+
+        self.assertSequenceEqual(result_list, self.expected_url_list, msg=(
+            f"expected = \n{pprint.pformat(self.expected_url_list)}\n"
+            f"result = \n{pprint.pformat(result_list)}"
+        ))
 
 
 if "__main__" == __name__:
