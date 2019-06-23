@@ -62,6 +62,18 @@ def iter_repo_path_with_due(config, b_assert=True):
             yield full_path_to_repo, due_date
 
 
+def iter_repo_path(config, b_assert=True):
+    """
+    Iterate over full paths to each local repository
+
+    """
+
+    for section in gen_section(config):
+
+        for full_path_to_repo in iter_repo_path_in_section(config, section, b_assert=b_assert):
+            yield full_path_to_repo
+
+
 def iter_repo_path_in_section(config, section, b_assert=True):
     repo_path_rel = config[section]['folder']
 
