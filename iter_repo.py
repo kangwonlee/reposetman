@@ -1,4 +1,5 @@
 import ast
+import os
 
 
 def get_section_list(config):
@@ -14,3 +15,15 @@ def gen_section(config):
 
     for section in get_section_list(config):
         yield section
+
+
+def read_b_decode(filename):
+    with open(filename, 'rb') as f:
+        data = f.read()
+
+    try:
+        txt = data.decode('utf-8')
+    except UnicodeDecodeError:
+        txt = data.decode('cp949')
+    
+    return txt
