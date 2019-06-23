@@ -99,6 +99,10 @@ class TestIterRepo(unittest.TestCase):
         self.assertSequenceEqual(iter_repo.get_section_list(self.config), 
         ast.literal_eval(self.config['operation']['sections']),)
 
+    def test_gen_section(self):
+        self.assertSequenceEqual(list(iter_repo.gen_section(self.config)), ast.literal_eval(
+            self.config['operation']['sections']),)
+
 
 if "__main__" == __name__:
     unittest.main()
