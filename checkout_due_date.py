@@ -85,27 +85,17 @@ def get_config_from_argv(argv):
     if namespace.date and namespace.time:
         date_time = namespace.date + ' ' + namespace.time
 
-        for section in gen_section(config):
+        for section in iter_repo.gen_section(config):
             config[section]['before'] = date_time
 
     # --date override
     elif namespace.date and (not namespace.time):
         date_time = namespace.date + ' ' + '23:59:59'
 
-        for section in gen_section(config):
+        for section in iter_repo.gen_section(config):
             config[section]['before'] = date_time
 
     return config
-
-
-def gen_section(config):
-    """
-    Iterate over sections of the config file:
-
-    """
-
-    for section in iter_repo.get_section_list(config):
-        yield section
 
 
 def gen_repo_path(config, b_assert=True):
@@ -114,7 +104,7 @@ def gen_repo_path(config, b_assert=True):
 
     """
 
-    for section in gen_section(config):
+    for section in iter_repo.gen_section(config):
         due_date = config[section]['before']
         repo_path_rel = config[section]['folder']
         list_filename = config[section]['list']
