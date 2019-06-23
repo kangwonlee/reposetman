@@ -174,6 +174,14 @@ class TestGetGithubUrls(unittest.TestCase):
             f"result = \n{pprint.pformat(result_list)}"
         ))
 
+    def test_iter_github_urls(self):
+        result_list = list(iter_repo.iter_github_urls(self.txt))
+
+        self.assertSequenceEqual(result_list, self.expected_url_list, msg=(
+            f"expected = \n{pprint.pformat(self.expected_url_list)}\n"
+            f"result = \n{pprint.pformat(result_list)}"
+        ))
+
 
 if "__main__" == __name__:
     unittest.main()
