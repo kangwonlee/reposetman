@@ -24,6 +24,7 @@ import time
 import tokenize
 
 import git
+import iter_repo
 import read_python
 import regex_test as ret
 import repo_path
@@ -175,7 +176,7 @@ def main(argv=False):
     return tuple(
         itertools.starmap(
             process_section,
-            gen_arg_process_section(get_section_list(config))
+            gen_arg_process_section(iter_repo.get_section_list(config))
         )
     )
 
@@ -204,27 +205,6 @@ def get_config_from_filename(config_filename=False):
     config.read(config_filename)
 
     return config
-
-
-def get_section_list(config):
-    op_key = 'operation'
-    if op_key in config:
-        if 'sections' not in config[op_key]:
-            if 'section' not in config[op_key]:
-                raise IOError(
-                    'Unable to find section list from the config file')
-            else:
-                sections_txt = config[op_key]['section']
-        else:
-            sections_txt = config[op_key]['sections']
-
-    else:
-        raise ValueError(
-            f"key 'operation' missing\nAvailable keys : {list(config.keys())}")
-
-    # to obtain the list from text
-    # https://stackoverflow.com/questions/335695/lists-in-configparser
-    return ast.literal_eval(sections_txt)
 
 
 @timeit.timeit
@@ -934,7 +914,7 @@ class RepoEval(object):
 
     def is_readable(self, filename):
         try:
-            result = ret.read_utf_or_cp(filename)
+            result = iter_repo.read_b_decode(filename)
         except UnicodeDecodeError:
             print('%s : unable to read %s' %
                   (self.get_class_name(), os.path.join(os.getcwd(), filename)))

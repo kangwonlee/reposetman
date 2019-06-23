@@ -45,6 +45,7 @@ import os
 import sys
 
 import git
+import iter_repo
 import regex_test
 import repo_path
 
@@ -53,7 +54,7 @@ def main(argv):
 
     config = get_config_from_argv(argv)
 
-    for full_path_to_repo, due_date in gen_repo_path(config):
+    for full_path_to_repo, due_date in iter_repo.iter_repo_path(config):
         print(f"{os.path.split(full_path_to_repo)[-1]} ".ljust(60, '='))
         git.checkout_date(due_date, full_path_to_repo,
                           b_force=config['operation']['force'], b_verbose=True)
@@ -84,54 +85,17 @@ def get_config_from_argv(argv):
     if namespace.date and namespace.time:
         date_time = namespace.date + ' ' + namespace.time
 
-        for section in gen_section(config):
+        for section in iter_repo.gen_section(config):
             config[section]['before'] = date_time
 
     # --date override
     elif namespace.date and (not namespace.time):
         date_time = namespace.date + ' ' + '23:59:59'
 
-        for section in gen_section(config):
+        for section in iter_repo.gen_section(config):
             config[section]['before'] = date_time
 
     return config
-
-
-def gen_section(config):
-    """
-    Iterate over sections of the config file:
-
-    """
-
-    sections_list = ast.literal_eval(config['operation']['sections'])
-
-    for section in sections_list:
-        yield section
-
-
-def gen_repo_path(config, b_assert=True):
-    """
-    Iterate over full paths to each local repository
-
-    """
-
-    for section in gen_section(config):
-        due_date = config[section]['before']
-        repo_path_rel = config[section]['folder']
-        list_filename = config[section]['list']
-        github_url_list = regex_test.get_github_url_list(list_filename)
-
-        for url in github_url_list:
-            proj_id = repo_path.get_repo_name_from_url(url)
-
-            full_path_to_repo = os.path.abspath(
-                os.path.join(repo_path_rel, proj_id)
-            )
-
-            if b_assert:
-                assert os.path.exists(full_path_to_repo), full_path_to_repo
-
-            yield full_path_to_repo, due_date
 
 
 def get_arg_parser():
