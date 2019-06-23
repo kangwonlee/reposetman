@@ -24,7 +24,7 @@ def read_b_decode(filename):
     Read a file in binary mode and try to decode
 
     Try utf-8 and cp949 for now
-    
+
     """
     with open(filename, 'rb') as f:
         data = f.read()
