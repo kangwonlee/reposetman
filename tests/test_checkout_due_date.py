@@ -42,5 +42,27 @@ class TestGetArgParser(unittest.TestCase):
         self.assertEqual(namespace.time, '01:23:45')
 
 
+class TestGetConfigFromArgv(unittest.TestCase):
+    def setUp(self):
+        self.config = configparser.ConfigParser()
+        self.config.add_section('operation')
+        self.config['operation'] = {'key': 'value'}
+        self.config_file = tempfile.NamedTemporaryFile(suffix='.cfg', mode='wt', encoding='utf-8')
+        self.config.write(self.config_file)
+        self.config_file.seek(0)
+
+    def tearDown(self):
+        del self.config_file
+        del self.config
+
+    def test_get_config_from_argv_force(self):
+        input_list = ['filename.py', '--config', self.config_file.name]
+        result = cdd.get_config_from_argv(input_list)
+
+        self.assertIsInstance(result, configparser.ConfigParser)
+        self.assertIn('operation', result)
+        self.assertIn('force', result['operation'])
+
+
 if "__main__" == __name__:
     unittest.main()
