@@ -1,5 +1,6 @@
 import ast
 import os
+import re
 
 
 def get_section_list(config):
@@ -27,3 +28,7 @@ def read_b_decode(filename):
         txt = data.decode('cp949')
     
     return txt
+
+
+def get_github_urls(txt):
+    return re.findall(r"(https://[\w+?@]*github.com/\S+?/\S+?)[\"\s]", txt)
