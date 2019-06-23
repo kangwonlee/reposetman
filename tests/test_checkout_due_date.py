@@ -145,10 +145,6 @@ class TestGenRepoPath(unittest.TestCase):
             self.assertIn(path, expected_full_path_list)
             self.assertTrue(due, msg=due)
 
-    def test_gen_section(self):
-        self.assertSequenceEqual(list(cdd.gen_section(self.config)), ast.literal_eval(
-            self.config['operation']['sections']),)
-
 
 if "__main__" == __name__:
     unittest.main()
