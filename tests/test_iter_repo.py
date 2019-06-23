@@ -314,6 +314,19 @@ class TestIterRepoPath(unittest.TestCase):
         del self.list_file_b
         del self.config
 
+    def test_iter_repo_path(self):
+        expected_full_path_list = [
+            os.path.join(os.getcwd(), self.rel_path_a, proj)
+            for proj in self.expected_list_a
+        ] + [
+            os.path.join(os.getcwd(), self.rel_path_b, proj)
+            for proj in self.expected_list_b
+        ]
+
+        self.assertSequenceEqual([path for path in iter_repo.iter_repo_path(self.config, b_assert=False)],
+            expected_full_path_list
+        )
+
     def test_iter_repo_path_with_due(self):
         expected_full_path_list = [
             os.path.join(os.getcwd(), self.rel_path_a, proj)
