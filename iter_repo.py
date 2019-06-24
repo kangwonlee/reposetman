@@ -31,18 +31,35 @@ def read_b_decode(filename):
     return txt
 
 
+def compile_re_github_urls():
+    return re.compile(r"(https://[\w+?@]*github.com/\S+?/\S+?)[\"\s]")
+
+
 def get_github_urls(txt):
-    return re.findall(r"(https://[\w+?@]*github.com/\S+?/\S+?)[\"\s]", txt)
+    return compile_re_github_urls().findall(txt)
 
 
 def iter_github_urls(txt):
-    for p in re.finditer(r"(https://[\w+?@]*github.com/\S+?/\S+?)[\"\s]", txt):
+    for p in compile_re_github_urls().finditer(txt):
         yield p[0].strip()
 
 
 def iter_github_urls_in_file(filename):
     for url in iter_github_urls(read_b_decode(filename)):
         yield url
+
+
+def iter_repo_path_with_due(config, b_assert=True):
+    """
+    Iterate over full paths to each local repository
+
+    """
+
+    for section in gen_section(config):
+        due_date = config[section]['before']
+
+        for full_path_to_repo in iter_repo_path_in_section(config, section, b_assert=b_assert):
+            yield full_path_to_repo, due_date
 
 
 def iter_repo_path(config, b_assert=True):
@@ -52,17 +69,22 @@ def iter_repo_path(config, b_assert=True):
     """
 
     for section in gen_section(config):
-        due_date = config[section]['before']
-        repo_path_rel = config[section]['folder']
 
-        for url in iter_github_urls_in_file(config[section]['list']):
-            proj_id = repo_path.get_repo_name_from_url(url)
+        for full_path_to_repo in iter_repo_path_in_section(config, section, b_assert=b_assert):
+            yield full_path_to_repo
 
-            full_path_to_repo = os.path.abspath(
-                os.path.join(repo_path_rel, proj_id)
-            )
 
-            if b_assert:
-                assert os.path.exists(full_path_to_repo), full_path_to_repo
+def iter_repo_path_in_section(config, section, b_assert=True):
+    repo_path_rel = config[section]['folder']
 
-            yield full_path_to_repo, due_date
+    for url in iter_github_urls_in_file(config[section]['list']):
+        proj_id = repo_path.get_repo_name_from_url(url)
+
+        full_path_to_repo = os.path.abspath(
+            os.path.join(repo_path_rel, proj_id)
+        )
+
+        if b_assert:
+            assert os.path.exists(full_path_to_repo), full_path_to_repo
+
+        yield full_path_to_repo

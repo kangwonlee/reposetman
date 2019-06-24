@@ -229,9 +229,12 @@ class TestIterGithubUrlsInFile(unittest.TestCase):
 
 class TestIterRepoPath(unittest.TestCase):
     def setUp(self):
+
+        self.sections = ['a', 'b']
+
         self.config = configparser.ConfigParser()
         self.config['operation'] = {
-            'sections': ['a', 'b']
+            'sections': self.sections
         }
 
         self.list_file_a = tempfile.NamedTemporaryFile(
@@ -264,7 +267,7 @@ class TestIterRepoPath(unittest.TestCase):
 
         self.rel_path_a = 'rel_path_a'
 
-        self.config['a'] = {
+        self.config[self.sections[0]] = {
             'before': 'due date',
             'folder': self.rel_path_a,
             'list': self.list_file_a.name,
@@ -300,7 +303,7 @@ class TestIterRepoPath(unittest.TestCase):
 
         self.rel_path_b = 'rel_path_b'
 
-        self.config['b'] = {
+        self.config[self.sections[1]] = {
             'before': 'due date b',
             'folder': self.rel_path_b,
             'list': self.list_file_b.name,
@@ -311,7 +314,7 @@ class TestIterRepoPath(unittest.TestCase):
         del self.list_file_b
         del self.config
 
-    def test_gen_arg_parser(self):
+    def test_iter_repo_path(self):
         expected_full_path_list = [
             os.path.join(os.getcwd(), self.rel_path_a, proj)
             for proj in self.expected_list_a
@@ -320,9 +323,32 @@ class TestIterRepoPath(unittest.TestCase):
             for proj in self.expected_list_b
         ]
 
-        for path, due in iter_repo.iter_repo_path(self.config, b_assert=False):
+        self.assertSequenceEqual([path for path in iter_repo.iter_repo_path(self.config, b_assert=False)],
+            expected_full_path_list
+        )
+
+    def test_iter_repo_path_with_due(self):
+        expected_full_path_list = [
+            os.path.join(os.getcwd(), self.rel_path_a, proj)
+            for proj in self.expected_list_a
+        ] + [
+            os.path.join(os.getcwd(), self.rel_path_b, proj)
+            for proj in self.expected_list_b
+        ]
+
+        for path, due in iter_repo.iter_repo_path_with_due(self.config, b_assert=False):
             self.assertIn(path, expected_full_path_list)
             self.assertTrue(due, msg=due)
+
+    def test_iter_repo_path_in_section(self):
+        expected_full_path_list = [
+            os.path.join(os.getcwd(), self.rel_path_a, proj)
+            for proj in self.expected_list_a
+        ]
+
+        self.assertSequenceEqual([full_path for full_path in iter_repo.iter_repo_path_in_section(self.config, self.sections[0], b_assert=False)],
+            expected_full_path_list
+        )
 
 
 if "__main__" == __name__:
