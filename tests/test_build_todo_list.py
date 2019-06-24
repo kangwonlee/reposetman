@@ -1,4 +1,3 @@
-import progress
 import ast
 import configparser
 import os
@@ -16,6 +15,10 @@ sys.path.insert(0,
                     )
                 )
                 )
+
+
+import progress
+import dict_table
 
 
 def get_temp_filename(mode='w+t'):
@@ -76,7 +79,7 @@ class BaseTestBuildMessageList(unittest.TestCase):
             },  # repo 1
         }  # all_outputs
 
-        all_outputs = progress.RepoTable()
+        all_outputs = dict_table.RepoTable()
         for repo in all_outputs_dict:
             for filename in all_outputs_dict[repo]:
                 all_outputs.set_row_column(
@@ -237,7 +240,7 @@ class TestBuildTodoListPound(BaseTestBuildMessageList):
             },  # repo 1
         }  # pound_counts
 
-        pound_counts = progress.RepoTable()
+        pound_counts = dict_table.RepoTable()
         for repo in pound_comments_dict:
             for filename in pound_comments_dict[repo]:
                 pound_counts.set_row_column(
@@ -259,7 +262,7 @@ class TestBuildTodoListPound(BaseTestBuildMessageList):
             },  # repo 1
         }  # commit_comments_dict
 
-        commit_comments = progress.RepoTable()
+        commit_comments = dict_table.RepoTable()
         for repo in commit_comments_dict:
             for filename in commit_comments_dict[repo]:
                 commit_comments.set_row_column(
