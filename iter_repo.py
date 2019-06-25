@@ -20,6 +20,12 @@ def gen_section(config):
 
 
 def read_b_decode(filename):
+    """
+    Read a file in binary mode and try to decode
+
+    Try utf-8 and cp949 for now
+
+    """
     with open(filename, 'rb') as f:
         data = f.read()
 
@@ -64,7 +70,7 @@ def iter_repo_path_with_due(config, b_assert=True):
 
 def iter_repo_path(config, b_assert=True):
     """
-    Iterate over full paths to each local repository
+    Iterate over full paths to each local repository in all sections
 
     """
 
