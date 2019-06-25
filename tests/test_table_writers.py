@@ -1,23 +1,84 @@
-import progress
 import os
 import sys
 import unittest
 
 import bs4
 
-sys.path.insert(0,
-                os.path.abspath(
-                    os.path.join(
-                        os.path.dirname(__file__),
-                        os.pardir
-                    )
-                )
-                )
+
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir)))
+
+
+import dict_table
+
+
+class TestRepoTable(unittest.TestCase):
+    def setUp(self):
+        self.table = dict_table.RepoTable()
+
+    def test_add_row_column_new(self):
+        row_key, column_key, value = 'row', 'column', 'value'
+        # function under test
+        self.table.set_row_column(row_key, column_key, value)
+
+        # check value access
+        self.assertIn(row_key, self.table)
+        self.assertIn(column_key, self.table[row_key])
+        self.assertIn(value, self.table[row_key][column_key])
+
+        # check header
+        self.assertIn(column_key, self.table.column)
+
+    def test_add_row_column_duplicate(self):
+        row_key, column_key, value = 'row', 'column', 'value'
+        self.table.set_row_column(row_key, column_key, value)
+        # function under test
+        duplicate_value = 'duplicate_value'
+
+        with self.assertRaises(ValueError):
+            self.table.set_row_column(row_key, column_key, duplicate_value)
+
+    def test_matrix_new(self):
+        index = ('r1', 'r2')
+        column = ('c1', 'c2', 'c3')
+
+        # function under test
+        for row in index:
+            for col in column:
+                self.table.set_row_column(row, col, (row, col))
+
+        # check result
+        for row in index:
+            self.assertIn(row, self.table)
+            for col in column:
+                self.assertIn(col, self.table[row])
+                self.assertEqual((row, col), self.table[row][col])
+
+        for col in column:
+            self.assertIn(col, self.table.column)
+
+    def test_matrix_duplicate(self):
+        index = ('r1', 'r2')
+        column = ('c1', 'c2', 'c3')
+        new_value = 'new_value'
+
+        for row in index:
+            for col in column:
+                self.table.set_row_column(row, col, (row, col))
+
+        # function under test
+        for row in index:
+            for col in column:
+
+                with self.assertRaises(ValueError):
+                    self.table.set_row_column(row, col, (row, col, new_value))
+
+        for col in column:
+            self.assertIn(col, self.table.column)
 
 
 class BaseTestTableWriterRepoLinks(unittest.TestCase):
     def setUp(self):
-        self.d = progress.RepoTable()
+        self.d = dict_table.RepoTable()
 
         self.reponame1 = 'abc'
         self.reponame2 = 'def'
@@ -66,7 +127,7 @@ class BaseTestTableWriterTable(unittest.TestCase):
         self.row_title_list = [f'test_row_{i:}' for i in range(3)]
         self.column_title_list = [f'test_column_{i:}' for i in range(3)]
 
-        self.d = progress.RepoTable()
+        self.d = dict_table.RepoTable()
         for row_title in self.row_title_list:
             for column_title in self.column_title_list:
                 self.d.set_row_column(row_title, column_title,
@@ -100,7 +161,7 @@ class TestTextTableWriter(BaseTestTableWriterTable):
     def test_gen_rows(self):
         # TODO : common base class for various table writers possible?
 
-        writer = progress.TextTableWriter(
+        writer = dict_table.TextTableWriter(
             self.d,
             self.section,
             self.row_title_list,
@@ -142,7 +203,7 @@ class TestMarkdownTableWriter(BaseTestTableWriterTable):
 
     def test_gen_rows_body(self):
 
-        writer = progress.MarkdownTableWriter(
+        writer = dict_table.MarkdownTableWriter(
             self.d,
             self.section,
             self.row_title_list,
@@ -166,7 +227,7 @@ class TestMarkdownTableWriter(BaseTestTableWriterTable):
 
     def test_gen_rows_header(self):
 
-        writer = progress.MarkdownTableWriter(
+        writer = dict_table.MarkdownTableWriter(
             self.d,
             self.section,
             self.row_title_list,
@@ -214,7 +275,7 @@ class TestHtmlTableWriter(BaseTestTableWriterTable):
     def setUp(self):
         super().setUp()
 
-        self.writer = progress.HtmlTableWriter(
+        self.writer = dict_table.HtmlTableWriter(
             self.d,
             self.section,
             self.row_title_list,
@@ -278,7 +339,7 @@ class TestHtmlTableWriter(BaseTestTableWriterTable):
 class TestMDlinkTableWriter(BaseTestTableWriterRepoLinks):
     def setUp(self):
         super().setUp()
-        self.table_writer = progress.MDlinkTableWriter(self.d, self.row_title_list, 'test_MD_link_table',
+        self.table_writer = dict_table.MDlinkTableWriter(self.d, self.row_title_list, 'test_MD_link_table',
                                                        repo_list=self.repo_dict_list,
                                                        )
 
@@ -334,7 +395,7 @@ class TestMDlinkTableWriter(BaseTestTableWriterRepoLinks):
 class TestHtmlLinkTableWriter(BaseTestTableWriterRepoLinks):
     def setUp(self):
         super().setUp()
-        self.table_writer = progress.HtmlLinkTableWriter(self.d, self.row_title_list, 'test_HTML_link_table',
+        self.table_writer = dict_table.HtmlLinkTableWriter(self.d, self.row_title_list, 'test_HTML_link_table',
                                                          repo_list=self.repo_dict_list,
                                                          )
 
