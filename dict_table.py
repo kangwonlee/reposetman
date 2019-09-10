@@ -314,7 +314,7 @@ class MDlinkTableWriter(MarkdownTableWriter):
 
         for repo_info_dict in self.repo_list:
             if repo_name == repo_info_dict['name']:
-                repo_url = repo_info_dict['url']
+                repo_url = repo_info_dict.get('url', "")
 
         return repo_url
 
@@ -478,7 +478,7 @@ class HtmlLinkTableWriter(HtmlTableWriter):
 
         for repo_info_dict in self.repo_list:
             if repo_name == repo_info_dict['name']:
-                repo_url = repo_info_dict['url']
+                repo_url = repo_info_dict.get('url')
 
         return repo_url
 
