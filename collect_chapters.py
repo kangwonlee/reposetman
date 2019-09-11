@@ -170,12 +170,16 @@ def set_user_ids(config, sections_dict, url_parse_dict):
         # parsed url loop
         for parse in url_parse_dict[section]:
             sections_dict[section]['user_ids'].append(
-                os.path.splitext(
-                    os.path.basename(
-                        parse.path.strip('/')
-                    )  # last part of the path
-                )[0][id_starts_here:]   # extract id
+                get_user_id(parse, id_starts_here)
             )
+
+
+def get_user_id(parse, id_starts_here):
+    return os.path.splitext(
+        os.path.basename(
+            parse.path.strip('/')
+        )  # last part of the path
+    )[0][id_starts_here:]   # extract id
 
 
 def get_url_parse_dict(config, sections_dict, urls_path_list):
