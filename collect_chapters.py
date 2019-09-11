@@ -35,6 +35,8 @@ import git
 import progress
 import regex_test as ret
 import timeit
+
+
 @timeit.timeit
 def main(argv):
     # read configuration file
