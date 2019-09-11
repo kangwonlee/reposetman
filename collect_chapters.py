@@ -149,20 +149,7 @@ def get_sections_dict(config):
     urls_path_list = []
 
     # to extract user ids
-    url_parse_dict = {}
-
-    # section loop
-    for section in ast.literal_eval(config['operation']['sections']):
-        sections_dict[section] = {
-            'urls': ret.get_github_url_list(config[section]['list'].strip()),
-        }
-
-        url_parse_dict[section] = []
-
-        # to extract user ids from the urls later
-        for url in sections_dict[section]['urls']:
-            url_parse_dict[section].append(up.urlparse(url))
-            urls_path_list.append(url_parse_dict[section][-1].path)
+    url_parse_dict = get_url_parse_dict(config, sections_dict, urls_path_list)
 
     # os.path.split(parse.path)[-1][id_starts_here:] -> user_id
     id_starts_here = len(config['operation']['repo_prefix_sample'].strip())
@@ -184,6 +171,26 @@ def get_sections_dict(config):
     # TODO : is it desirable to separate id extraction?
 
     return sections_dict
+
+
+def get_url_parse_dict(config, sections_dict, urls_path_list):
+    # to extract user ids
+    url_parse_dict = {}
+
+    # section loop
+    for section in ast.literal_eval(config['operation']['sections']):
+        sections_dict[section] = {
+            'urls': ret.get_github_url_list(config[section]['list'].strip()),
+        }
+
+        url_parse_dict[section] = []
+
+        # to extract user ids from the urls later
+        for url in sections_dict[section]['urls']:
+            url_parse_dict[section].append(up.urlparse(url))
+            urls_path_list.append(url_parse_dict[section][-1].path)
+
+    return url_parse_dict
 
 
 @timeit.timeit
