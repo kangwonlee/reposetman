@@ -161,11 +161,12 @@ def get_sections_dict(config):
 
 def set_user_ids(config, sections_dict, url_parse_dict):
     # os.path.split(parse.path)[-1][id_starts_here:] -> user_id
-    id_starts_here = len(config['operation']['repo_prefix_sample'].strip())
 
     # set user ids of each repository
     for section in sections_dict:
         sections_dict[section]['user_ids'] = []
+
+        id_starts_here = len(config[section]['repo_prefix'].strip())
 
         # parsed url loop
         for parse in url_parse_dict[section]:
