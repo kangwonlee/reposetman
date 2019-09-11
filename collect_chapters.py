@@ -152,6 +152,15 @@ def get_sections_dict(config):
     url_parse_dict = get_url_parse_dict(config, sections_dict, urls_path_list)
 
     # os.path.split(parse.path)[-1][id_starts_here:] -> user_id
+    set_user_ids(config, sections_dict, url_parse_dict)
+
+    # TODO : is it desirable to separate id extraction?
+
+    return sections_dict
+
+
+def set_user_ids(config, sections_dict, url_parse_dict):
+    # os.path.split(parse.path)[-1][id_starts_here:] -> user_id
     id_starts_here = len(config['operation']['repo_prefix_sample'].strip())
 
     # set user ids of each repository
@@ -167,10 +176,6 @@ def get_sections_dict(config):
                     )  # last part of the path
                 )[0][id_starts_here:]   # extract id
             )
-
-    # TODO : is it desirable to separate id extraction?
-
-    return sections_dict
 
 
 def get_url_parse_dict(config, sections_dict, urls_path_list):
