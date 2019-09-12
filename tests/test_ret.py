@@ -110,7 +110,9 @@ class TestFetchAndReset(unittest.TestCase):
     def show_remotes(self, caller='show_remotes'):
         os.chdir(self.clone_destination_folder)
         print(f'TestFetchAndReset.{caller}() '.ljust(60, '='))
-        os.system(f'git remote -v')
+        p = subprocess.run(['git','remote', '-v'], capture_output=True, encoding='utf-8')
+        print(p.stdout)
+        print(p.stderr)
         print(f'TestFetchAndReset.{caller}() '.ljust(60, '='))
         os.chdir(self.cwd)
 
