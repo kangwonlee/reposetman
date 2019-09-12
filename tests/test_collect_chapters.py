@@ -148,5 +148,9 @@ def test_set_user_ids(config, sections_dict):
         assert value['user_ids'] == expected
 
 
+def test_get_sections_dict(config):
+    result = col.get_sections_dict(config)
+
+
 if "__main__" == __name__:
     unittest.main()
