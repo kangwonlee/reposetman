@@ -259,6 +259,9 @@ class TestRet(unittest.TestCase):
 class TestGitCheckout(unittest.TestCase):
     def setUp(self):
         self.temp_folder = tempfile.TemporaryDirectory()
+        self.cwd = os.getcwd()
+
+        os.chdir(self.temp_folder.name)
 
         if self.get_git_version_string().startswith('2.23'):
             self.git_init_2_23()
@@ -266,10 +269,6 @@ class TestGitCheckout(unittest.TestCase):
             self.git_init_2_21()
 
     def git_init_2_23(self):
-
-        self.cwd = os.getcwd()
-
-        os.chdir(self.temp_folder.name)
 
         p_init = subprocess.run(
             ['git', 'init'],
@@ -368,10 +367,6 @@ class TestGitCheckout(unittest.TestCase):
 
         subprocess.run(
             ['git', 'checkout', self.current_branch_name], cwd=self.temp_folder.name)
-
-        self.cwd = os.getcwd()
-
-        os.chdir(self.temp_folder.name)
 
     def tearDown(self):
         os.chdir(self.cwd)
