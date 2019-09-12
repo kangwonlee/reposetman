@@ -1,18 +1,24 @@
-import collect_chapters as col
 import configparser
+import copy
 import os
 import pprint
 import sys
 import unittest
+import urllib.parse as up
 
-sys.path.insert(0,
-                os.path.abspath(
-                    os.path.join(
-                        os.path.dirname(__file__),
-                        os.pardir
-                    )
-                )
-                )
+
+sys.path.insert(
+    0,
+    os.path.abspath(
+        os.path.join(
+            os.path.dirname(__file__),
+            os.pardir
+        )
+    )
+)
+
+
+import collect_chapters as col
 
 
 class TestCollectChapters(unittest.TestCase):
@@ -68,6 +74,68 @@ class TestCollectChapters(unittest.TestCase):
                 in_list = list(
                     map(lambda x: x in url, url_a_list + url_b_list))
                 self.assertTrue(any(in_list))
+
+
+def test_set_user_ids():
+    sections_dict = {
+        'cls12a_00':{
+            'urls':[
+                'https://github.com/cls12a/cls12a-nmisp-00-abc',
+                'https://github.com/cls12a/cls12a-nmisp-00-def',
+                'https://github.com/cls12a/cls12a-nmisp-00-ghi-eca00a',
+            ]
+        },
+        'cls12a_01':{
+            'urls':[
+                'https://github.com/cls12a/cls12a-nmisp-01-abc',
+                'https://github.com/cls12a/cls12a-nmisp-01-def',
+                'https://github.com/cls12a/cls12a-nmisp-01-ghi-eca00a',
+            ]
+        },
+        'cls12a_tutorial':{
+            'urls':[
+                'https://github.com/cls12a/cls12a-nmisp-tutorial-abc',
+                'https://github.com/cls12a/cls12a-nmisp-tutorial-def',
+                'https://github.com/cls12a/cls12a-nmisp-tutorial-ghi-eca00a',
+            ]
+        },
+    }
+
+    config = configparser.ConfigParser(
+        {
+            'cls12a_00':{'repo_prefix': 'cls12a-nmisp-00-'},
+            'cls12a_01':{'repo_prefix': 'cls12a-nmisp-01-'},
+            'cls12a_tutorial':{'repo_prefix': 'cls12a-nmisp-tutorial-'},
+        }
+    )
+
+    url_parse_dict = {
+        'cls12a_00': [
+            up.urlparse('https://github.com/cls12a/cls12a-nmisp-00-abc'),
+            up.urlparse('https://github.com/cls12a/cls12a-nmisp-00-def'),
+            up.urlparse('https://github.com/cls12a/cls12a-nmisp-00-ghi-eca00a'),
+        ],
+        'cls12a_01': [
+            up.urlparse('https://github.com/cls12a/cls12a-nmisp-01-abc'),
+            up.urlparse('https://github.com/cls12a/cls12a-nmisp-01-def'),
+            up.urlparse('https://github.com/cls12a/cls12a-nmisp-01-ghi-eca00a'),
+        ],
+        'cls12a_tutorial': [
+            up.urlparse('https://github.com/cls12a/cls12a-nmisp-tutorial-abc'),
+            up.urlparse('https://github.com/cls12a/cls12a-nmisp-tutorial-def'),
+            up.urlparse('https://github.com/cls12a/cls12a-nmisp-tutorial-ghi-eca00a'),
+        ],
+    }
+
+    storage = copy.deepcopy(sections_dict)
+
+    col.set_user_ids(config, storage, url_parse_dict)
+
+    expected = ['abc', 'def', 'ghi-eca00a']
+
+    for _, value in storage.items:
+        assert 'user_ids' in value
+        assert value['user_ids'] == expected
 
 
 if "__main__" == __name__:
