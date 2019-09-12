@@ -17,6 +17,7 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), os.pa
 import eval_repo
 import tempf
 
+
 class TestEvalRepo(unittest.TestCase):
     def setUp(self):
         self.msg = 'commit 0095423cbee960ab0e59c05bf0f1b75ea9ab5b18\n' \
@@ -170,246 +171,224 @@ class TestSysArgv(unittest.TestCase):
 
         self.assertTrue(result)
 
-    def test_get_argn_import_sys_no_inline_comment(self):
-        _, filename = tempfile.mkstemp(suffix='.py', text=True)
 
-        with open(filename, mode='wt', encoding='utf-8') as argv_file:
-            argv_file.write(
-                "# comment a\n"
-                "# comment b\n"
-                "# commnet c\n"
-                "\n"
-                "import sys\n"
-                "\n"
-                "a, b, c = sys.argv\n"
-                "\n"
-                "print('a =', a)\n"
-                "print('b =', b)\n"
-                "print('c =', c)\n"
-                "\n"
-            )
+class TestSysArgvFile(unittest.TestCase):
+    def test_get_argn_import_sys_no_inline_comment(self):
+
+        argv_file = tempf.write_to_temp_file(
+            "# comment a\n"
+            "# comment b\n"
+            "# commnet c\n"
+            "\n"
+            "import sys\n"
+            "\n"
+            "a, b, c = sys.argv\n"
+            "\n"
+            "print('a =', a)\n"
+            "print('b =', b)\n"
+            "print('c =', c)\n"
+            "\n"
+        )
 
         result = eval_repo.get_argn(argv_file.name)
 
-        os.remove(filename)
+        os.remove(argv_file.name)
 
         expected = 3
 
         self.assertEqual(expected, result)
 
     def test_get_argn_import_sys_with_inline_comment(self):
-        _, filename = tempfile.mkstemp(suffix='.py', text=True)
 
-        with open(filename, mode='wt', encoding='utf-8') as argv_file:
-            argv_file.write(
-                "# comment a\n"
-                "# comment b\n"
-                "# commnet c\n"
-                "\n"
-                "import sys\n"
-                "\n"
-                "a, b, c = sys.argv # inline comment\n"
-                "\n"
-                "print('a =', a)\n"
-                "print('b =', b)\n"
-                "print('c =', c)\n"
-                "\n"
-            )
+        argv_file = tempf.write_to_temp_file(
+            "# comment a\n"
+            "# comment b\n"
+            "# commnet c\n"
+            "\n"
+            "import sys\n"
+            "\n"
+            "a, b, c = sys.argv # inline comment\n"
+            "\n"
+            "print('a =', a)\n"
+            "print('b =', b)\n"
+            "print('c =', c)\n"
+            "\n"
+        )
 
         result = eval_repo.get_argn(argv_file.name)
 
-        os.remove(filename)
+        os.remove(argv_file.name)
 
         expected = 3
 
         self.assertEqual(expected, result)
 
     def test_get_argn_import_sys_comment(self):
-        _, filename = tempfile.mkstemp(suffix='.py', text=True)
 
-        with open(filename, mode='wt', encoding='utf-8') as argv_file:
-            argv_file.write(
-                "# comment a\n"
-                "# comment b\n"
-                "# commnet c\n"
-                "\n"
-                "import sys\n"
-                "\n"
-                "# a, b, c = sys.argv # comment\n"
-                "a, b, c = 1, 2, 3 # comment\n"
-                "\n"
-                "print('a =', a)\n"
-                "print('b =', b)\n"
-                "print('c =', c)\n"
-                "\n"
-            )
+        argv_file = tempf.write_to_temp_file(
+            "# comment a\n"
+            "# comment b\n"
+            "# commnet c\n"
+            "\n"
+            "import sys\n"
+            "\n"
+            "# a, b, c = sys.argv # comment\n"
+            "a, b, c = 1, 2, 3 # comment\n"
+            "\n"
+            "print('a =', a)\n"
+            "print('b =', b)\n"
+            "print('c =', c)\n"
+            "\n"
+        )
 
         result = eval_repo.get_argn(argv_file.name)
 
-        os.remove(filename)
+        os.remove(argv_file.name)
 
         expected = 0
 
         self.assertEqual(expected, result)
 
     def test_get_argn_import_sys_with_inline_comment_trailing_comma(self):
-        _, filename = tempfile.mkstemp(suffix='.py', text=True)
-
-        with open(filename, mode='wt', encoding='utf-8') as argv_file:
-            argv_file.write(
-                "# comment a\n"
-                "# comment b\n"
-                "# commnet c\n"
-                "\n"
-                "import sys\n"
-                "\n"
-                "a, b, c, = sys.argv # inline comment\n"
-                "\n"
-                "print('a =', a)\n"
-                "print('b =', b)\n"
-                "print('c =', c)\n"
-                "\n"
-            )
+        argv_file = tempf.write_to_temp_file(
+            "# comment a\n"
+            "# comment b\n"
+            "# commnet c\n"
+            "\n"
+            "import sys\n"
+            "\n"
+            "a, b, c, = sys.argv # inline comment\n"
+            "\n"
+            "print('a =', a)\n"
+            "print('b =', b)\n"
+            "print('c =', c)\n"
+            "\n"
+        )
 
         result = eval_repo.get_argn(argv_file.name)
 
-        os.remove(filename)
+        os.remove(argv_file.name)
 
         expected = 3
 
         self.assertEqual(expected, result)
 
     def test_get_argn_from_sys_import_argv_no_inline_comment(self):
-        _, filename = tempfile.mkstemp(suffix='.py', text=True)
-
-        with open(filename, mode='wt', encoding='utf-8') as argv_file:
-            argv_file.write(
-                "# comment a\n"
-                "# comment b\n"
-                "# commnet c\n"
-                "\n"
-                "from sys import argv\n"
-                "\n"
-                "a, b, c = argv\n"
-                "\n"
-                "print('a =', a)\n"
-                "print('b =', b)\n"
-                "print('c =', c)\n"
-                "\n"
-            )
+        argv_file = tempf.write_to_temp_file(
+            "# comment a\n"
+            "# comment b\n"
+            "# commnet c\n"
+            "\n"
+            "from sys import argv\n"
+            "\n"
+            "a, b, c = argv\n"
+            "\n"
+            "print('a =', a)\n"
+            "print('b =', b)\n"
+            "print('c =', c)\n"
+            "\n"
+        )
 
         result = eval_repo.get_argn(argv_file.name)
 
-        os.remove(filename)
+        os.remove(argv_file.name)
 
         expected = 3
 
         self.assertEqual(expected, result)
 
     def test_get_argn_from_sys_import_argv_with_inline_comment(self):
-        _, filename = tempfile.mkstemp(suffix='.py', text=True)
-
-        with open(filename, mode='wt', encoding='utf-8') as argv_file:
-            argv_file.write(
-                "# comment a\n"
-                "# comment b\n"
-                "# commnet c\n"
-                "\n"
-                "from sys import argv\n"
-                "\n"
-                "a, b, c = argv # inline comment\n"
-                "\n"
-                "print('a =', a)\n"
-                "print('b =', b)\n"
-                "print('c =', c)\n"
-                "\n"
-            )
+        argv_file = tempf.write_to_temp_file(
+            "# comment a\n"
+            "# comment b\n"
+            "# commnet c\n"
+            "\n"
+            "from sys import argv\n"
+            "\n"
+            "a, b, c = argv # inline comment\n"
+            "\n"
+            "print('a =', a)\n"
+            "print('b =', b)\n"
+            "print('c =', c)\n"
+            "\n"
+        )
 
         result = eval_repo.get_argn(argv_file.name)
 
-        os.remove(filename)
+        os.remove(argv_file.name)
 
         expected = 3
 
         self.assertEqual(expected, result)
 
     def test_get_argn_from_sys_import_argv_with_inline_comment_trailing_comma(self):
-        _, filename = tempfile.mkstemp(suffix='.py', text=True)
-
-        with open(filename, mode='wt', encoding='utf-8') as argv_file:
-            argv_file.write(
-                "# comment a\n"
-                "# comment b\n"
-                "# commnet c\n"
-                "\n"
-                "from sys import argv\n"
-                "\n"
-                "a, b, c, = argv # inline comment\n"
-                "\n"
-                "print('a =', a)\n"
-                "print('b =', b)\n"
-                "print('c =', c)\n"
-                "\n"
-            )
+        argv_file = tempf.write_to_temp_file(
+            "# comment a\n"
+            "# comment b\n"
+            "# commnet c\n"
+            "\n"
+            "from sys import argv\n"
+            "\n"
+            "a, b, c, = argv # inline comment\n"
+            "\n"
+            "print('a =', a)\n"
+            "print('b =', b)\n"
+            "print('c =', c)\n"
+            "\n"
+        )
 
         result = eval_repo.get_argn(argv_file.name)
 
-        os.remove(filename)
+        os.remove(argv_file.name)
 
         expected = 3
 
         self.assertEqual(expected, result)
 
     def test_get_argn_from_sys_import_argv_comment(self):
-        _, filename = tempfile.mkstemp(suffix='.py', text=True)
-
-        with open(filename, mode='wt', encoding='utf-8') as argv_file:
-            argv_file.write(
-                "# comment a\n"
-                "# comment b\n"
-                "# commnet c\n"
-                "\n"
-                "from sys import argv\n"
-                "\n"
-                "# a, b, c = argv # comment\n"
-                "a, b, c = 1, 2, 3 # comment\n"
-                "\n"
-                "print('a =', a)\n"
-                "print('b =', b)\n"
-                "print('c =', c)\n"
-                "\n"
-            )
+        argv_file = tempf.write_to_temp_file(
+            "# comment a\n"
+            "# comment b\n"
+            "# commnet c\n"
+            "\n"
+            "from sys import argv\n"
+            "\n"
+            "# a, b, c = argv # comment\n"
+            "a, b, c = 1, 2, 3 # comment\n"
+            "\n"
+            "print('a =', a)\n"
+            "print('b =', b)\n"
+            "print('c =', c)\n"
+            "\n"
+        )
 
         result = eval_repo.get_argn(argv_file.name)
 
-        os.remove(filename)
+        os.remove(argv_file.name)
 
         expected = 0
 
         self.assertEqual(expected, result)
 
     def test_get_argn_from_sys_import_argv_with_equal_in_inline_comment(self):
-        _, filename = tempfile.mkstemp(suffix='.py', text=True)
-
-        with open(filename, mode='wt', encoding='utf-8') as argv_file:
-            argv_file.write(
-                "# comment a\n"
-                "# comment b\n"
-                "# commnet c\n"
-                "\n"
-                "from sys import argv\n"
-                "\n"
-                "스크립트, 파일_이름 = argv #argv = 실행할때 사용자에게 입력 받음, 파일 이름은 경로까지!\n"
-                "\n"
-                "print('a =', a)\n"
-                "print('b =', b)\n"
-                "print('c =', c)\n"
-                "\n"
-            )
+        argv_file = tempf.write_to_temp_file(
+            "# comment a\n"
+            "# comment b\n"
+            "# commnet c\n"
+            "\n"
+            "from sys import argv\n"
+            "\n"
+            "스크립트, 파일_이름 = argv #argv = 실행할때 사용자에게 입력 받음, 파일 이름은 경로까지!\n"
+            "\n"
+            "print('a =', a)\n"
+            "print('b =', b)\n"
+            "print('c =', c)\n"
+            "\n"
+        )
 
         result = eval_repo.get_argn(argv_file.name)
 
-        os.remove(filename)
+        os.remove(argv_file.name)
 
         expected = 2
 
@@ -1110,3 +1089,7 @@ class TestRepoEvalRunEachSkipSomeLastCommit(TestRepoEvalRunEachBase):
         else:
             raise IOError('Unable to obtain git log\nmsgo = {log!r}\nmsge = {err!r}'.format(
                 log=msgo, err=msge))
+
+
+if "__main__" == __name__:
+    unittest.main()
