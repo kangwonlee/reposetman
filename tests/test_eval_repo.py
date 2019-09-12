@@ -17,6 +17,7 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), os.pa
 import eval_repo
 import tempf
 
+
 class TestEvalRepo(unittest.TestCase):
     def setUp(self):
         self.msg = 'commit 0095423cbee960ab0e59c05bf0f1b75ea9ab5b18\n' \
