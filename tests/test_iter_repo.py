@@ -1,5 +1,3 @@
-# coding=utf8
-
 import ast
 import configparser
 import os
@@ -8,9 +6,7 @@ import sys
 import tempfile
 import unittest
 
-
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir)))
-
 
 import iter_repo
 import tempf
@@ -119,25 +115,27 @@ class TestReadByteDecode(unittest.TestCase):
 강화 학습은 또한 입출력 쌍으로 이루어진 훈련 집합이 제시되지 않으며, 잘못된 행동에 대해서도 명시적으로 정정이 일어나지 않는다는 점에서 일반적인 지도 학습과 다르다. 대신, 강화학습의 초점은 학습 과정에서의(on-line) 성능이며, 이는 탐색(exploration)과 이용(exploitation)의 균형을 맞춤으로써 제고된다.[2] 탐색과 이용의 균형 문제 강화 학습에서 가장 많이 연구된 문제로, 다중 슬롯 머신 문제(multi-armed bandit problem)와 유한한 마르코프 결정 과정 등에서 연구되었다.
 """
 
-        self.utf_file = tempfile.NamedTemporaryFile(mode='wt', suffix='.txt', encoding='utf-8')
-        self.utf_file.write(self.txt)
-        self.utf_file.seek(0)
+        self.utf_file_name = tempf.get_tempfile_name(suffix='.txt')
+        with open(self.utf_file_name, 'wt', encoding='utf-8') as utf_file:
+            utf_file.write(self.txt)
 
-        self.cp9_file = tempfile.NamedTemporaryFile(mode='wt', suffix='.txt', encoding='cp949')
-        self.cp9_file.write(self.txt)
-        self.cp9_file.seek(0)
+        self.cp9_file_name = tempf.get_tempfile_name(suffix='.txt')
+        with open(self.cp9_file_name, 'wt', encoding='utf-8') as cp9_file:
+            cp9_file.write(self.txt)
+
+        self.maxDiff = None
 
     def tearDown(self):
-        del self.utf_file
-        del self.cp9_file
+        os.remove(self.utf_file_name)
+        os.remove(self.cp9_file_name)
         del self.txt
 
     def test_read_b_decode_utf8(self):
-        result = iter_repo.read_b_decode(self.utf_file.name)
+        result = iter_repo.read_b_decode(self.utf_file_name)
         self.assertEqual(result, self.txt)
 
     def test_read_b_decode_cp949(self):
-        result = iter_repo.read_b_decode(self.cp9_file.name)
+        result = iter_repo.read_b_decode(self.cp9_file_name)
         self.assertEqual(result, self.txt)
 
 
@@ -238,11 +236,9 @@ class TestIterRepoPath(unittest.TestCase):
             'sections': self.sections
         }
 
-        self.list_file_a = tempfile.NamedTemporaryFile(
-            suffix='.txt',
-            mode='wt',
-            encoding='utf-8',
-        )
+        self.list_file_a_name = tempf.get_tempfile_name(suffix='.txt')
+
+        self.list_file_a = open(self.list_file_a_name, 'wt', encoding='utf-8')
 
         self.list_file_a.write(
             "가나다(2082652342) (03.11 오후 02:33)\n"
@@ -264,21 +260,19 @@ class TestIterRepoPath(unittest.TestCase):
             '18pfa_lpthw-ghi',
         ]
 
-        self.list_file_a.seek(0)
+        self.list_file_a.close()
 
         self.rel_path_a = 'rel_path_a'
 
         self.config[self.sections[0]] = {
             'before': 'due date',
             'folder': self.rel_path_a,
-            'list': self.list_file_a.name,
+            'list': self.list_file_a_name,
         }
 
-        self.list_file_b = tempfile.NamedTemporaryFile(
-            suffix='.txt',
-            mode='wt',
-            encoding='utf-8',
-        )
+        self.list_file_b_name = tempf.get_tempfile_name(suffix='.txt')
+
+        self.list_file_b = open(self.list_file_b_name, 'wt', encoding='utf-8')
 
         self.list_file_b.write(
             "jkl(2082652342) (03.11 오후 02:33)\n"
@@ -300,19 +294,19 @@ class TestIterRepoPath(unittest.TestCase):
             '18pfb_lpthw-pqr',
         ]
 
-        self.list_file_b.seek(0)
+        self.list_file_b.close()
 
         self.rel_path_b = 'rel_path_b'
 
         self.config[self.sections[1]] = {
             'before': 'due date b',
             'folder': self.rel_path_b,
-            'list': self.list_file_b.name,
+            'list': self.list_file_b_name,
         }
 
     def tearDown(self):
-        del self.list_file_a
-        del self.list_file_b
+        os.remove(self.list_file_a_name)
+        os.remove(self.list_file_b_name)
         del self.config
 
     def test_iter_repo_path(self):
