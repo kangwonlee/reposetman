@@ -176,9 +176,9 @@ class TestGetSectionsDict(TestSetUserIdsBase):
             lst_01_name = os.path.basename(lst_01.name)
         with open(lst_01_name, 'wt', encoding='utf-8') as lst_01:
             lst_01.write(
-                '456 fghij https://github.com/cls12a/cls12a-nmisp-10-def\n'
-                '123 abcde https://github.com/cls12a/cls12a-nmisp-10-abc\n'
-                '789 klmno https://github.com/cls12a/cls12a-nmisp-10-ghi-eca00a\n'
+                '456 fghij https://github.com/cls12a/cls12a-nmisp-01-def\n'
+                '123 abcde https://github.com/cls12a/cls12a-nmisp-01-abc\n'
+                '789 klmno https://github.com/cls12a/cls12a-nmisp-01-ghi-eca00a\n'
             )
 
         with tempfile.NamedTemporaryFile('wt', suffix='.txt') as lst_tutorial:
