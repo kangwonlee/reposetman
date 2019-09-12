@@ -49,7 +49,9 @@ def rmtree(folder: str) -> None :
         for filename in filenames:
             full_path = os.path.join(root, filename)
             os.chmod(full_path, stat.S_IWUSR)
-            os.remove(filename)
+            # https://www.jquery-az.com/python-delete-file-directory-os-pathlib-shutil/
+            if os.path.exists(filename):
+                os.remove(filename)
         for dirname in dirnames:
             os.rmdir(os.path.join(root, dirname))
 
