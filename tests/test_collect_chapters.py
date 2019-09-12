@@ -207,6 +207,11 @@ class TestGetSectionsDict(TestSetUserIdsBase):
 
         self.assertIsInstance(result, dict)
 
+        for _, d in result.items():
+            self.assertIn('urls', d)
+            self.assertIn('user_ids', d)
+            self.assertSetEqual(self.id_set, set(d['user_ids']))
+
 
 if "__main__" == __name__:
     unittest.main()
