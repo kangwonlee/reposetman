@@ -441,11 +441,13 @@ class TestGitCheckout(unittest.TestCase):
     def test_is_prev_now(self):
         r_list, _ = self.checkout_sha_sha()
 
-        self.assertTrue(git.is_prev_now(r_list[-1].stderr), msg=(
-            f"\nstderr :\n{r_list[-1].stderr}\n"
-            "stdout :\n"
-            f"{r_list[-1].stdout}"
-        )
+        self.assertTrue(
+            git.is_prev_now(r_list[-1].stderr),
+            msg=(
+                f"\nstderr :\n{r_list[-1].stderr}\n"
+                "stdout :\n"
+                f"{r_list[-1].stdout}"
+            )
         )
 
     def test_show_stderr_prev_now(self):
