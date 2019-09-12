@@ -2,6 +2,7 @@ import configparser
 import copy
 import os
 import pprint
+import pytest
 import sys
 import unittest
 import urllib.parse as up
@@ -76,8 +77,9 @@ class TestCollectChapters(unittest.TestCase):
                 self.assertTrue(any(in_list))
 
 
-def test_set_user_ids():
-    sections_dict = {
+@pytest.fixture
+def sections_dict():
+    return {
         'cls12a_00':{
             'urls':[
                 'https://github.com/cls12a/cls12a-nmisp-00-abc',
@@ -101,7 +103,10 @@ def test_set_user_ids():
         },
     }
 
-    config = configparser.ConfigParser(
+
+@pytest.fixture
+def config():
+    return configparser.ConfigParser(
         {
             'cls12a_00':{'repo_prefix': 'cls12a-nmisp-00-'},
             'cls12a_01':{'repo_prefix': 'cls12a-nmisp-01-'},
@@ -109,6 +114,8 @@ def test_set_user_ids():
         }
     )
 
+
+def test_set_user_ids(config, sections_dict):
     url_parse_dict = {
         'cls12a_00': [
             up.urlparse('https://github.com/cls12a/cls12a-nmisp-00-abc'),
