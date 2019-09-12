@@ -340,12 +340,14 @@ class TestGitCheckout(unittest.TestCase):
         subprocess.run(['git', 'config', 'user.email',
                         'temp@temp.net'], cwd=self.temp_folder.name)
 
-        tempfile_full_path = os.path.join(self.temp_folder.name, 'temp')
+        temp_file_local_name = 'temp.txt'
+
+        tempfile_full_path = os.path.join(self.temp_folder.name, temp_file_local_name)
 
         with open(tempfile_full_path, 'w') as f:
             f.write('tempfile\n')
 
-        subprocess.run(['git', 'add', tempfile_full_path],
+        subprocess.run(['git', 'add', temp_file_local_name],
                        cwd=self.temp_folder.name)
         subprocess.run(['git', 'commit', '-m', 'first commit'],
                        cwd=self.temp_folder.name)
@@ -358,7 +360,7 @@ class TestGitCheckout(unittest.TestCase):
         with open(tempfile_full_path, 'a') as f:
             f.write('modified\n')
 
-        subprocess.run(['git', 'add', tempfile_full_path],
+        subprocess.run(['git', 'add', temp_file_local_name],
                        cwd=self.temp_folder.name)
         subprocess.run(['git', 'commit', '-m', 'second commit'],
                        cwd=self.temp_folder.name)
