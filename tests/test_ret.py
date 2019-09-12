@@ -59,16 +59,31 @@ class TestFetchAndReset(unittest.TestCase):
             self.reset_existing_repo()
         else:
             # clone the first test repository
-            os.system(
-                f'git clone {self.first_repository} {self.clone_destination_folder}')
+            p_clone = subprocess.run(
+                ['git', 'clone', self.first_repository, self.clone_destination_folder],
+                capture_output=True,
+                encoding='utf-8'
+            )
 
             assert os.path.exists(self.clone_destination_folder)
 
             # change default remote repository to another
             os.chdir(self.clone_destination_folder)
-            os.system(f'git remote set-url origin {self.second_repository}')
-            os.system(f'git remote add test00 {self.first_repository}')
-            os.system(f'git remote add conflict {self.second_repository}')
+            p_set_url_origin = subprocess.run(
+                ['git', 'remote', 'set-url', 'origin',  self.second_repository],
+                capture_output=True,
+                encoding='utf-8'
+            )
+            p_add_remote_test00 = subprocess.run(
+                ['git', 'remote', 'add', 'test00',  self.first_repository],
+                capture_output=True,
+                encoding='utf-8'
+            )
+            p_add_remote_conflict = subprocess.run(
+                ['git', 'remote', 'add', 'conflict',  self.second_repository],
+                capture_output=True,
+                encoding='utf-8'
+            )
 
             # now `git pull` would cause a ** merge conflict **
 
