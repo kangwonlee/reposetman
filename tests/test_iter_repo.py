@@ -6,10 +6,13 @@ import sys
 import tempfile
 import unittest
 
+
 sys.path.insert(0, os.path.abspath(
     os.path.join(os.path.dirname(__file__), os.pardir)))
 
+
 import iter_repo
+import tempf
 
 
 class TestIterRepo(unittest.TestCase):
@@ -209,14 +212,11 @@ class TestIterGithubUrlsInFile(unittest.TestCase):
             "https://ghi@github.com/CPF18A/18pfa_lpthw-ghi",
         ]
 
-        self.input_file = tempfile.NamedTemporaryFile(suffix='.txt', mode='wt', encoding='utf-8')
-
-        self.input_file.write(self.txt)
-        self.input_file.seek(0)
+        self.input_file = tempf.write_to_temp_file(self.txt)
 
     def tearDown(self):
         del self.txt
-        del self.input_file
+        os.remove(self.input_file.name)
 
     def test_iter_github_urls_in_file(self):
         result_list = list(iter_repo.iter_github_urls_in_file(self.input_file.name))
