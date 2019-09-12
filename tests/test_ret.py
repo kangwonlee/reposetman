@@ -90,6 +90,7 @@ class TestFetchAndReset(unittest.TestCase):
             # now `git pull` would cause a ** merge conflict **
 
         self.show_remotes('setUp')
+        os.chdir(self.cwd)
 
     def tearDown(self):
         shutil.rmtree(self.temp_folder_name)
@@ -122,15 +123,15 @@ class TestFetchAndReset(unittest.TestCase):
         ret.fetch_and_reset(self.clone_destination_folder, b_verbose=True)
 
         # check the SHA of the last commit
-        os.chdir(self.clone_destination_folder)
-        r = subprocess.check_output(['git', 'log', '-1'])
-        os.chdir(self.cwd)
+        r = subprocess.check_output(['git', 'log', '-1'], cwd=self.clone_destination_folder, encoding='utf-8')
 
-        result_sha = r.decode().splitlines()[0].split()[-1]
+        result_sha = r.splitlines()[0].split()[-1]
 
         expected_sha = '2a3ac03f077d739b6cc115788703431bb5beefc8'
 
         self.assertEqual(expected_sha, result_sha)
+
+        os.chdir(self.cwd)
 
 
 if "__main__" == __name__:
