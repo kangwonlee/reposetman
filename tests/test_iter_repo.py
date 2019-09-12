@@ -1,3 +1,5 @@
+# coding=utf8
+
 import ast
 import configparser
 import os
@@ -7,8 +9,7 @@ import tempfile
 import unittest
 
 
-sys.path.insert(0, os.path.abspath(
-    os.path.join(os.path.dirname(__file__), os.pardir)))
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir)))
 
 
 import iter_repo
