@@ -35,6 +35,8 @@ import git
 import progress
 import regex_test as ret
 import timeit
+
+
 @timeit.timeit
 def main(argv):
     # read configuration file
@@ -147,6 +149,42 @@ def get_sections_dict(config):
     urls_path_list = []
 
     # to extract user ids
+    url_parse_dict = get_url_parse_dict(config, sections_dict, urls_path_list)
+
+    # os.path.split(parse.path)[-1][id_starts_here:] -> user_id
+    set_user_ids(config, sections_dict, url_parse_dict)
+
+    # TODO : is it desirable to separate id extraction?
+
+    return sections_dict
+
+
+def set_user_ids(config, sections_dict, url_parse_dict):
+    # os.path.split(parse.path)[-1][id_starts_here:] -> user_id
+
+    # set user ids of each repository
+    for section in sections_dict:
+        sections_dict[section]['user_ids'] = []
+
+        id_starts_here = len(config[section]['repo_prefix'].strip())
+
+        # parsed url loop
+        for parse in url_parse_dict[section]:
+            sections_dict[section]['user_ids'].append(
+                get_user_id(parse, id_starts_here)
+            )
+
+
+def get_user_id(parse, id_starts_here):
+    return os.path.splitext(
+        os.path.basename(
+            parse.path.strip('/')
+        )  # last part of the path
+    )[0][id_starts_here:]   # extract id
+
+
+def get_url_parse_dict(config, sections_dict, urls_path_list):
+    # to extract user ids
     url_parse_dict = {}
 
     # section loop
@@ -162,26 +200,7 @@ def get_sections_dict(config):
             url_parse_dict[section].append(up.urlparse(url))
             urls_path_list.append(url_parse_dict[section][-1].path)
 
-    # os.path.split(parse.path)[-1][id_starts_here:] -> user_id
-    id_starts_here = len(config['operation']['repo_prefix_sample'].strip())
-
-    # set user ids of each repository
-    for section in sections_dict:
-        sections_dict[section]['user_ids'] = []
-
-        # parsed url loop
-        for parse in url_parse_dict[section]:
-            sections_dict[section]['user_ids'].append(
-                os.path.splitext(
-                    os.path.basename(
-                        parse.path.strip('/')
-                    )  # last part of the path
-                )[0][id_starts_here:]   # extract id
-            )
-
-    # TODO : is it desirable to separate id extraction?
-
-    return sections_dict
+    return url_parse_dict
 
 
 @timeit.timeit
