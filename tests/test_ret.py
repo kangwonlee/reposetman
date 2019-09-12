@@ -1,5 +1,6 @@
 import os
 import shutil
+import stat
 import subprocess
 import sys
 import tempfile
@@ -40,6 +41,19 @@ def onerror(func, path, exc_info):
         func(path)
     else:
         raise IOError
+
+
+def rmtree(folder: str) -> None :
+    # https://stackoverflow.com/a/2656408
+    for root, dirnames, filenames in os.walk(folder, topdown=False):
+        for filename in filenames:
+            full_path = os.path.join(root, filename)
+            os.chmod(full_path, stat.S_IWUSR)
+            os.remove(filename)
+        for dirname in dirnames:
+            os.rmdir(os.path.join(root, dirname))
+
+    os.rmdir(folder)
 
 
 class TestFetchAndReset(unittest.TestCase):
@@ -93,7 +107,7 @@ class TestFetchAndReset(unittest.TestCase):
         os.chdir(self.cwd)
 
     def tearDown(self):
-        shutil.rmtree(self.temp_folder_name)
+        rmtree(self.temp_folder_name)
 
     def reset_existing_repo(self):
         os.chdir(self.clone_destination_folder)
