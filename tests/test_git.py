@@ -489,20 +489,27 @@ class TestGitCheckout(unittest.TestCase):
 class TestGitCheckoutDate(unittest.TestCase):
     def setUp(self):
         self.temp_folder = tempfile.TemporaryDirectory()
+
+        self.cwd = os.getcwd()
+
+        os.chdir(self.temp_folder.name)
+
         subprocess.run(['git', 'init'], cwd=self.temp_folder.name)
         subprocess.run(['git', 'config', 'user.name', 'temp'],
                        cwd=self.temp_folder.name)
         subprocess.run(['git', 'config', 'user.email',
                         'temp@temp.net'], cwd=self.temp_folder.name)
 
-        tempfile_full_path = os.path.join(self.temp_folder.name, 'temp')
+        temp_file_local_name = 'temp.txt'
+
+        tempfile_full_path = os.path.join(self.temp_folder.name, temp_file_local_name)
 
         with open(tempfile_full_path, 'w') as f:
             f.write('tempfile\n')
 
         self.date_0 = '2008-01-01 12:00:00'
 
-        subprocess.run(['git', 'add', tempfile_full_path],
+        subprocess.run(['git', 'add', temp_file_local_name],
                        cwd=self.temp_folder.name)
         subprocess.run(['git', 'commit', '-m', 'first commit',
                         '--date', self.date_0], cwd=self.temp_folder.name)
@@ -515,7 +522,7 @@ class TestGitCheckoutDate(unittest.TestCase):
         with open(tempfile_full_path, 'a') as f:
             f.write('modified\n')
 
-        subprocess.run(['git', 'add', tempfile_full_path],
+        subprocess.run(['git', 'add', temp_file_local_name],
                        cwd=self.temp_folder.name)
         subprocess.run(['git', 'commit', '-m', 'second commit'],
                        cwd=self.temp_folder.name)
@@ -526,6 +533,7 @@ class TestGitCheckoutDate(unittest.TestCase):
             ['git', 'checkout', self.current_branch_name], cwd=self.temp_folder.name)
 
     def tearDown(self):
+        os.chdir(self.cwd)
         del self.temp_folder
 
     def test_checkout_date(self):
