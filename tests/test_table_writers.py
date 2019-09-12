@@ -287,7 +287,7 @@ class TestHtmlTableWriter(BaseTestTableWriterTable):
 
         result_txt = ''.join(list(self.writer.gen_rows()))
 
-        soup = bs4.BeautifulSoup(result_txt, "lxml")
+        soup = bs4.BeautifulSoup(result_txt, "html.parser")
 
         table_list = soup.find_all('table')
 
