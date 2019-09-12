@@ -2,7 +2,7 @@ import os
 import tempfile
 
 
-def get_tempfile_name(suffix=None, istext=True):
+def get_tempfile_name(suffix: str=None, istext: bool=True) -> str:
     _, filename = tempfile.mkstemp(suffix=suffix, text=istext)
 
     if 'nt' == os.name:
