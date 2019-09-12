@@ -212,8 +212,12 @@ class TestGetSectionsDict(TestSetUserIdsBase):
             set(list(result.keys()))
         )
 
-        for _, d in result.items():
+        for section, d in result.items():
             self.assertIn('urls', d)
+            self.assertSetEqual(
+                set(self.sections_dict[section]['urls']),
+                set(d['urls'])
+            )
             self.assertIn('user_ids', d)
             self.assertSetEqual(self.id_set, set(d['user_ids']))
 
