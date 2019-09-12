@@ -2,8 +2,9 @@ import os
 import tempfile
 
 
-def get_tempfile_name(suffix: str=None, istext: bool=True) -> str:
-    _, filename = tempfile.mkstemp(suffix=suffix, text=istext)
+def get_tempfile_name(suffix: str=None) -> str:
+    with tempfile.NamedTemporaryFile(mode='wt', suffix=suffix, encoding='utf-8', delete=True) as fp:
+        filename = fp.name
 
     if 'nt' == os.name:
         filename = os.path.basename(filename)
