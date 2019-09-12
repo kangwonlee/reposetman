@@ -81,6 +81,7 @@ class TestSetUserIdsBase(unittest.TestCase):
     def setUp(self):
         self.sections_dict = self.get_sections_dict()
         self.config = self.get_config()
+        self.id_set = set(['abc', 'def', 'ghi-eca00a'])
 
     @staticmethod
     def get_sections_dict():
