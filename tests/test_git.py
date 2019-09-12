@@ -259,6 +259,82 @@ class TestRet(unittest.TestCase):
 class TestGitCheckout(unittest.TestCase):
     def setUp(self):
         self.temp_folder = tempfile.TemporaryDirectory()
+
+        if self.get_git_version_string().startswith('2.23'):
+            self.git_init_2_23()
+        else:
+            self.git_init_2_21()
+
+    def git_init_2_23(self):
+
+        self.cwd = os.getcwd()
+
+        os.chdir(self.temp_folder.name)
+
+        p_init = subprocess.run(
+            ['git', 'init'],
+            cwd=self.temp_folder.name, capture_output=True, encoding='utf-8'
+        )
+        subprocess.run(
+            ['git', 'config', 'user.name', 'temp'],
+            cwd=self.temp_folder.name,
+        )
+        subprocess.run(
+            ['git', 'config', 'user.email', 'temp@temp.net'],
+            cwd=self.temp_folder.name,
+        )
+
+        temp_filename = 'temp.txt'
+
+        tempfile_full_path = os.path.join(self.temp_folder.name, temp_filename)
+
+        with open(tempfile_full_path, 'w') as f:
+            f.write('tempfile\n')
+
+        p = subprocess.run(
+            ['git', 'add', temp_filename],
+            cwd=self.temp_folder.name, capture_output=True, encoding='utf-8'
+        )
+        assert not p.stderr, f"\ninit : {p_init.stdout}\nadd : {p.stderr}"
+
+        p = subprocess.run(
+            ['git', 'commit', '-m', 'first commit'],
+            cwd=self.temp_folder.name, capture_output=True, encoding='utf-8'
+        )
+
+        self.branch_name = 'branch'
+
+        p = subprocess.run(
+            ['git', 'switch', '-c', self.branch_name],
+            cwd=self.temp_folder.name, capture_output=True, encoding='utf-8'
+        )
+
+        with open(tempfile_full_path, 'a') as f:
+            f.write('modified\n')
+
+        p = subprocess.run(
+            ['git', 'add', temp_filename],
+            cwd=self.temp_folder.name, capture_output=True, encoding='utf-8'
+        )
+        assert not p.stderr.strip().startswith('fatal'), f"\ninit : {p_init.stdout}\nadd : {p.stderr}"
+
+        p = subprocess.run(
+            ['git', 'commit', '-m', 'second commit'],
+            cwd=self.temp_folder.name, capture_output=True, encoding='utf-8'
+        )
+
+        self.current_branch_name = 'master'
+
+        p = subprocess.run(
+            ['git', 'checkout', self.current_branch_name], cwd=self.temp_folder.name, 
+            capture_output=True, encoding='utf-8'
+        )
+
+    @staticmethod
+    def get_git_version_string():
+        return subprocess.check_output('git --version', encoding='utf-8').strip().split()[2]
+
+    def git_init_2_21(self):
         subprocess.run(['git', 'init'], cwd=self.temp_folder.name)
         subprocess.run(['git', 'config', 'user.name', 'temp'],
                        cwd=self.temp_folder.name)
