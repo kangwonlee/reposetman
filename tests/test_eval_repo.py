@@ -171,6 +171,8 @@ class TestSysArgv(unittest.TestCase):
 
         self.assertTrue(result)
 
+
+class TestSysArgvFile(unittest.TestCase):
     def test_get_argn_import_sys_no_inline_comment(self):
 
         argv_file = tempf.write_to_temp_file(
