@@ -39,7 +39,7 @@ class BaseTestBuildMessageList(unittest.TestCase):
 
         config['operation'] = {
             'python_path': sys.executable,
-            'sections': [self.section_name],
+            'sections': repr([self.section_name]),
         }
 
         config[self.section_name] = {
