@@ -207,6 +207,11 @@ class TestGetSectionsDict(TestSetUserIdsBase):
 
         self.assertIsInstance(result, dict)
 
+        self.assertSetEqual(
+            set(self.sections_dict.keys()), 
+            set(list(result.keys()))
+        )
+
         for _, d in result.items():
             self.assertIn('urls', d)
             self.assertIn('user_ids', d)
