@@ -171,9 +171,8 @@ class TestSysArgv(unittest.TestCase):
         self.assertTrue(result)
 
     def test_get_argn_import_sys_no_inline_comment(self):
-        _, filename = tempfile.mkstemp(suffix='.py', text=True)
+        with tempfile.NamedTemporaryFile(mode='wt', suffix='.py', encoding='utf-8', delete=False) as argv_file:
 
-        with open(filename, mode='wt', encoding='utf-8') as argv_file:
             argv_file.write(
                 "# comment a\n"
                 "# comment b\n"
@@ -191,7 +190,7 @@ class TestSysArgv(unittest.TestCase):
 
         result = eval_repo.get_argn(argv_file.name)
 
-        os.remove(filename)
+        os.remove(argv_file.name)
 
         expected = 3
 
