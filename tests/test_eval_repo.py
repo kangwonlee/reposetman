@@ -172,22 +172,21 @@ class TestSysArgv(unittest.TestCase):
         self.assertTrue(result)
 
     def test_get_argn_import_sys_no_inline_comment(self):
-        with tempfile.NamedTemporaryFile(mode='wt', suffix='.py', encoding='utf-8', delete=False) as argv_file:
 
-            argv_file.write(
-                "# comment a\n"
-                "# comment b\n"
-                "# commnet c\n"
-                "\n"
-                "import sys\n"
-                "\n"
-                "a, b, c = sys.argv\n"
-                "\n"
-                "print('a =', a)\n"
-                "print('b =', b)\n"
-                "print('c =', c)\n"
-                "\n"
-            )
+        argv_file = tempf.write_to_temp_file(
+            "# comment a\n"
+            "# comment b\n"
+            "# commnet c\n"
+            "\n"
+            "import sys\n"
+            "\n"
+            "a, b, c = sys.argv\n"
+            "\n"
+            "print('a =', a)\n"
+            "print('b =', b)\n"
+            "print('c =', c)\n"
+            "\n"
+        )
 
         result = eval_repo.get_argn(argv_file.name)
 
