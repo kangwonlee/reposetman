@@ -108,6 +108,9 @@ def sections_dict():
 def config():
     return configparser.ConfigParser(
         {
+            'operation':{
+                'sections': "['cls12a_00', 'cls12a_01', 'cls12a_tutorial']"
+            },
             'cls12a_00':{'repo_prefix': 'cls12a-nmisp-00-'},
             'cls12a_01':{'repo_prefix': 'cls12a-nmisp-01-'},
             'cls12a_tutorial':{'repo_prefix': 'cls12a-nmisp-tutorial-'},
