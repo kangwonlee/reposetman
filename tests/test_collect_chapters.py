@@ -150,6 +150,7 @@ class TestSetUserIds(TestSetUserIdsBase):
 
         storage = copy.deepcopy(self.sections_dict)
 
+        # TODO : see if the following function is definitely necessary
         col.set_user_ids(self.config, storage, url_parse_dict)
 
         expected_set = set(['abc', 'def', 'ghi-eca00a'])
