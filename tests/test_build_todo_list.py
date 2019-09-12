@@ -38,7 +38,7 @@ class BaseTestBuildMessageList(unittest.TestCase):
         self.section_name = 'test_section'
 
         config['operation'] = {
-            'python_path': shutil.which('python'),
+            'python_path': sys.executable,
             'sections': [self.section_name],
         }
 
