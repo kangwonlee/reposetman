@@ -8,6 +8,7 @@ import unittest
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir)))
 
 import checkout_due_date as cdd
+import tempf
 
 
 class TestGetArgParser(unittest.TestCase):
@@ -47,16 +48,17 @@ class TestGetConfigFromArgv(unittest.TestCase):
         self.config = configparser.ConfigParser()
         self.config.add_section('operation')
         self.config['operation'] = {'key': 'value'}
-        self.config_file = tempfile.NamedTemporaryFile(suffix='.cfg', mode='wt', encoding='utf-8')
-        self.config.write(self.config_file)
-        self.config_file.seek(0)
+        self.config_filename = tempf.get_tempfile_name(suffix='.cfg')
+
+        with open(self.config_filename, 'wt') as configfile:
+            self.config.write(configfile)
 
     def tearDown(self):
-        del self.config_file
+        os.remove(self.config_filename)
         del self.config
 
     def test_get_config_from_argv_force(self):
-        input_list = ['filename.py', '--config', self.config_file.name]
+        input_list = ['filename.py', '--config', self.config_filename]
         result = cdd.get_config_from_argv(input_list)
 
         self.assertIsInstance(result, configparser.ConfigParser)
