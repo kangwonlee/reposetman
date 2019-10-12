@@ -364,7 +364,7 @@ def get_refs_tag_deref():
 
     # Obtain SHA's from the log
     stdout_log, stderr_log = run_command(
-        (git_exe_path, 'log', '--pretty=%H'),
+        (git_exe_path, 'log', '--pretty=%H', '--all'),
         b_verbose=False,
     )
     if stderr_log:
