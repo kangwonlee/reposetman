@@ -19,11 +19,9 @@ def main():
     config = configparser.ConfigParser()
     filename = 'detect_conflict.cfg'
 
-    if os.path.exists(filename):
-        # if file exists
-        config.read(filename)
-    else:
-        raise IOError('unable to find {filename}'.format(filename=filename))
+    assert os.path.exists(filename), f'unable to find {filename} at {os.getcwd()}'
+
+    config.read(filename)
 
     for section_name in config['folders']:
         process_section(section_name, config)
