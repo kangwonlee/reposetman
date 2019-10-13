@@ -180,7 +180,7 @@ def git(cmd:typing.Sequence[str], cwd:str=None, bVerbose:bool=True) -> str:
     return msg
 
 
-def checkout(commit=False, repo_path=False, b_force=False, b_verbose=False):
+def checkout(commit:str=False, repo_path:str=None, b_force:bool=False, b_verbose:bool=False) -> typing.Tuple[str]:
     """
     git checkout <commit>
 
