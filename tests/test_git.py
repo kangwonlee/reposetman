@@ -495,6 +495,17 @@ class TestGitCheckout(unittest.TestCase):
         )
         )
 
+    def test_get_current_branch_master(self):
+
+        result = git.get_current_branch(cwd=self.temp_folder.name)
+
+        self.assertEqual(
+            'master', result, 
+            msg=(
+                f"self.temp_folder.name = {self.temp_folder.name}"
+            )
+        )
+
 
 class TestGitCheckoutDate(unittest.TestCase):
     def setUp(self):
