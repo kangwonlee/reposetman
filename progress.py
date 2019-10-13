@@ -124,7 +124,7 @@ class ProgressReportBuilder(object):
 
 
 @timeit.timeit
-def main(argv=False):
+def main(argv=sys.argv):
     """
 
     main function of progress report generator
@@ -137,26 +137,13 @@ def main(argv=False):
     input file name : in progress.cfg
 
     """
+
+    # https://docs.python.org/3.7/library/argparse.html
+    ns = parse_args(argv)
+
     # https://docs.python.org/3/library/configparser.html
-    config = get_config_from_argv(argv)
-
-    '''
-    project id loop : for all project id's
-
-        go in
-
-        get list
-
-        if doesn't start with '.'
-
-            if file, get log
-
-                # commits
-
-                # begin ~ end
-
-                # average commit interval
-    '''
+    config = get_config_from_filename(ns.config_filename)
+    config['operation']['multiprocessing'] = str(ns.multiprocessing)
 
     # compile regex here not to repeat later
     re_git_log = eval_repo.RepoEvalCountCommit.get_regex_parse_git_log()
@@ -675,4 +662,4 @@ def pound_count(config, section, repo_list):
 
 
 if "__main__" == __name__:
-    main(sys.argv[1:])
+    main(sys.argv)
