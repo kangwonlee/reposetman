@@ -442,6 +442,7 @@ def has_a_tag(sha:str=None, cwd:str=None) -> bool:
 
     # tag__sha loop
     for _, sha_tag in get_refs_tag_deref(cwd=cwd):
+        assert len(sha) == len(sha_tag), (sha, sha_tag)
         if sha_tag == sha:
             result = True
             break
