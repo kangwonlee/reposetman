@@ -376,8 +376,8 @@ def get_refs_tag_deref():
         (git_exe_path, 'log', '--pretty=%H', '--all'),
         b_verbose=False,
     )
-    if stderr_log:
-        raise SystemError(stderr_log)
+
+    assert not stderr_log, stderr_log
 
     sha_tuple = tuple(stdout_log.splitlines())
 
