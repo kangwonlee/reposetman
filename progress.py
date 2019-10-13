@@ -653,7 +653,10 @@ def pound_count(config:configparser.ConfigParser, section:str, repo_list:typing.
     """
 
     pound_counter = eval_repo.RepoEvalPoundByteCounterExcludingRef()
-    pound_numbers = pound_counter.eval_repo_list(repo_list)
+    pound_numbers = pound_counter.eval_repo_list(
+        repo_list,
+        b_multiprocessing=config2bool(config['operation']['multiprocessing']),
+    )
     print('pound_count() : finished eval_repo_list()')
 
     # sort with total
