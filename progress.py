@@ -214,7 +214,7 @@ def config2bool(value:str) -> bool:
 
 
 @timeit.timeit
-def process_section(config, re_git_log, section):
+def process_section(config: configparser.ConfigParser, re_git_log:re.Pattern, section:str):
     """
     Clone or pull from remote repositories
     For each repository,
