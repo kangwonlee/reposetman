@@ -353,7 +353,7 @@ def get_tags():
     return [tag.strip() for tag in msgo.splitlines()]
 
 
-def get_refs_tag_deref():
+def get_refs_tag_deref(cwd:str=None) -> typing.Sequence[typing.Tuple[str]]:
     """
     Obtain list of (sha, tag) of the current repository
     SHAs show up on the `git log`
@@ -361,19 +361,19 @@ def get_refs_tag_deref():
 
     # Obtain sha's and tags
     # dereference may include sha's in `git log`
-    git_cmd = [git_exe_path, 'show-ref', '--tags', '--dereference']
-
-    msgo, msge = run_command(
-        git_cmd,
+    msgo, msge = git_common(
+        ('show-ref', '--tags', '--dereference'),
         b_verbose=False,
+        cwd=cwd,
     )
 
     assert not msge, msge
 
     # Obtain SHA's from the log
-    stdout_log, stderr_log = run_command(
-        (git_exe_path, 'log', '--pretty=%H', '--all'),
+    stdout_log, stderr_log = git_common(
+        ('log', '--pretty=%H', '--all'),
         b_verbose=False,
+        cwd=cwd,
     )
 
     assert not stderr_log, stderr_log
