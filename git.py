@@ -368,8 +368,7 @@ def get_refs_tag_deref():
         b_verbose=False,
     )
 
-    if msge:
-        raise SystemError(msge)
+    assert not msge, msge
 
     # Obtain SHA's from the log
     stdout_log, stderr_log = run_command(
