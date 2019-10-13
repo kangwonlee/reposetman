@@ -342,7 +342,11 @@ def count_commits(config:configparser.ConfigParser, section:str, repo_list:typin
 
     commit_counter = eval_repo.RepoEvalCountOneCommitLog(
         after, before, exclude_email_tuple)
-    commit_count = commit_counter.eval_repo_list(repo_list)
+
+    commit_count = commit_counter.eval_repo_list(
+        repo_list,
+        b_multiprocessing=config2bool(config['operation']['multiprocessing']),
+    )
 
     # if the header row seems to include '\' character in the header row
     if commit_count.is_backslash_in_header():
