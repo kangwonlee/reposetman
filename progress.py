@@ -11,6 +11,7 @@ Year : 2018
 """
 
 
+import argparse
 import ast
 import configparser
 import itertools
@@ -19,6 +20,7 @@ import os
 import re
 import sys
 import time
+import typing
 
 import dict_table
 import eval_repo
@@ -175,6 +177,19 @@ def main(argv=False):
             gen_arg_process_section(iter_repo.get_section_list(config))
         )
     )
+
+
+def parse_args(argv:typing.Sequence[str]) -> argparse.Namespace:
+    parser = argparse.ArgumentParser(description="Exercise Chart Builder")
+    parser.add_argument('config_filename', type=str, default='progress.cfg', help="section configuration file")
+    # https://docs.python.org/3.7/library/argparse.html
+    # Parsing boolean values with argparse, https://stackoverflow.com/a/15008806
+    parser.add_argument('--multiprocessing', dest='multiprocessing', action='store_true', help="enable multiprocessing")
+    parser.add_argument('--no-multiprocessing', dest='multiprocessing', action='store_false', help="disable multiprocessing")
+    parser.set_defaults(multiprocessing=True)
+
+    ns = parser.parse_args(argv[1:])
+    return ns
 
 
 def get_config_from_argv(argv):
