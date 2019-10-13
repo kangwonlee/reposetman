@@ -330,7 +330,7 @@ def call_commit_count(config, section, repo_list, results):
 
 
 @timeit.timeit
-def count_commits(config, section, repo_list):
+def count_commits(config:configparser.ConfigParser, section:str, repo_list:typing.Sequence):
     """
     Count commits of each file fromt eh section
     """
