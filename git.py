@@ -459,9 +459,13 @@ def clean_xdf(b_verbose=False):
     run_command((git_exe_path, 'clean', '-x', '-d', '-f'), b_verbose=b_verbose)
 
 
-def get_current_branch(b_verbose=False):
+def get_current_branch(b_verbose:bool=False, cwd:str=None) -> str:
     # https://stackoverflow.com/questions/1417957/show-just-the-current-branch-in-git/1418022
-    return run_command((git_exe_path, 'rev-parse', '--abbrev-ref', 'HEAD'), b_verbose=b_verbose)[0].strip()
+    return git_common(
+        ('rev-parse', '--abbrev-ref', 'HEAD'),
+        b_verbose=b_verbose,
+        cwd=cwd,
+    )[0].strip()
 
 
 def get_remote_branch_list(b_verbose=False):
