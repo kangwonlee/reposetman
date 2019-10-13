@@ -468,7 +468,7 @@ def get_current_branch(b_verbose:bool=False, cwd:str=None) -> str:
     )[0].strip()
 
 
-def get_remote_branch_list(b_verbose=False):
+def get_remote_branch_list(b_verbose:bool=False, cwd:str=None) -> typing.List[str]:
     """
     Get a list of remote branches of current repository
     """
