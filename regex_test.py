@@ -239,40 +239,37 @@ def get_timestamp_str():
     return time.strftime('%a_%b_%d_%H_%M_%S_%Y')
 
 
-def tag_stamp(b_tag_after_update, repo_path_in_section, repo, branch='', commit=''):
+def tag_stamp(b_tag_after_update:bool, repo_abs_path:str, repo:str, branch:str='', commit:str=''):
     """
     Tag with time stamp after clone or pull
     """
     if b_tag_after_update:
-        # store current path
-        cwd = os.getcwd()
-
-        # move to the repository path
-        os.chdir(repo_path_in_section)
 
         # get latest hash value
-        last_sha = git.get_last_sha(branch=branch)
+        last_sha = git.get_last_sha(branch=branch, cwd=repo_abs_path, b_full=True)
 
-        # decide tag string
-        if branch:
-            if '/' in branch:
-                branch = branch[(branch.index('/')+1):]
-
-            # add branch name
-            tag_string = f'{get_timestamp_str()}__{branch}__{last_sha}'
-        else:
-            # just time stamp
-            tag_string = f'{get_timestamp_str()}__{last_sha}'
+        tag_string = get_tag_str(branch, last_sha)
 
         # Tag if the latest commit does not already have a tag
-        if not git.has_a_tag(commit=commit):
-            if not git.tag(tag_string, revision=commit):
+        if not git.has_a_tag(sha=last_sha, cwd=repo_abs_path):
+            if not git.tag(tag_string, revision=commit, cwd=repo_abs_path):
                 raise IOError('Unable to tag {name} {tag}'.format(
                     tag=tag_string, name=repo['name']))
 
-        # return to the stored path
-        os.chdir(cwd)
 
+def get_tag_str(branch:str, last_sha:str) -> str:
+    # decide tag string
+    if branch:
+        if '/' in branch:
+            branch = branch[(branch.index('/')+1):]
+
+        # add branch name
+        tag_string = f'{get_timestamp_str()}__{branch}__{last_sha}'
+    else:
+        # just time stamp
+        tag_string = f'{get_timestamp_str()}__{last_sha}'
+
+    return tag_string
 
 def tag_all_remote_branches(b_tag_after_update, repo_abs_path, repo):
     """
