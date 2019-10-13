@@ -143,7 +143,7 @@ def git_common(cmd, b_verbose=True):
     return run_command((git_exe_path,) + tuple(cmd), b_verbose)
 
 
-def git(cmd, bVerbose=True):
+def git(cmd, cwd=os.getcwd(), bVerbose=True):
     """
     execute git command & print
 
