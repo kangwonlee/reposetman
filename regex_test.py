@@ -4,6 +4,7 @@ import multiprocessing as mp
 import os
 import re
 import time
+import typing
 
 import git
 import repo_path
@@ -58,7 +59,7 @@ def get_proj_id_list(filename=config['repository']['listFile']):
 
 
 @timeit.timeit
-def get_github_url_list(filename):
+def get_github_url_list(filename:str) -> typing.Sequence[str]:
     txt = read_utf_or_cp(filename)
     # using regular expression, find all repository addresses
     return get_github_urls(txt)
