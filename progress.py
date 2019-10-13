@@ -233,7 +233,8 @@ def process_section(config: configparser.ConfigParser, re_git_log:re.Pattern, se
     repo_list = ret.clone_or_pull_repo_list(
         repo_url_list,
         section_folder=config[section]['folder'],
-        b_update_repo=('True' == config['operation']['update_repo'].strip())
+        b_update_repo=config2bool(config['operation']['update_repo']),
+        b_multiprocessing=config2bool(config['operation']['multiprocessing']),
     )
 
     results = {}
