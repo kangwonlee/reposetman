@@ -145,11 +145,11 @@ def get_proj_info(txt_fname):
 
 @timeit.timeit
 def clone_or_pull_repo_list(
-    repo_url_list,
-    section_folder=os.path.abspath(config['repository']['path']),
-    b_update_repo=True,
-    b_multiprocessing=True
-):
+    repo_url_list:typing.Sequence[str],
+    section_folder:str=os.path.abspath(config['repository']['path']),
+    b_update_repo:bool=True,
+    b_multiprocessing:bool=True,
+) -> typing.Sequence[typing.Dict[str, str]]:
     """
     process repository list
     if duplicate, don't do anything
