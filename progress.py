@@ -381,7 +381,7 @@ def count_commits(config:configparser.ConfigParser, section:str, repo_list:typin
 
 
 @timeit.timeit
-def write_tables(section, repo_list, table, filename_prefix, sorted_row=None):
+def write_tables(section, repo_list, table, filename_prefix, sorted_row=None) -> typing.Dict[str, bool]:
 
     # if sorted_row not given, make one from repo_list
     if sorted_row is None:
