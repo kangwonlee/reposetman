@@ -472,8 +472,11 @@ def get_remote_branch_list(b_verbose:bool=False, cwd:str=None) -> typing.List[st
     """
     Get a list of remote branches of current repository
     """
-    stdout, _ = run_command(
-        (git_exe_path, 'branch', '--remote'), b_verbose=b_verbose)
+    stdout, _ = git_common(
+        ('branch', '--remote'),
+        b_verbose=b_verbose,
+        cwd=cwd,
+    )
 
     result = []
 
