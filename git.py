@@ -2,6 +2,7 @@ import os
 import shutil
 import subprocess
 import sys
+import typing
 import urllib.parse as up
 
 
@@ -129,21 +130,31 @@ def run_command(cmd, b_verbose=True, in_txt=None, b_show_cmd=False):
     return msgo, msge
 
 
-def git_common(cmd, b_verbose=True):
+def git_common(cmd:typing.Sequence[str], cwd:str=None, b_verbose:bool=True) -> typing.Tuple[str]:
     """
     execute git command & print
 
-    :param str cmd: git command
+    :param cmd: git command
+    :param str cwd: path to run the git command
     :param bool b_verbose:
     :return: messages through stdout and stderr
 
-    >>> git_common("status") # == git status
+    >>> git_common(["status"]) # == git status
     """
 
-    return run_command((git_exe_path,) + tuple(cmd), b_verbose)
+    git_cmd = (git_exe_path,) + tuple(cmd)
+
+    p = subprocess.run(git_cmd, cwd=cwd, encoding='utf-8', capture_output=True)
+
+    if b_verbose:
+        print("cmd : ", ' '.join(git_cmd))
+        print("out : ", p.stdout)
+        print("err : ", p.stderr)
+
+    return p.stdout, p.stderr
 
 
-def git(cmd, cwd=os.getcwd(), bVerbose=True):
+def git(cmd:typing.Sequence[str], cwd:str=None, bVerbose:bool=True) -> str:
     """
     execute git command & print
 
@@ -151,10 +162,10 @@ def git(cmd, cwd=os.getcwd(), bVerbose=True):
     :param bool bVerbose:
     :return:
 
-    >>> git("status") # == git status
+    >>> git(["status"]) # == git status
     """
 
-    msgo, msge = git_common(cmd, bVerbose)
+    msgo, msge = git_common(cmd, cwd=cwd, b_verbose=bVerbose)
 
     if msgo:
         if not msge:

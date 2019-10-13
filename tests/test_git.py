@@ -29,6 +29,14 @@ class TestGit(unittest.TestCase):
         # https://stackoverflow.com/questions/606191/convert-bytes-to-a-string
         self.assertIn(expected, msg, msg='"%s" not in "%s"' % (expected, msg))
 
+    def test_git_common_git_status(self):
+        msgo, msge = git.git_common(["status"], b_verbose=False)
+        expected = "On branch"
+
+        # https://stackoverflow.com/questions/606191/convert-bytes-to-a-string
+        self.assertIn(expected, msgo)
+        self.assertFalse(msge)
+
     def test_git_config(self):
         msg = git.git(["config"], bVerbose=False)
         expected = "usage: git config"
