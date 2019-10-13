@@ -35,5 +35,16 @@ class TestArgParser(unittest.TestCase):
         self.assertFalse(result_namespace.multiprocessing)
 
 
+class TestConfig2Bool(unittest.TestCase):
+    def test_confg2bool_False(self):
+        self.assertFalse(progress.config2bool('False'))
+
+    def test_confg2bool_null(self):
+        self.assertFalse(progress.config2bool(''))
+
+    def test_confg2bool_True(self):
+        self.assertTrue(progress.config2bool('True'))
+
+
 if "__main__" == __name__:
     unittest.main()
