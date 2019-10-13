@@ -417,7 +417,10 @@ def run_all(config, section, repo_list):
 
     all_runner = eval_repo.RepoEvalRunEachSkipSomeLastCommit(
         config['operation']['python_path'])
-    all_outputs = all_runner.eval_repo_list(repo_list)
+    all_outputs = all_runner.eval_repo_list(
+        repo_list,
+        b_multiprocessing=config2bool(config['operation']['multiprocessing']),
+    )
     print(f'run_all() : finished eval_repo_list()')
 
     # repository names in order
