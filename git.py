@@ -311,16 +311,17 @@ def get_last_sha(b_full:bool=False, path:str='', branch:str='', cwd:str=None) ->
     return result
 
 
-def tag(tag_string, revision=''):
+def tag(tag_string:str, revision:str='', cwd:str=None) -> bool:
 
-    git_cmd = [git_exe_path, 'tag', tag_string]
+    git_cmd = ['tag', tag_string]
 
     if revision:
         git_cmd.append(str(revision))
 
-    msgo, msge = run_command(
+    msgo, msge = git_common(
         git_cmd,
         b_verbose=False,
+        cwd=cwd,
     )
 
     if msgo or msge:
