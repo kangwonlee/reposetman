@@ -187,13 +187,11 @@ def checkout(commit:str=False, repo_path:str=None, b_force:bool=False, b_verbose
     change folder to <repo_path>
     """
 
-    if not repo_path:
-        repo_path = os.getcwd()
-
     # checkout specific commit
-    checkout_cmd_list = [git_exe_path,
-                         'checkout',
-                         ]
+    checkout_cmd_list = [
+        git_exe_path,
+        'checkout',
+    ]
 
     if commit:
         checkout_cmd_list.append(commit)
