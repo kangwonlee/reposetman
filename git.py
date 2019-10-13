@@ -434,15 +434,15 @@ def ls_remote_tag(remote='origin', b_verbose=False):
     return result_list
 
 
-def has_a_tag(commit=None):
-    if commit is None:
-        commit = get_last_sha(b_full=True)
+def has_a_tag(sha:str=None, cwd:str=None) -> bool:
+    if sha is None:
+        sha = get_last_sha(b_full=True, cwd=cwd)
 
     result = False
 
     # tag__sha loop
-    for _, sha in get_refs_tag_deref():
-        if sha == commit:
+    for _, sha_tag in get_refs_tag_deref(cwd=cwd):
+        if sha_tag == sha:
             result = True
             break
 
