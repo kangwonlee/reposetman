@@ -278,15 +278,14 @@ def log_last_commit():
     return result
 
 
-def get_last_sha(b_full=False, path='', branch=''):
+def get_last_sha(b_full:bool=False, path:str='', branch:str='', cwd:str=None) -> str:
     # sometimes full SHA is necessary
     if b_full:
         format_string = '%H'
     else:
         format_string = '%h'
 
-    command_list = [git_exe_path, 'log',
-                    '--pretty=format:{h}'.format(h=format_string), '-1']
+    command_list = ['log', f'--pretty=format:{format_string}', '-1']
 
     if branch and path:
         command_list += [branch, '--', path]
@@ -296,9 +295,10 @@ def get_last_sha(b_full=False, path='', branch=''):
         command_list.append(branch)
 
     # get the last sha from git log of the latest commit
-    msgo, msge = run_command(
+    msgo, msge = git_common(
         tuple(command_list),
-        b_verbose=False
+        b_verbose=False,
+        cwd=cwd,
     )
 
     # output error check
