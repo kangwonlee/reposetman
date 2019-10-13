@@ -330,7 +330,7 @@ def call_commit_count(config, section, repo_list, results):
 
 
 @timeit.timeit
-def count_commits(config:configparser.ConfigParser, section:str, repo_list:typing.Sequence):
+def count_commits(config:configparser.ConfigParser, section:str, repo_list:typing.Sequence) -> typing.Dict[str, typing.Union[bool, dict_table.RepoTable]]:
     """
     Count commits of each file fromt eh section
     """
@@ -410,7 +410,7 @@ def write_tables(section, repo_list, table, filename_prefix, sorted_row=None) ->
 
 
 @timeit.timeit
-def run_all(config, section, repo_list):
+def run_all(config:configparser.ConfigParser, section:str, repo_list:typing.Sequence) -> typing.Dict[str, typing.Union[bool, dict_table.RepoTable]]:
     """
     Run (almost) all .py files from the section
     """
@@ -650,7 +650,7 @@ def write_last_sent(last_sent_file, gmtime_sec=time.time()):
 
 
 @timeit.timeit
-def pound_count(config:configparser.ConfigParser, section:str, repo_list:typing.Sequence):
+def pound_count(config:configparser.ConfigParser, section:str, repo_list:typing.Sequence) -> typing.Dict[str, typing.Union[bool, dict_table.RepoTable]]:
     """
     count # comments of the section
     """
