@@ -647,7 +647,7 @@ def write_last_sent(last_sent_file, gmtime_sec=time.time()):
 
 
 @timeit.timeit
-def pound_count(config, section, repo_list):
+def pound_count(config:configparser.ConfigParser, section:str, repo_list:typing.Sequence):
     """
     count # comments of the section
     """
