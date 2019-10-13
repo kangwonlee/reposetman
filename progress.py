@@ -205,6 +205,14 @@ def get_config_from_filename(config_filename=False):
     return config
 
 
+def config2bool(value:str) -> bool:
+    if not value:
+        result = False
+    else:
+        result = 'false' != value.strip().lower()
+    return result
+
+
 @timeit.timeit
 def process_section(config, re_git_log, section):
     """
