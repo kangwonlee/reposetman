@@ -3,12 +3,14 @@ import itertools
 import multiprocessing as mp
 import os
 import re
+import shutil
 import time
 import typing
 
 import git
 import repo_path
 import timeit
+
 import unique_list
 
 
@@ -203,6 +205,12 @@ def clone_or_pull_repo_cd(k, repo_url, abs_section_folder, b_update_repo, b_tag_
     return result
 
 
+def need_to_clone(abs_repo_path:str) -> bool:
+    return not os.path.exists(
+        os.path.join(abs_repo_path, '.git', 'config')
+    )
+
+
 def clone_or_pull_repo(k, repo_url, b_update_repo, b_tag_after_update=True):
     # initialize repository info
     repo = {
@@ -220,7 +228,11 @@ def clone_or_pull_repo(k, repo_url, b_update_repo, b_tag_after_update=True):
 
     # even if b_updte_repo is False,
     # if not cloned yet, do it now.
-    if not os.path.exists(repo_path_in_section):
+    if need_to_clone(repo_path_in_section):
+        # clean up before clone
+        if os.path.exists(repo_path_in_section):
+            print(f"shutil.rmtree({repo_path_in_section})")
+            shutil.rmtree(repo_path_in_section)
         print('clone_or_pull_repo(%2d) : clone %s' % (k, repo['url']))
         git.clone(repo['url'], id=config['Admin']['id'])
     else:
