@@ -257,19 +257,19 @@ def tag_stamp(b_tag_after_update:bool, repo_abs_path:str, repo:str, branch:str='
                     tag=tag_string, name=repo['name']))
 
 
-def get_tag_str(branch:str, last_sha:str) -> str:
+def get_tag_str(branch:str, last_sha:str, sep:str='__') -> str:
     # decide tag string
     if branch:
         if '/' in branch:
             branch = branch[(branch.index('/')+1):]
 
         # add branch name
-        tag_string = f'{get_timestamp_str()}__{branch}__{last_sha}'
+        tag_string_postfix = f'{branch}{sep}{last_sha}'
     else:
         # just time stamp
-        tag_string = f'{get_timestamp_str()}__{last_sha}'
+        tag_string_postfix = f'{last_sha}'
 
-    return tag_string
+    return f'{get_timestamp_str()}{sep}{tag_string_postfix}'
 
 
 def tag_all_remote_branches(b_tag_after_update:bool, repo_abs_path:str, repo:str):
