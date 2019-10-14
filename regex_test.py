@@ -152,7 +152,7 @@ def clone_or_pull_repo_list(
     section_folder:str=os.path.abspath(config['repository']['path']),
     b_update_repo:bool=True,
     b_multiprocessing:bool=True,
-) -> typing.Sequence[typing.Dict[str, str]]:
+) -> typing.Sequence[RepoInfo]:
     """
     process repository list
     if duplicate, don't do anything
