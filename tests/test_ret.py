@@ -61,7 +61,9 @@ def rmtree(folder: str) -> None :
 class TestFetchAndReset(unittest.TestCase):
     def setUp(self):
 
-        self.temp_folder_name = tempfile.mkdtemp()
+        # https://docs.python.org/3.7/library/tempfile.html#tempfile.TemporaryDirectory
+        self.temp_folder = tempfile.TemporaryDirectory()
+        self.temp_folder_name = self.temp_folder.name
 
         # test repositories
         self.first_repository = 'https://github.com/kangwonlee/test-reposetman-fetch-and-reset-00'
@@ -109,7 +111,10 @@ class TestFetchAndReset(unittest.TestCase):
         os.chdir(self.cwd)
 
     def tearDown(self):
-        rmtree(self.temp_folder_name)
+        # rmtree(self.temp_folder_name)
+        # https://docs.python.org/3.7/library/tempfile.html#tempfile.TemporaryDirectory
+        # self.temp_folder.cleanup()
+        del self.temp_folder
 
     def reset_existing_repo(self):
         os.chdir(self.clone_destination_folder)
@@ -148,6 +153,25 @@ class TestFetchAndReset(unittest.TestCase):
         self.assertEqual(expected_sha, result_sha)
 
         os.chdir(self.cwd)
+
+
+class TestGetTagStringBranchShaInfo(unittest.TestCase):
+    def test_get_tag_str_postfix_sha(self):
+        branch = ''
+        sha = 'sha'
+
+        result = ret.get_tag_str_branch_sha_info(branch, sha)
+
+        self.assertIn(sha, result)
+
+    def test_get_tag_str_postfix_branch_sha(self):
+        branch = 'branch'
+        sha = 'sha'
+
+        result = ret.get_tag_str_branch_sha_info(branch, sha)
+
+        self.assertIn(branch, result)
+        self.assertIn(sha, result)
 
 
 if "__main__" == __name__:

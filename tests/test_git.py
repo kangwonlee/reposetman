@@ -29,6 +29,14 @@ class TestGit(unittest.TestCase):
         # https://stackoverflow.com/questions/606191/convert-bytes-to-a-string
         self.assertIn(expected, msg, msg='"%s" not in "%s"' % (expected, msg))
 
+    def test_git_common_git_status(self):
+        msgo, msge = git.git_common(["status"], b_verbose=False)
+        expected = "On branch"
+
+        # https://stackoverflow.com/questions/606191/convert-bytes-to-a-string
+        self.assertIn(expected, msgo)
+        self.assertFalse(msge)
+
     def test_git_config(self):
         msg = git.git(["config"], bVerbose=False)
         expected = "usage: git config"
@@ -485,6 +493,30 @@ class TestGitCheckout(unittest.TestCase):
             "stdout :\n"
             f"{stdout}"
         )
+        )
+
+    def test_get_current_branch_master(self):
+
+        result = git.get_current_branch(cwd=self.temp_folder.name)
+
+        self.assertEqual(
+            'master', result, 
+            msg=(
+                f"self.temp_folder.name = {self.temp_folder.name}"
+            )
+        )
+
+    def test_get_current_branch_branch(self):
+
+        self.switch_to_the_branch()
+
+        result = git.get_current_branch(cwd=self.temp_folder.name)
+
+        self.assertEqual(
+            self.branch_name, result, 
+            msg=(
+                f"self.temp_folder.name = {self.temp_folder.name}"
+            )
         )
 
 

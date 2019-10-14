@@ -11,6 +11,7 @@ Year : 2018
 """
 
 
+import argparse
 import ast
 import configparser
 import itertools
@@ -19,6 +20,7 @@ import os
 import re
 import sys
 import time
+import typing
 
 import dict_table
 import eval_repo
@@ -122,7 +124,7 @@ class ProgressReportBuilder(object):
 
 
 @timeit.timeit
-def main(argv=False):
+def main(argv=sys.argv):
     """
 
     main function of progress report generator
@@ -135,26 +137,13 @@ def main(argv=False):
     input file name : in progress.cfg
 
     """
+
+    # https://docs.python.org/3.7/library/argparse.html
+    ns = parse_args(argv)
+
     # https://docs.python.org/3/library/configparser.html
-    config = get_config_from_argv(argv)
-
-    '''
-    project id loop : for all project id's
-
-        go in
-
-        get list
-
-        if doesn't start with '.'
-
-            if file, get log
-
-                # commits
-
-                # begin ~ end
-
-                # average commit interval
-    '''
+    config = get_config_from_filename(ns.config_filename)
+    config['operation']['multiprocessing'] = str(ns.multiprocessing)
 
     # compile regex here not to repeat later
     re_git_log = eval_repo.RepoEvalCountCommit.get_regex_parse_git_log()
@@ -175,6 +164,19 @@ def main(argv=False):
             gen_arg_process_section(iter_repo.get_section_list(config))
         )
     )
+
+
+def parse_args(argv:typing.Sequence[str]) -> argparse.Namespace:
+    parser = argparse.ArgumentParser(description="Exercise Chart Builder")
+    parser.add_argument('config_filename', type=str, default='progress.cfg', help="section configuration file")
+    # https://docs.python.org/3.7/library/argparse.html
+    # Parsing boolean values with argparse, https://stackoverflow.com/a/15008806
+    parser.add_argument('--multiprocessing', dest='multiprocessing', action='store_true', help="enable multiprocessing")
+    parser.add_argument('--no-multiprocessing', dest='multiprocessing', action='store_false', help="disable multiprocessing")
+    parser.set_defaults(multiprocessing=True)
+
+    ns = parser.parse_args(argv[1:])
+    return ns
 
 
 def get_config_from_argv(argv):
@@ -203,8 +205,16 @@ def get_config_from_filename(config_filename=False):
     return config
 
 
+def config2bool(value:str) -> bool:
+    if not value:
+        result = False
+    else:
+        result = 'false' != value.strip().lower()
+    return result
+
+
 @timeit.timeit
-def process_section(config, re_git_log, section):
+def process_section(config: configparser.ConfigParser, re_git_log:re.Pattern, section:str):
     """
     Clone or pull from remote repositories
     For each repository,
@@ -223,7 +233,8 @@ def process_section(config, re_git_log, section):
     repo_list = ret.clone_or_pull_repo_list(
         repo_url_list,
         section_folder=config[section]['folder'],
-        b_update_repo=('True' == config['operation']['update_repo'].strip())
+        b_update_repo=config2bool(config['operation']['update_repo']),
+        b_multiprocessing=config2bool(config['operation']['multiprocessing']),
     )
 
     results = {}
@@ -319,7 +330,7 @@ def call_commit_count(config, section, repo_list, results):
 
 
 @timeit.timeit
-def count_commits(config, section, repo_list):
+def count_commits(config:configparser.ConfigParser, section:str, repo_list:typing.Sequence) -> typing.Dict[str, typing.Union[bool, dict_table.RepoTable]]:
     """
     Count commits of each file fromt eh section
     """
@@ -331,7 +342,11 @@ def count_commits(config, section, repo_list):
 
     commit_counter = eval_repo.RepoEvalCountOneCommitLog(
         after, before, exclude_email_tuple)
-    commit_count = commit_counter.eval_repo_list(repo_list)
+
+    commit_count = commit_counter.eval_repo_list(
+        repo_list,
+        b_multiprocessing=config2bool(config['operation']['multiprocessing']),
+    )
 
     # if the header row seems to include '\' character in the header row
     if commit_count.is_backslash_in_header():
@@ -366,7 +381,7 @@ def count_commits(config, section, repo_list):
 
 
 @timeit.timeit
-def write_tables(section, repo_list, table, filename_prefix, sorted_row=None):
+def write_tables(section, repo_list, table, filename_prefix, sorted_row=None) -> typing.Dict[str, bool]:
 
     # if sorted_row not given, make one from repo_list
     if sorted_row is None:
@@ -395,14 +410,17 @@ def write_tables(section, repo_list, table, filename_prefix, sorted_row=None):
 
 
 @timeit.timeit
-def run_all(config, section, repo_list):
+def run_all(config:configparser.ConfigParser, section:str, repo_list:typing.Sequence) -> typing.Dict[str, typing.Union[bool, dict_table.RepoTable]]:
     """
     Run (almost) all .py files from the section
     """
 
     all_runner = eval_repo.RepoEvalRunEachSkipSomeLastCommit(
         config['operation']['python_path'])
-    all_outputs = all_runner.eval_repo_list(repo_list)
+    all_outputs = all_runner.eval_repo_list(
+        repo_list,
+        b_multiprocessing=config2bool(config['operation']['multiprocessing']),
+    )
     print(f'run_all() : finished eval_repo_list()')
 
     # repository names in order
@@ -632,13 +650,16 @@ def write_last_sent(last_sent_file, gmtime_sec=time.time()):
 
 
 @timeit.timeit
-def pound_count(config, section, repo_list):
+def pound_count(config:configparser.ConfigParser, section:str, repo_list:typing.Sequence) -> typing.Dict[str, typing.Union[bool, dict_table.RepoTable]]:
     """
     count # comments of the section
     """
 
     pound_counter = eval_repo.RepoEvalPoundByteCounterExcludingRef()
-    pound_numbers = pound_counter.eval_repo_list(repo_list)
+    pound_numbers = pound_counter.eval_repo_list(
+        repo_list,
+        b_multiprocessing=config2bool(config['operation']['multiprocessing']),
+    )
     print('pound_count() : finished eval_repo_list()')
 
     # sort with total
@@ -660,4 +681,4 @@ def pound_count(config, section, repo_list):
 
 
 if "__main__" == __name__:
-    main(sys.argv[1:])
+    main(sys.argv)

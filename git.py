@@ -2,6 +2,7 @@ import os
 import shutil
 import subprocess
 import sys
+import typing
 import urllib.parse as up
 
 
@@ -129,21 +130,31 @@ def run_command(cmd, b_verbose=True, in_txt=None, b_show_cmd=False):
     return msgo, msge
 
 
-def git_common(cmd, b_verbose=True):
+def git_common(cmd:typing.Sequence[str], cwd:str=None, b_verbose:bool=True) -> typing.Tuple[str]:
     """
     execute git command & print
 
-    :param str cmd: git command
+    :param cmd: git command
+    :param str cwd: path to run the git command
     :param bool b_verbose:
     :return: messages through stdout and stderr
 
-    >>> git_common("status") # == git status
+    >>> git_common(["status"]) # == git status
     """
 
-    return run_command((git_exe_path,) + tuple(cmd), b_verbose)
+    git_cmd = (git_exe_path,) + tuple(cmd)
+
+    p = subprocess.run(git_cmd, cwd=cwd, encoding='utf-8', capture_output=True)
+
+    if b_verbose:
+        print("cmd : ", ' '.join(git_cmd))
+        print("out : ", p.stdout)
+        print("err : ", p.stderr)
+
+    return p.stdout, p.stderr
 
 
-def git(cmd, bVerbose=True):
+def git(cmd:typing.Sequence[str], cwd:str=None, bVerbose:bool=True) -> str:
     """
     execute git command & print
 
@@ -151,10 +162,10 @@ def git(cmd, bVerbose=True):
     :param bool bVerbose:
     :return:
 
-    >>> git("status") # == git status
+    >>> git(["status"]) # == git status
     """
 
-    msgo, msge = git_common(cmd, bVerbose)
+    msgo, msge = git_common(cmd, cwd=cwd, b_verbose=bVerbose)
 
     if msgo:
         if not msge:
@@ -169,20 +180,18 @@ def git(cmd, bVerbose=True):
     return msg
 
 
-def checkout(commit=False, repo_path=False, b_force=False, b_verbose=False):
+def checkout(commit:str=False, repo_path:str=None, b_force:bool=False, b_verbose:bool=False) -> typing.Tuple[str]:
     """
     git checkout <commit>
 
     change folder to <repo_path>
     """
 
-    if not repo_path:
-        repo_path = os.getcwd()
-
     # checkout specific commit
-    checkout_cmd_list = [git_exe_path,
-                         'checkout',
-                         ]
+    checkout_cmd_list = [
+        git_exe_path,
+        'checkout',
+    ]
 
     if commit:
         checkout_cmd_list.append(commit)
@@ -269,15 +278,14 @@ def log_last_commit():
     return result
 
 
-def get_last_sha(b_full=False, path='', branch=''):
+def get_last_sha(b_full:bool=False, path:str='', branch:str='', cwd:str=None) -> str:
     # sometimes full SHA is necessary
     if b_full:
         format_string = '%H'
     else:
         format_string = '%h'
 
-    command_list = [git_exe_path, 'log',
-                    '--pretty=format:{h}'.format(h=format_string), '-1']
+    command_list = ['log', f'--pretty=format:{format_string}', '-1']
 
     if branch and path:
         command_list += [branch, '--', path]
@@ -287,9 +295,10 @@ def get_last_sha(b_full=False, path='', branch=''):
         command_list.append(branch)
 
     # get the last sha from git log of the latest commit
-    msgo, msge = run_command(
+    msgo, msge = git_common(
         tuple(command_list),
-        b_verbose=False
+        b_verbose=False,
+        cwd=cwd,
     )
 
     # output error check
@@ -302,16 +311,17 @@ def get_last_sha(b_full=False, path='', branch=''):
     return result
 
 
-def tag(tag_string, revision=''):
+def tag(tag_string:str, revision:str='', cwd:str=None) -> bool:
 
-    git_cmd = [git_exe_path, 'tag', tag_string]
+    git_cmd = ['tag', tag_string]
 
     if revision:
         git_cmd.append(str(revision))
 
-    msgo, msge = run_command(
+    msgo, msge = git_common(
         git_cmd,
         b_verbose=False,
+        cwd=cwd,
     )
 
     if msgo or msge:
@@ -344,7 +354,7 @@ def get_tags():
     return [tag.strip() for tag in msgo.splitlines()]
 
 
-def get_refs_tag_deref():
+def get_refs_tag_deref(cwd:str=None) -> typing.Sequence[typing.Tuple[str]]:
     """
     Obtain list of (sha, tag) of the current repository
     SHAs show up on the `git log`
@@ -352,23 +362,22 @@ def get_refs_tag_deref():
 
     # Obtain sha's and tags
     # dereference may include sha's in `git log`
-    git_cmd = [git_exe_path, 'show-ref', '--tags', '--dereference']
-
-    msgo, msge = run_command(
-        git_cmd,
+    msgo, msge = git_common(
+        ('show-ref', '--tags', '--dereference'),
         b_verbose=False,
+        cwd=cwd,
     )
 
-    if msge:
-        raise SystemError(msge)
+    assert not msge, msge
 
     # Obtain SHA's from the log
-    stdout_log, stderr_log = run_command(
-        (git_exe_path, 'log', '--pretty=%H'),
+    stdout_log, stderr_log = git_common(
+        ('log', '--pretty=%H', '--all'),
         b_verbose=False,
+        cwd=cwd,
     )
-    if stderr_log:
-        raise SystemError(stderr_log)
+
+    assert not stderr_log, stderr_log
 
     sha_tuple = tuple(stdout_log.splitlines())
 
@@ -426,15 +435,16 @@ def ls_remote_tag(remote='origin', b_verbose=False):
     return result_list
 
 
-def has_a_tag(commit=None):
-    if commit is None:
-        commit = get_last_sha(b_full=True)
+def has_a_tag(sha:str=None, cwd:str=None) -> bool:
+    if sha is None:
+        sha = get_last_sha(b_full=True, cwd=cwd)
 
     result = False
 
     # tag__sha loop
-    for _, sha in get_refs_tag_deref():
-        if sha == commit:
+    for _, sha_tag in get_refs_tag_deref(cwd=cwd):
+        assert len(sha) == len(sha_tag), (sha, sha_tag)
+        if sha_tag == sha:
             result = True
             break
 
@@ -448,17 +458,24 @@ def clean_xdf(b_verbose=False):
     run_command((git_exe_path, 'clean', '-x', '-d', '-f'), b_verbose=b_verbose)
 
 
-def get_current_branch(b_verbose=False):
+def get_current_branch(b_verbose:bool=False, cwd:str=None) -> str:
     # https://stackoverflow.com/questions/1417957/show-just-the-current-branch-in-git/1418022
-    return run_command((git_exe_path, 'rev-parse', '--abbrev-ref', 'HEAD'), b_verbose=b_verbose)[0].strip()
+    return git_common(
+        ('rev-parse', '--abbrev-ref', 'HEAD'),
+        b_verbose=b_verbose,
+        cwd=cwd,
+    )[0].strip()
 
 
-def get_remote_branch_list(b_verbose=False):
+def get_remote_branch_list(b_verbose:bool=False, cwd:str=None) -> typing.List[str]:
     """
     Get a list of remote branches of current repository
     """
-    stdout, _ = run_command(
-        (git_exe_path, 'branch', '--remote'), b_verbose=b_verbose)
+    stdout, _ = git_common(
+        ('branch', '--remote'),
+        b_verbose=b_verbose,
+        cwd=cwd,
+    )
 
     result = []
 

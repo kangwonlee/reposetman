@@ -4,6 +4,7 @@ import multiprocessing as mp
 import os
 import re
 import time
+import typing
 
 import git
 import repo_path
@@ -12,6 +13,9 @@ import unique_list
 
 
 cfg_filename = 'regex_test.cfg'
+
+
+RepoInfo = typing.Dict[str, str]
 
 
 def init_regex_test_cfg():
@@ -58,7 +62,7 @@ def get_proj_id_list(filename=config['repository']['listFile']):
 
 
 @timeit.timeit
-def get_github_url_list(filename):
+def get_github_url_list(filename:str) -> typing.Sequence[str]:
     txt = read_utf_or_cp(filename)
     # using regular expression, find all repository addresses
     return get_github_urls(txt)
@@ -144,11 +148,11 @@ def get_proj_info(txt_fname):
 
 @timeit.timeit
 def clone_or_pull_repo_list(
-    repo_url_list,
-    section_folder=os.path.abspath(config['repository']['path']),
-    b_update_repo=True,
-    b_multiprocessing=True
-):
+    repo_url_list:typing.Sequence[str],
+    section_folder:str=os.path.abspath(config['repository']['path']),
+    b_update_repo:bool=True,
+    b_multiprocessing:bool=True,
+) -> typing.Sequence[RepoInfo]:
     """
     process repository list
     if duplicate, don't do anything
@@ -199,7 +203,7 @@ def clone_or_pull_repo_cd(k, repo_url, abs_section_folder, b_update_repo, b_tag_
     return result
 
 
-def clone_or_pull_repo(k, repo_url, b_updte_repo, b_tag_after_update=True):
+def clone_or_pull_repo(k, repo_url, b_update_repo, b_tag_after_update=True):
     # initialize repository info
     repo = {
         'url': repo_url,
@@ -220,13 +224,12 @@ def clone_or_pull_repo(k, repo_url, b_updte_repo, b_tag_after_update=True):
         print('clone_or_pull_repo(%2d) : clone %s' % (k, repo['url']))
         git.clone(repo['url'], id=config['Admin']['id'])
     else:
-        if b_updte_repo:
+        if b_update_repo:
             print('clone_or_pull_repo(%2d) : pull %s' % (k, repo['url']))
             fetch_and_reset(repo_path_in_section)
 
     # tag with time stamp after clone or pull
-    tag_all_remote_branches(
-        b_tag_after_update, os.path.abspath(repo_path_in_section), repo)
+    tag_all_remote_branches(b_tag_after_update, repo)
 
     # just in case
     os.chdir(dir_backup)
@@ -238,72 +241,67 @@ def get_timestamp_str():
     return time.strftime('%a_%b_%d_%H_%M_%S_%Y')
 
 
-def tag_stamp(b_tag_after_update, repo_path_in_section, repo, branch='', commit=''):
+def tag_stamp(b_tag_after_update:bool, repo_abs_path:str, repo:RepoInfo, branch:str='', commit:str=''):
     """
     Tag with time stamp after clone or pull
     """
     if b_tag_after_update:
-        # store current path
-        cwd = os.getcwd()
-
-        # move to the repository path
-        os.chdir(repo_path_in_section)
 
         # get latest hash value
-        last_sha = git.get_last_sha(branch=branch)
+        last_sha = git.get_last_sha(branch=branch, cwd=repo_abs_path, b_full=True)
 
-        # decide tag string
-        if branch:
-            if '/' in branch:
-                branch = branch[(branch.index('/')+1):]
-
-            # add branch name
-            tag_string = f'{get_timestamp_str()}__{branch}__{last_sha}'
-        else:
-            # just time stamp
-            tag_string = f'{get_timestamp_str()}__{last_sha}'
+        tag_string = get_tag_str(branch, last_sha)
 
         # Tag if the latest commit does not already have a tag
-        if not git.has_a_tag(commit=commit):
-            if not git.tag(tag_string, revision=commit):
+        if not git.has_a_tag(sha=last_sha, cwd=repo_abs_path):
+            if not git.tag(tag_string, revision=commit, cwd=repo_abs_path):
                 raise IOError('Unable to tag {name} {tag}'.format(
                     tag=tag_string, name=repo['name']))
 
-        # return to the stored path
-        os.chdir(cwd)
+
+def get_tag_str(branch:str, last_sha:str, sep:str='__') -> str:
+    return f'{get_timestamp_str()}{sep}{get_tag_str_branch_sha_info(branch, last_sha, sep)}'
 
 
-def tag_all_remote_branches(b_tag_after_update, repo_abs_path, repo):
+def get_tag_str_branch_sha_info(branch:str, last_sha:str, sep:str='__') -> str:
+    # decide tag string
+    if branch:
+        if '/' in branch:
+            branch = branch[(branch.index('/')+1):]
+
+        # add branch name
+        tag_string_postfix = f'{branch}{sep}{last_sha}'
+    else:
+        # just time stamp
+        tag_string_postfix = f'{last_sha}'
+
+    return tag_string_postfix
+
+
+def tag_all_remote_branches(b_tag_after_update:bool, repo:RepoInfo):
     """
     Tag all remote branches with timestamps and branch names
     """
     # preserve current status
     # current_section_branch = git.get_current_branch()
     # probably section path
-    section_path = os.getcwd()
 
     if b_tag_after_update:
-        # need to obtain the branch list in the repository
-        os.chdir(repo_abs_path)
 
         # preserve repository status
-        current_repo_branch = git.get_current_branch()
+        current_repo_branch = git.get_current_branch(cwd=repo['path'])
 
         # branch name loop
-        for repo_branch in git.get_remote_branch_list():
+        for repo_branch in git.get_remote_branch_list(cwd=repo['path']):
             # A remote branch would be like : remote_name/branch_name/##
-            tag_stamp(b_tag_after_update, repo_abs_path, repo,
+            tag_stamp(b_tag_after_update, repo['path'], repo,
                       branch=repo_branch, commit=repo_branch)
 
         # restore repository branch
-        git.checkout(current_repo_branch)
+        git.checkout(current_repo_branch, repo_path=repo['path'])
         if 'master' != git.get_current_branch().strip():
             print("branch = {branch}, repo path = {path}".format(
-                branch=git.get_current_branch(), path=repo_abs_path))
-
-    # return to section path
-    os.chdir(section_path)
-    # git.checkout(current_section_branch)
+                branch=git.get_current_branch(), path=repo['path']))
 
 
 def get_git_naver_anon(proj_id):
