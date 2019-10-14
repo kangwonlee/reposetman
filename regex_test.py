@@ -239,7 +239,7 @@ def get_timestamp_str():
     return time.strftime('%a_%b_%d_%H_%M_%S_%Y')
 
 
-def tag_stamp(b_tag_after_update:bool, repo_abs_path:str, repo:str, branch:str='', commit:str=''):
+def tag_stamp(b_tag_after_update:bool, repo_abs_path:str, repo:typing.Dict, branch:str='', commit:str=''):
     """
     Tag with time stamp after clone or pull
     """
@@ -276,7 +276,7 @@ def get_tag_str_branch_sha_info(branch:str, last_sha:str, sep:str='__') -> str:
     return tag_string_postfix
 
 
-def tag_all_remote_branches(b_tag_after_update:bool, repo_abs_path:str, repo:str):
+def tag_all_remote_branches(b_tag_after_update:bool, repo_abs_path:str, repo:typing.Dict):
     """
     Tag all remote branches with timestamps and branch names
     """
