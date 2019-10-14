@@ -229,6 +229,10 @@ def clone_or_pull_repo(k, repo_url, b_update_repo, b_tag_after_update=True):
     # even if b_updte_repo is False,
     # if not cloned yet, do it now.
     if need_to_clone(repo_path_in_section):
+        # clean up before clone
+        if os.path.exists(repo_path_in_section):
+            print(f"shutil.rmtree({repo_path_in_section})")
+            shutil.rmtree(repo_path_in_section)
         print('clone_or_pull_repo(%2d) : clone %s' % (k, repo['url']))
         git.clone(repo['url'], id=config['Admin']['id'])
     else:
