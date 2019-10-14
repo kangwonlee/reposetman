@@ -139,11 +139,7 @@ def main(argv=sys.argv):
     """
 
     # https://docs.python.org/3.7/library/argparse.html
-    ns = parse_args(argv)
-
-    # https://docs.python.org/3/library/configparser.html
-    config = get_config_from_filename(ns.config_filename)
-    config['operation']['multiprocessing'] = str(ns.multiprocessing)
+    config = get_config_from_argv(argv)
 
     # compile regex here not to repeat later
     re_git_log = eval_repo.RepoEvalCountCommit.get_regex_parse_git_log()
@@ -166,6 +162,17 @@ def main(argv=sys.argv):
     )
 
 
+def get_config_from_argv(argv):
+    # https://docs.python.org/3.7/library/argparse.html
+    ns = parse_args(argv)
+
+    # https://docs.python.org/3/library/configparser.html
+    config = get_config_from_filename(ns.config_filename)
+    config['operation']['multiprocessing'] = str(ns.multiprocessing)
+
+    return config
+
+
 def parse_args(argv:typing.Sequence[str]) -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Exercise Chart Builder")
     parser.add_argument('config_filename', type=str, default='progress.cfg', help="section configuration file")
@@ -177,11 +184,6 @@ def parse_args(argv:typing.Sequence[str]) -> argparse.Namespace:
 
     ns = parser.parse_args(argv[1:])
     return ns
-
-
-def get_config_from_argv(argv):
-
-    return get_config_from_filename(get_cfg_filename_from_argv(argv))
 
 
 def get_cfg_filename_from_argv(argv):
