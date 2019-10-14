@@ -203,6 +203,12 @@ def clone_or_pull_repo_cd(k, repo_url, abs_section_folder, b_update_repo, b_tag_
     return result
 
 
+def need_to_clone(abs_repo_path:str) -> bool:
+    return not os.path.exists(
+        os.path.join(abs_repo_path, '.git', 'config')
+    )
+
+
 def clone_or_pull_repo(k, repo_url, b_update_repo, b_tag_after_update=True):
     # initialize repository info
     repo = {
