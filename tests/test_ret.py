@@ -155,5 +155,24 @@ class TestFetchAndReset(unittest.TestCase):
         os.chdir(self.cwd)
 
 
+class TestGetTagStringBranchShaInfo(unittest.TestCase):
+    def test_get_tag_str_postfix_sha(self):
+        branch = ''
+        sha = 'sha'
+
+        result = ret.get_tag_str_branch_sha_info(branch, sha)
+
+        self.assertIn(sha, result)
+
+    def test_get_tag_str_postfix_branch_sha(self):
+        branch = 'branch'
+        sha = 'sha'
+
+        result = ret.get_tag_str_branch_sha_info(branch, sha)
+
+        self.assertIn(branch, result)
+        self.assertIn(sha, result)
+
+
 if "__main__" == __name__:
     unittest.main()
