@@ -38,10 +38,9 @@ import timeit
 
 
 @timeit.timeit
-def main(argv):
-    # read configuration file
-    config = configparser.ConfigParser()
-    config.read(argv[0])
+def main(argv=sys.argv):
+
+    config = progress.get_config_from_argv(argv)
 
     # get umbrella folder location
     # TODO : consider rename umbrella to summary
@@ -362,4 +361,4 @@ def generate_reports(repo_list, config, results={}):
 
 
 if "__main__" == __name__:
-    main(sys.argv[1:])
+    main(sys.argv)
