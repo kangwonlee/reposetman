@@ -271,37 +271,30 @@ def get_tag_str(branch:str, last_sha:str) -> str:
 
     return tag_string
 
-def tag_all_remote_branches(b_tag_after_update, repo_abs_path, repo):
+def tag_all_remote_branches(b_tag_after_update:bool, repo_abs_path:str, repo:str):
     """
     Tag all remote branches with timestamps and branch names
     """
     # preserve current status
     # current_section_branch = git.get_current_branch()
     # probably section path
-    section_path = os.getcwd()
 
     if b_tag_after_update:
-        # need to obtain the branch list in the repository
-        os.chdir(repo_abs_path)
 
         # preserve repository status
-        current_repo_branch = git.get_current_branch()
+        current_repo_branch = git.get_current_branch(cwd=repo_abs_path)
 
         # branch name loop
-        for repo_branch in git.get_remote_branch_list():
+        for repo_branch in git.get_remote_branch_list(cwd=repo_abs_path):
             # A remote branch would be like : remote_name/branch_name/##
             tag_stamp(b_tag_after_update, repo_abs_path, repo,
                       branch=repo_branch, commit=repo_branch)
 
         # restore repository branch
-        git.checkout(current_repo_branch)
+        git.checkout(current_repo_branch, repo_path=repo_abs_path)
         if 'master' != git.get_current_branch().strip():
             print("branch = {branch}, repo path = {path}".format(
                 branch=git.get_current_branch(), path=repo_abs_path))
-
-    # return to section path
-    os.chdir(section_path)
-    # git.checkout(current_section_branch)
 
 
 def get_git_naver_anon(proj_id):
