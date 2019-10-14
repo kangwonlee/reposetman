@@ -241,7 +241,7 @@ def get_timestamp_str():
     return time.strftime('%a_%b_%d_%H_%M_%S_%Y')
 
 
-def tag_stamp(b_tag_after_update:bool, repo_abs_path:str, repo:typing.Dict, branch:str='', commit:str=''):
+def tag_stamp(b_tag_after_update:bool, repo_abs_path:str, repo:RepoInfo, branch:str='', commit:str=''):
     """
     Tag with time stamp after clone or pull
     """
