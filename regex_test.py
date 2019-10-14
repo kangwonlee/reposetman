@@ -271,6 +271,7 @@ def get_tag_str(branch:str, last_sha:str) -> str:
 
     return tag_string
 
+
 def tag_all_remote_branches(b_tag_after_update:bool, repo_abs_path:str, repo:str):
     """
     Tag all remote branches with timestamps and branch names
