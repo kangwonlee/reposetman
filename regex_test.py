@@ -229,8 +229,7 @@ def clone_or_pull_repo(k, repo_url, b_update_repo, b_tag_after_update=True):
             fetch_and_reset(repo_path_in_section)
 
     # tag with time stamp after clone or pull
-    tag_all_remote_branches(
-        b_tag_after_update, os.path.abspath(repo_path_in_section), repo)
+    tag_all_remote_branches(b_tag_after_update, repo)
 
     # just in case
     os.chdir(dir_backup)
@@ -279,7 +278,7 @@ def get_tag_str_branch_sha_info(branch:str, last_sha:str, sep:str='__') -> str:
     return tag_string_postfix
 
 
-def tag_all_remote_branches(b_tag_after_update:bool, repo_abs_path:str, repo:typing.Dict):
+def tag_all_remote_branches(b_tag_after_update:bool, repo:RepoInfo):
     """
     Tag all remote branches with timestamps and branch names
     """
@@ -290,19 +289,19 @@ def tag_all_remote_branches(b_tag_after_update:bool, repo_abs_path:str, repo:typ
     if b_tag_after_update:
 
         # preserve repository status
-        current_repo_branch = git.get_current_branch(cwd=repo_abs_path)
+        current_repo_branch = git.get_current_branch(cwd=repo['path'])
 
         # branch name loop
-        for repo_branch in git.get_remote_branch_list(cwd=repo_abs_path):
+        for repo_branch in git.get_remote_branch_list(cwd=repo['path']):
             # A remote branch would be like : remote_name/branch_name/##
-            tag_stamp(b_tag_after_update, repo_abs_path, repo,
+            tag_stamp(b_tag_after_update, repo['path'], repo,
                       branch=repo_branch, commit=repo_branch)
 
         # restore repository branch
-        git.checkout(current_repo_branch, repo_path=repo_abs_path)
+        git.checkout(current_repo_branch, repo_path=repo['path'])
         if 'master' != git.get_current_branch().strip():
             print("branch = {branch}, repo path = {path}".format(
-                branch=git.get_current_branch(), path=repo_abs_path))
+                branch=git.get_current_branch(), path=repo['path']))
 
 
 def get_git_naver_anon(proj_id):
