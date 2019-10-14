@@ -15,6 +15,9 @@ import unique_list
 cfg_filename = 'regex_test.cfg'
 
 
+RepoInfo = typing.Dict[str, str]
+
+
 def init_regex_test_cfg():
     list_filename = 'test_list.txt'
     repo_path = 'sample'
