@@ -200,7 +200,7 @@ def clone_or_pull_repo_cd(k, repo_url, abs_section_folder, b_update_repo, b_tag_
     return result
 
 
-def clone_or_pull_repo(k, repo_url, b_updte_repo, b_tag_after_update=True):
+def clone_or_pull_repo(k, repo_url, b_update_repo, b_tag_after_update=True):
     # initialize repository info
     repo = {
         'url': repo_url,
@@ -221,7 +221,7 @@ def clone_or_pull_repo(k, repo_url, b_updte_repo, b_tag_after_update=True):
         print('clone_or_pull_repo(%2d) : clone %s' % (k, repo['url']))
         git.clone(repo['url'], id=config['Admin']['id'])
     else:
-        if b_updte_repo:
+        if b_update_repo:
             print('clone_or_pull_repo(%2d) : pull %s' % (k, repo['url']))
             fetch_and_reset(repo_path_in_section)
 
